@@ -59,7 +59,7 @@ if($_SESSION['ident'])
      break;
 
          case 2;
-				 echo "opcion 2";
+				 include("proyectos.php");
      break;
 
          case 3;

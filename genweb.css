@@ -84,3 +84,18 @@ ul.menu2011 li.verde
 {
   background-color:#6F6;
 }
+
+table
+{
+ border: 1px solid black;
+}
+
+th
+{
+ border: 1px solid black;
+ }
+
+td
+{
+ border: 1px solid black;
+}
