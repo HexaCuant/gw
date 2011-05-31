@@ -55,7 +55,7 @@ if($_SESSION['ident'])
 				switch ($option)
 				{
          case 1;
-				 echo "opcion 1";
+				 include("caracteres.php");
      break;
 
          case 2;

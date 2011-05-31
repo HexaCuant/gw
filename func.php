@@ -1,6 +1,9 @@
 <?php
 session_start();
 
+require_once("func_car.php");
+require_once("func_pro.php");
+
 function cabecera()
 {
  ?>
@@ -113,77 +116,9 @@ function inserta($user,$pass)
   }
  }
 
-function listapro($id)
-{
- $conn = conecta();
- $sql="select * from proyectos where userid =".$id;
- $res=pg_query($conn,$sql);
- $rows=pg_NumRows($res);
-?>
-<form action="index.php?option=2" method="post">
- <table>
- <tr><th>Id</th><th>Nombre Proyecto</th><th>Borrar</th><th>Abrir</th></tr>
- <?
- for ($i=0;$i<$rows;$i++)
- {
-  $id = pg_result($res,$i,0);
-  $proname = pg_result($res,$i,1);
-	?><tr><td><?=$id?></td><td><?=$proname?></td><?
-  probutton($id);
-	?></tr><?
- }
- ?>
- </table>
-</form>
- <?
- desconecta($conn);
-}
-
-function probutton($id)
-{
-?>
-				<td><input type="submit" name="borrarpro" value="<?=$id?>"></input><input type="checkbox" name="confirmado"></input></td>
-				<td><input type="submit" name="abrirpro" value="<?=$id?>"</td> 
-<?
-}
-
-function formnewpro()
-{
- ?>
- <form action="index.php?option=2" method="post">
- <p>Nombre:<input type="text" name="proname"></input></p>
- <p><input type="submit" value="Nuevo Proyecto" name="newpro" /><input type="reset" value="borrar" /></p>
- </form>
- <?
-}
-
-
-function	insertpro($proname)
-{
-				$conn = conecta();
-				$sql="insert into proyectos (proname,userid) values ('".$proname."','".$_SESSION['userid']."')";
-				echo $sql;
-				$res = pg_query($conn,$sql);
-				if(!$res) echo "Error en la inserción del proyecto";
-				desconecta($conn);
-				refresh();
-}
 
 function refresh()
 {
  echo "<meta http-equiv=\"refresh\" content=\"0\">";
 }
 
-
-function testborrarpro()
-{
- if (isset($_POST['borrarpro']) && isset($_POST['confirmado']))
- {
- 	$id=$_POST['borrarpro'];
-	$sql = "delete from proyectos where id=".$id;
-	$conn=conecta();
-	pg_query($conn,$sql);
-	desconecta($conn);
-	refresh();
- }
-}

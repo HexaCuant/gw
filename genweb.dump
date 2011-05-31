@@ -12,6 +12,80 @@ SET escape_string_warning = off;
 SET search_path = public, pg_catalog;
 
 --
+-- Name: caracter_id; Type: SEQUENCE; Schema: public; Owner: genweb
+--
+
+CREATE SEQUENCE caracter_id
+    START WITH 1
+    INCREMENT BY 1
+    NO MAXVALUE
+    NO MINVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.caracter_id OWNER TO genweb;
+
+--
+-- Name: caracter_id; Type: SEQUENCE SET; Schema: public; Owner: genweb
+--
+
+SELECT pg_catalog.setval('caracter_id', 1, false);
+
+
+SET default_tablespace = '';
+
+SET default_with_oids = false;
+
+--
+-- Name: caracteres; Type: TABLE; Schema: public; Owner: genweb; Tablespace: 
+--
+
+CREATE TABLE caracteres (
+    id integer DEFAULT nextval('caracter_id'::regclass),
+    name character varying(50),
+    creatorid integer,
+    public boolean,
+    visible boolean
+);
+
+
+ALTER TABLE public.caracteres OWNER TO genweb;
+
+--
+-- Name: proyecto_id; Type: SEQUENCE; Schema: public; Owner: genweb
+--
+
+CREATE SEQUENCE proyecto_id
+    START WITH 1
+    INCREMENT BY 1
+    NO MAXVALUE
+    NO MINVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.proyecto_id OWNER TO genweb;
+
+--
+-- Name: proyecto_id; Type: SEQUENCE SET; Schema: public; Owner: genweb
+--
+
+SELECT pg_catalog.setval('proyecto_id', 9, true);
+
+
+--
+-- Name: proyectos; Type: TABLE; Schema: public; Owner: genweb; Tablespace: 
+--
+
+CREATE TABLE proyectos (
+    id integer DEFAULT nextval('proyecto_id'::regclass),
+    proname character varying(40),
+    userid integer
+);
+
+
+ALTER TABLE public.proyectos OWNER TO genweb;
+
+--
 -- Name: user_id; Type: SEQUENCE; Schema: public; Owner: genweb
 --
 
@@ -32,10 +106,6 @@ ALTER TABLE public.user_id OWNER TO genweb;
 SELECT pg_catalog.setval('user_id', 5, true);
 
 
-SET default_tablespace = '';
-
-SET default_with_oids = false;
-
 --
 -- Name: users; Type: TABLE; Schema: public; Owner: genweb; Tablespace: 
 --
@@ -49,6 +119,27 @@ CREATE TABLE users (
 
 
 ALTER TABLE public.users OWNER TO genweb;
+
+--
+-- Data for Name: caracteres; Type: TABLE DATA; Schema: public; Owner: genweb
+--
+
+COPY caracteres (id, name, creatorid, public, visible) FROM stdin;
+\.
+
+
+--
+-- Data for Name: proyectos; Type: TABLE DATA; Schema: public; Owner: genweb
+--
+
+COPY proyectos (id, proname, userid) FROM stdin;
+1	nuevo	\N
+3	tercero	1
+4	tercero	1
+7	sexto	1
+9	otro	1
+\.
+
 
 --
 -- Data for Name: users; Type: TABLE DATA; Schema: public; Owner: genweb
