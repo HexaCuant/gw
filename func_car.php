@@ -56,16 +56,40 @@ function testcar($id){
 				if(isset($_POST['abrircar'])){
 								$_SESSION['caractivo']=$id;
 								$conn=conecta();
-								$sql="select name from caracteres where id=".$id;
+								$sql="select name,public,visible,sexo,ambiente from caracteres where id=".$id;
 								$res = pg_query($conn,$sql);
 								if(!$res) echo "Error: carácter no encontrado";
-								else $_SESSION['name_caractivo'] = pg_result($res,0,0);
-				}else{
-								if(isset($_POST['cerrarcar'])){
-												unset($_SESSION['caractivo']);
-												unset($_SESSION['name_caractivo']);
+								else{
+												$_SESSION['name_caractivo'] = pg_result($res,0,0);
+												$public =  pg_result($res,0,1);
+												$visible =  pg_result($res,0,2);
+												$sexo =  pg_result($res,0,3);
+												$ambiente =  pg_result($res,0,4);
 								}
 				}
+				else	if(isset($_POST['cerrarcar'])){
+												unset($_SESSION['caractivo']);
+												unset($_SESSION['name_caractivo']);
+				}
+				else if(isset($_POST['borrarcar']) && isset($_POST['confirmado'])){
+								$id=$_POST['borrarcar'];
+								$sql="delete from caracteres where id=".$id;
+								$conn=conecta();
+								$res=pg_query($conn,$sql);
+								if (!$res) echo "ERROR: No se pudo borrar el carácter"; 
+				}
+				else if(isset($_POST['datoscar'])){
+								if (isset($_POST['sexo'])) $sexo="t"; else $sexo = "f";
+								if (isset($_POST['visible'])) $visible="t"; else $visible = "f";
+								if (isset($_POST['public'])) $public="t"; else $public = "f";
+								$ambiente = $_POST['ambiente'];
+								$conn = conecta();
+								$sql = "update caracteres set visible='".$visible."', public='".$public."', sexo='".$sexo."', ambiente ='".$ambiente."' where id = ".$_SESSION['caractivo'];
+								$res = pg_query($conn,$sql);
+								if(!$res) echo "Error: carácter no encontrado";
+								desconecta($conn);
+				}
+
 				if(isset($_SESSION['caractivo'])) datoscar($_SESSION['caractivo']);
 }
 
@@ -77,13 +101,27 @@ function carbutton($id){
 }
 
 function datoscar($car_id){
-
+				        $conn = conecta();
+								$sql="select name,public,visible,sexo,ambiente from caracteres where id=".$car_id;
+								$res = pg_query($conn,$sql);
+								desconecta($conn);
+								if(!$res) echo "Error: carácter no encontrado";
+								else{
+												$_SESSION['name_caractivo'] = pg_result($res,0,0);
+												$public =  pg_result($res,0,1);
+												$visible =  pg_result($res,0,2);
+												$sexo =  pg_result($res,0,3);
+												$ambiente =  pg_result($res,0,4);
+								}
 ?>
 			<h2>Carácter:<?=$_SESSION['name_caractivo']?></h2>
-      <form action="index.php?option=1" method="post">
-			<p>Sexo: <input type="checkbox" name="sexo"></input></p>
-			<p>Ambiente: <input type="text" name="ambiente"></input></p>
-      <input type="submit" value="Guardar Cambios" name="datosgen"></input><input type="submit" value="Cerrar" name="cerrarcar"></input></p>
+			<form action="index.php?option=1" method="post">
+			<p>Sexo: <input type="checkbox" name="sexo"  <?if($sexo == "t") print("checked")?>></input></p>
+			<p>Visible: <input type="checkbox" name="visible" <?if($visible == "t") print("checked")?>></input>
+			Público: <input type="checkbox" name="public" <?if($public == "t") print("checked")?>></input>
+			</p>
+			<p>Ambiente: <input type="text" name="ambiente" value="<?=$ambiente?>"></input></p>
+      <input type="submit" value="Guardar Cambios" name="datoscar"></input><input type="submit" value="Cerrar" name="cerrarcar"></input></p>
 			</form>
 
       <form action=index.php?option=1" method="post">
@@ -96,15 +134,37 @@ function datoscar($car_id){
 function testgen(){
 				if(isset($_POST['nuevogen'])){
 ?>
-<?echo "pulsado nuevo gen";?>
 <form action="index.php?option=1" method="post">
-<p>nombre:<input type="text" name="nombregen"></input></p>
-<p>Cromosoma:<input type="text" name="chrgen"></input></p>
-<p>Posición:<input type="text" name="chrgen"></input></p>
-
+<p>Nombre:<input type="text" name="nombregen"></input></p>
+<p>Cromosoma nº:<input type="text" name="chrgen"></input></p>
+<p>
+X<input type="checkbox" name"X"></input>
+Y<input type="checkbox" name"Y"></input>
+A<input type="checkbox" name"A" checked></input>
+B<input type="checkbox" name"B" checked></input>
+</p>
+<p>Posición:<input type="text" name="posgen"></input></p>
+<input type="submit" name="guardagen" value="Guardar datos"></input></p>
 </form>
 <?
 				}
+				else if(isset($_POST['guardagen'])){
+								//recoge datos post
+								$nombregen = $_POST['nombregen'];
+								$chrgen = $_POST['chrgen'];
+								$posgen = $_POST['posgen'];
+								//guardar en BD
+								$sql = "insert into genes (name,chr,pos) values ('".$nombregen."','".$chrgen."','".$posgen."')";
+								echo $sql;
+								$conn = conecta();
+								$res = pg_query($conn,$sql);
+								if(!$res) echo "ERROR: No se insertó la información del gen en la BD";
+				}
+}
 
+function testalelo(){
+				if(isset($_POST['newalelo'])){
+								echo "nuevo alelo";
+				}
 }
 

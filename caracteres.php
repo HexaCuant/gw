@@ -5,7 +5,8 @@ testcar($_POST['abrircar']);
 ?></div><?
 
 ?><div class="derecha"><?
-				testgen();
+testgen();
+testalelo();
 ?></div><?
 
 if($_POST['newcar'] == "Nuevo Carácter")

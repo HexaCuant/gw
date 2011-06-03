@@ -1,7 +1,27 @@
+body{
+background-color:#ddf;
+}
+
+h1{
+background-color:#fdd;
+}
+
+h2{
+background-color:#dfd;
+}
+
+table{
+background-color:white;
+}
+
 .derecha{
 				position: relative;
 				width: 70%;
 float: right;
+border: 1px solid black;
+margin:1ex;
+padding:1ex;
+background-color:#bfb;
 
 }
 
@@ -10,11 +30,12 @@ float: right;
 .menu2011
 {
 /* width:1000px;*/
- background-color:#830;
+ background-color:#999;
  border-style:solid;
- border-width:1px;
-  border-color:#f00;
-	border-top:solid #900 4px;
+ border-width:2px;
+  border-color:#eee;
+	border-top:solid #555;
+	border-right:solid #777;
 padding:5px;
 padding-bottom:7px;
 font-weight: bold;
@@ -31,7 +52,7 @@ ul.menu2011
 ul.menu2011 li
 {
 /* position:relative;*/
-	background-color:#FF6;
+	background-color:#ddd;
 	padding:3px;
 	padding-left:5px;
 	padding-right:5px;

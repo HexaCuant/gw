@@ -29,7 +29,7 @@ ALTER TABLE public.caracter_id OWNER TO genweb;
 -- Name: caracter_id; Type: SEQUENCE SET; Schema: public; Owner: genweb
 --
 
-SELECT pg_catalog.setval('caracter_id', 1, false);
+SELECT pg_catalog.setval('caracter_id', 9, true);
 
 
 SET default_tablespace = '';
@@ -45,11 +45,41 @@ CREATE TABLE caracteres (
     name character varying(50),
     creatorid integer,
     public boolean,
-    visible boolean
+    visible boolean,
+    sexo boolean,
+    ambiente integer
 );
 
 
 ALTER TABLE public.caracteres OWNER TO genweb;
+
+--
+-- Name: caracteres_proy; Type: TABLE; Schema: public; Owner: genweb; Tablespace: 
+--
+
+CREATE TABLE caracteres_proy (
+    caracter_id integer,
+    proyecto_id integer
+);
+
+
+ALTER TABLE public.caracteres_proy OWNER TO genweb;
+
+--
+-- Name: genes; Type: TABLE; Schema: public; Owner: genweb; Tablespace: 
+--
+
+CREATE TABLE genes (
+    idglobal integer,
+    id integer,
+    name character varying(20),
+    chr integer,
+    pos double precision,
+    cod integer
+);
+
+
+ALTER TABLE public.genes OWNER TO genweb;
 
 --
 -- Name: proyecto_id; Type: SEQUENCE; Schema: public; Owner: genweb
@@ -69,7 +99,7 @@ ALTER TABLE public.proyecto_id OWNER TO genweb;
 -- Name: proyecto_id; Type: SEQUENCE SET; Schema: public; Owner: genweb
 --
 
-SELECT pg_catalog.setval('proyecto_id', 9, true);
+SELECT pg_catalog.setval('proyecto_id', 11, true);
 
 
 --
@@ -124,7 +154,30 @@ ALTER TABLE public.users OWNER TO genweb;
 -- Data for Name: caracteres; Type: TABLE DATA; Schema: public; Owner: genweb
 --
 
-COPY caracteres (id, name, creatorid, public, visible) FROM stdin;
+COPY caracteres (id, name, creatorid, public, visible, sexo, ambiente) FROM stdin;
+2	uno-vis	1	f	t	\N	\N
+3	visible	1	f	t	\N	\N
+5	ambos	1	t	t	\N	\N
+4	publico	1	t	f	f	30
+6	ninguno	1	f	t	t	20
+1	nuevo	1	f	t	f	10
+\.
+
+
+--
+-- Data for Name: caracteres_proy; Type: TABLE DATA; Schema: public; Owner: genweb
+--
+
+COPY caracteres_proy (caracter_id, proyecto_id) FROM stdin;
+\.
+
+
+--
+-- Data for Name: genes; Type: TABLE DATA; Schema: public; Owner: genweb
+--
+
+COPY genes (idglobal, id, name, chr, pos, cod) FROM stdin;
+\N	\N	color	1	10	\N
 \.
 
 
