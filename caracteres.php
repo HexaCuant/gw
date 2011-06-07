@@ -6,6 +6,7 @@ testcar($_POST['abrircar']);
 
 ?><div class="derecha"><?
 testgen();
+testvergenes();
 testalelo();
 ?></div><?
 

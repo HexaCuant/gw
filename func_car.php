@@ -14,8 +14,8 @@ function listacar($proyecto_id)
  <?
  for ($i=0;$i<$rows;$i++)
  {
-  $id = pg_result($res,$i,0);
-  $name = pg_result($res,$i,1);
+  $id = pg_fetch_result($res,$i,0);
+  $name = pg_fetch_result($res,$i,1);
 	?><tr><td><?=$id?></td><td><?=$name?></td><?
   carbutton($id);
 	?></tr><?
@@ -60,11 +60,11 @@ function testcar($id){
 								$res = pg_query($conn,$sql);
 								if(!$res) echo "Error: carácter no encontrado";
 								else{
-												$_SESSION['name_caractivo'] = pg_result($res,0,0);
-												$public =  pg_result($res,0,1);
-												$visible =  pg_result($res,0,2);
-												$sexo =  pg_result($res,0,3);
-												$ambiente =  pg_result($res,0,4);
+												$_SESSION['name_caractivo'] = pg_fetch_result($res,0,0);
+												$public =  pg_fetch_result($res,0,1);
+												$visible =  pg_fetch_result($res,0,2);
+												$sexo =  pg_fetch_result($res,0,3);
+												$ambiente =  pg_fetch_result($res,0,4);
 								}
 				}
 				else	if(isset($_POST['cerrarcar'])){
@@ -107,11 +107,11 @@ function datoscar($car_id){
 								desconecta($conn);
 								if(!$res) echo "Error: carácter no encontrado";
 								else{
-												$_SESSION['name_caractivo'] = pg_result($res,0,0);
-												$public =  pg_result($res,0,1);
-												$visible =  pg_result($res,0,2);
-												$sexo =  pg_result($res,0,3);
-												$ambiente =  pg_result($res,0,4);
+												$_SESSION['name_caractivo'] = pg_fetch_result($res,0,0);
+												$public =  pg_fetch_result($res,0,1);
+												$visible =  pg_fetch_result($res,0,2);
+												$sexo =  pg_fetch_result($res,0,3);
+												$ambiente =  pg_fetch_result($res,0,4);
 								}
 ?>
 			<h2>Carácter:<?=$_SESSION['name_caractivo']?></h2>
@@ -125,11 +125,41 @@ function datoscar($car_id){
 			</form>
 
       <form action=index.php?option=1" method="post">
+			<p><input type="submit" value="Ver Genes" name="vergenes"></input></p>
 			<p><input type="submit" value="Nuevo gen" name="nuevogen"></input></p>
       </form>
 
 </div><?
 }
+
+function testvergenes(){
+				if(isset($_POST['vergenes'])){
+								$conn = conecta();
+								$sql="select gen_id from genes_car where car_id =".$_SESSION['caractivo'];
+								$res = pg_query($conn,$sql);
+								$filas = pg_num_rows($res);
+?><table>
+				<tr><th>Id</th><th>Nombre</th><th>chr</th><th>pos</th><th>cod</th></tr><?
+								for ($i=0;$i<$filas;$i++){
+												$gen_id = pg_fetch_result($res,$i,0);
+												$sql = "select * from genes where idglobal =".$gen_id;
+												$resgen = pg_query($conn,$sql);
+												if(!$resgen) echo "ERROR: No se insertó la información del gen en la BD";
+												$idglobal=pg_fetch_result($resgen,0);
+												$name=pg_fetch_result($resgen,2);
+												$chr=pg_fetch_result($resgen,3);
+												$pos=pg_fetch_result($resgen,4);
+												$code=pg_fetch_result($resgen,5);
+?>
+				<tr><td><?=$idglobal?></td><td><?=$name?></td><td><?=$chr?></td><td><?=$pos?></td><td><?=$code?></td></tr>
+<?
+																
+								}
+?></table><?
+								desconecta($conn);
+				}
+}
+
 
 function testgen(){
 				if(isset($_POST['nuevogen'])){
@@ -154,11 +184,21 @@ B<input type="checkbox" name"B" checked></input>
 								$chrgen = $_POST['chrgen'];
 								$posgen = $_POST['posgen'];
 								//guardar en BD
-								$sql = "insert into genes (name,chr,pos) values ('".$nombregen."','".$chrgen."','".$posgen."')";
-								echo $sql;
 								$conn = conecta();
+								$sql = "insert into genes (name,chr,pos) values ('".$nombregen."','".$chrgen."','".$posgen."')";
 								$res = pg_query($conn,$sql);
 								if(!$res) echo "ERROR: No se insertó la información del gen en la BD";
+								$gen_id = 0;
+								$sql="select last_value from gen_id";
+								$res = pg_query($conn,$sql);
+								if(!$res) echo "ERROR: No se insertó la información del gen en la BD";
+								else $gen_id = pg_fetch_result($res,0,0);
+								if ($gen_id != 0){
+												$sql="insert into genes_car (gen_id, car_id) values (".$gen_id.", ".$_SESSION['caractivo'].")";
+												$res = pg_query($conn,$sql);
+												if(!$res) echo "ERROR: No se insertó la información del gen en la BD";
+								}
+								desconecta($conn);
 				}
 }
 
