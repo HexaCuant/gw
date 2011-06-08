@@ -139,7 +139,7 @@ function testvergenes(){
 								$res = pg_query($conn,$sql);
 								$filas = pg_num_rows($res);
 ?><table>
-				<tr><th>Id</th><th>Nombre</th><th>chr</th><th>pos</th><th>cod</th></tr><?
+				<tr><th>Id</th><th>Nombre</th><th>chr</th><th>pos</th><th>cod</th><th>Borrar</th><th>Abrir</th></tr><?
 								for ($i=0;$i<$filas;$i++){
 												$gen_id = pg_fetch_result($res,$i,0);
 												$sql = "select * from genes where idglobal =".$gen_id;
@@ -151,7 +151,9 @@ function testvergenes(){
 												$pos=pg_fetch_result($resgen,4);
 												$code=pg_fetch_result($resgen,5);
 ?>
-				<tr><td><?=$idglobal?></td><td><?=$name?></td><td><?=$chr?></td><td><?=$pos?></td><td><?=$code?></td></tr>
+				<tr><td><?=$idglobal?></td><td><?=$name?></td><td><?=$chr?></td><td><?=$pos?></td><td><?=$code?></td>
+<?genbutton($idglobal)?>
+</tr>
 <?
 																
 								}
@@ -202,9 +204,61 @@ B<input type="checkbox" name"B" checked></input>
 				}
 }
 
+
+function genbutton($id){
+?>
+<td><input type="submit" name="borrargen" value="<?=$id?>"></input><input type="checkbox" name="confirmado"></input></td>
+<td><input type="submit" name="abrirgen" value="<?=$id?>"</td> 
+<?
+}
+
+
+
 function testalelo(){
 				if(isset($_POST['newalelo'])){
 								echo "nuevo alelo";
 				}
 }
 
+
+
+function abrirgen($id){
+				if(isset($_POST['abrirgen'])){
+								$_SESSION['genactivo']=$id;
+								$conn=conecta();
+								$sql="select name,public,visible,sexo,ambiente from caracteres where id=".$id;
+								$res = pg_query($conn,$sql);
+								if(!$res) echo "Error: carácter no encontrado";
+								else{
+												$_SESSION['name_caractivo'] = pg_fetch_result($res,0,0);
+												$public =  pg_fetch_result($res,0,1);
+												$visible =  pg_fetch_result($res,0,2);
+												$sexo =  pg_fetch_result($res,0,3);
+												$ambiente =  pg_fetch_result($res,0,4);
+								}
+				}
+				else	if(isset($_POST['cerrarcar'])){
+												unset($_SESSION['caractivo']);
+												unset($_SESSION['name_caractivo']);
+				}
+				else if(isset($_POST['borrarcar']) && isset($_POST['confirmado'])){
+								$id=$_POST['borrarcar'];
+								$sql="delete from caracteres where id=".$id;
+								$conn=conecta();
+								$res=pg_query($conn,$sql);
+								if (!$res) echo "ERROR: No se pudo borrar el carácter"; 
+				}
+				else if(isset($_POST['datoscar'])){
+								if (isset($_POST['sexo'])) $sexo="t"; else $sexo = "f";
+								if (isset($_POST['visible'])) $visible="t"; else $visible = "f";
+								if (isset($_POST['public'])) $public="t"; else $public = "f";
+								$ambiente = $_POST['ambiente'];
+								$conn = conecta();
+								$sql = "update caracteres set visible='".$visible."', public='".$public."', sexo='".$sexo."', ambiente ='".$ambiente."' where id = ".$_SESSION['caractivo'];
+								$res = pg_query($conn,$sql);
+								if(!$res) echo "Error: carácter no encontrado";
+								desconecta($conn);
+				}
+
+				if(isset($_SESSION['caractivo'])) datoscar($_SESSION['caractivo']);
+}

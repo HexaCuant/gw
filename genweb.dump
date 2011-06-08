@@ -12,6 +12,57 @@ SET escape_string_warning = off;
 SET search_path = public, pg_catalog;
 
 --
+-- Name: alelo_id; Type: SEQUENCE; Schema: public; Owner: genweb
+--
+
+CREATE SEQUENCE alelo_id
+    START WITH 1
+    INCREMENT BY 1
+    NO MAXVALUE
+    NO MINVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.alelo_id OWNER TO genweb;
+
+--
+-- Name: alelo_id; Type: SEQUENCE SET; Schema: public; Owner: genweb
+--
+
+SELECT pg_catalog.setval('alelo_id', 1, false);
+
+
+SET default_tablespace = '';
+
+SET default_with_oids = false;
+
+--
+-- Name: alelos; Type: TABLE; Schema: public; Owner: genweb; Tablespace: 
+--
+
+CREATE TABLE alelos (
+    id integer DEFAULT nextval('alelo_id'::regclass),
+    name character varying(20),
+    valor double precision,
+    dominancia double precision
+);
+
+
+ALTER TABLE public.alelos OWNER TO genweb;
+
+--
+-- Name: alelos_gen; Type: TABLE; Schema: public; Owner: genweb; Tablespace: 
+--
+
+CREATE TABLE alelos_gen (
+    id_gen integer,
+    id_alelo integer
+);
+
+
+ALTER TABLE public.alelos_gen OWNER TO genweb;
+
+--
 -- Name: caracter_id; Type: SEQUENCE; Schema: public; Owner: genweb
 --
 
@@ -31,10 +82,6 @@ ALTER TABLE public.caracter_id OWNER TO genweb;
 
 SELECT pg_catalog.setval('caracter_id', 9, true);
 
-
-SET default_tablespace = '';
-
-SET default_with_oids = false;
 
 --
 -- Name: caracteres; Type: TABLE; Schema: public; Owner: genweb; Tablespace: 
@@ -66,11 +113,32 @@ CREATE TABLE caracteres_proy (
 ALTER TABLE public.caracteres_proy OWNER TO genweb;
 
 --
+-- Name: gen_id; Type: SEQUENCE; Schema: public; Owner: genweb
+--
+
+CREATE SEQUENCE gen_id
+    START WITH 1
+    INCREMENT BY 1
+    NO MAXVALUE
+    NO MINVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.gen_id OWNER TO genweb;
+
+--
+-- Name: gen_id; Type: SEQUENCE SET; Schema: public; Owner: genweb
+--
+
+SELECT pg_catalog.setval('gen_id', 6, true);
+
+
+--
 -- Name: genes; Type: TABLE; Schema: public; Owner: genweb; Tablespace: 
 --
 
 CREATE TABLE genes (
-    idglobal integer,
+    idglobal integer DEFAULT nextval('gen_id'::regclass),
     id integer,
     name character varying(20),
     chr integer,
@@ -80,6 +148,18 @@ CREATE TABLE genes (
 
 
 ALTER TABLE public.genes OWNER TO genweb;
+
+--
+-- Name: genes_car; Type: TABLE; Schema: public; Owner: genweb; Tablespace: 
+--
+
+CREATE TABLE genes_car (
+    gen_id integer,
+    car_id integer
+);
+
+
+ALTER TABLE public.genes_car OWNER TO genweb;
 
 --
 -- Name: proyecto_id; Type: SEQUENCE; Schema: public; Owner: genweb
@@ -99,7 +179,7 @@ ALTER TABLE public.proyecto_id OWNER TO genweb;
 -- Name: proyecto_id; Type: SEQUENCE SET; Schema: public; Owner: genweb
 --
 
-SELECT pg_catalog.setval('proyecto_id', 11, true);
+SELECT pg_catalog.setval('proyecto_id', 12, true);
 
 
 --
@@ -151,16 +231,32 @@ CREATE TABLE users (
 ALTER TABLE public.users OWNER TO genweb;
 
 --
+-- Data for Name: alelos; Type: TABLE DATA; Schema: public; Owner: genweb
+--
+
+COPY alelos (id, name, valor, dominancia) FROM stdin;
+\.
+
+
+--
+-- Data for Name: alelos_gen; Type: TABLE DATA; Schema: public; Owner: genweb
+--
+
+COPY alelos_gen (id_gen, id_alelo) FROM stdin;
+\.
+
+
+--
 -- Data for Name: caracteres; Type: TABLE DATA; Schema: public; Owner: genweb
 --
 
 COPY caracteres (id, name, creatorid, public, visible, sexo, ambiente) FROM stdin;
-2	uno-vis	1	f	t	\N	\N
 3	visible	1	f	t	\N	\N
 5	ambos	1	t	t	\N	\N
 4	publico	1	t	f	f	30
 6	ninguno	1	f	t	t	20
 1	nuevo	1	f	t	f	10
+2	uno-vis	1	f	t	f	50
 \.
 
 
@@ -177,7 +273,20 @@ COPY caracteres_proy (caracter_id, proyecto_id) FROM stdin;
 --
 
 COPY genes (idglobal, id, name, chr, pos, cod) FROM stdin;
-\N	\N	color	1	10	\N
+4	\N	color	1	10	\N
+5	\N	peso	1	15	\N
+6	\N	altura	3	10	\N
+\.
+
+
+--
+-- Data for Name: genes_car; Type: TABLE DATA; Schema: public; Owner: genweb
+--
+
+COPY genes_car (gen_id, car_id) FROM stdin;
+4	2
+5	2
+6	2
 \.
 
 
