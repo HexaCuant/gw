@@ -29,7 +29,7 @@ ALTER TABLE public.alelo_id OWNER TO genweb;
 -- Name: alelo_id; Type: SEQUENCE SET; Schema: public; Owner: genweb
 --
 
-SELECT pg_catalog.setval('alelo_id', 1, false);
+SELECT pg_catalog.setval('alelo_id', 10, true);
 
 
 SET default_tablespace = '';
@@ -80,7 +80,7 @@ ALTER TABLE public.caracter_id OWNER TO genweb;
 -- Name: caracter_id; Type: SEQUENCE SET; Schema: public; Owner: genweb
 --
 
-SELECT pg_catalog.setval('caracter_id', 9, true);
+SELECT pg_catalog.setval('caracter_id', 10, true);
 
 
 --
@@ -235,6 +235,8 @@ ALTER TABLE public.users OWNER TO genweb;
 --
 
 COPY alelos (id, name, valor, dominancia) FROM stdin;
+9	A	2	2
+10	a	1	1
 \.
 
 
@@ -243,6 +245,8 @@ COPY alelos (id, name, valor, dominancia) FROM stdin;
 --
 
 COPY alelos_gen (id_gen, id_alelo) FROM stdin;
+4	9
+4	10
 \.
 
 
@@ -286,7 +290,6 @@ COPY genes (idglobal, id, name, chr, pos, cod) FROM stdin;
 COPY genes_car (gen_id, car_id) FROM stdin;
 4	2
 5	2
-6	2
 \.
 
 
