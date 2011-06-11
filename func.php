@@ -119,6 +119,6 @@ function inserta($user,$pass)
 
 function refresh()
 {
- echo "<meta http-equiv=\"refresh\" content=\"0\">";
+				echo "<meta http-equiv=\"refresh\" content=\"0\">";
 }
 
