@@ -1,17 +1,25 @@
 body{
-background-color:#ddf;
+background-color:#225;
+color:#aa3;
 }
 
 h1{
 background-color:#fdd;
+color:#755;
 }
 
 h2{
 background-color:#dfd;
+color: #353;
 }
 
 table{
-background-color:white;
+background-color:#ffa;
+color: black;
+}
+
+th{
+background-color:#aa5;
 }
 
 .derecha{

@@ -3,7 +3,6 @@ function listapro($id)
 {
  $conn = conecta();
  $sql="select * from proyectos where userid =".$id;
- echo $sql;
  $res=pg_query($conn,$sql);
  $rows=pg_NumRows($res);
 ?>
@@ -23,7 +22,7 @@ function listapro($id)
  </table>
 </form>
  <?
- desconecta($conn);
+ pg_close($conn);
 }
 
 function probutton($id)
@@ -66,8 +65,10 @@ function testcierrapro()
 {
  if(isset($_POST['cerrarpro']))
  {
-//	$_SESSION['proactivo']=0;
-  unset($_SESSION['proactivo']);
+	$_SESSION['proactivo']=0;
+	unset($_SESSION['proactivo']);
+	$_SESSION['proname']="";
+//	refresh();
  }
 }
 
@@ -78,7 +79,7 @@ function	insertpro($proname)
 				$sql="insert into proyectos (proname,userid) values ('".$proname."','".$_SESSION['userid']."')";
 				$res = pg_query($conn,$sql);
 				if(!$res) echo "Error en la inserción del proyecto";
-				desconecta($conn);
+				pg_close($conn);
 				refresh();
 }
 
@@ -92,17 +93,23 @@ function testborrarpro()
 	$sql = "delete from proyectos where id=".$id;
 	$conn=conecta();
 	pg_query($conn,$sql);
-	desconecta($conn);
+	pg_close($conn);
+	$_SESSION['proactivo']=0;
+	$_SESSION['proname']="";
 	refresh();
  }
 }
 
 function testabrepro()
 {
- if (isset($_POST['abrirpro']))
+ if (isset($_POST['abrirpro']) || ($_SESSION['proactivo'] < 0))
  {
 				 $proyecto_id = $_POST['abrirpro'];
 				 $_SESSION['proactivo']=$proyecto_id;
-				 listacar($proyecto_id);
+				 $conn = conecta();
+				 $sql = "select proname from proyectos where id=".$_SESSION['proactivo'];
+				 $res = pg_query($conn,$sql);
+				 $_SESSION['proname'] = pg_fetch_result($res,0);
+				 pg_close($conn);
  }
 }

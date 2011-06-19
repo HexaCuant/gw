@@ -29,12 +29,6 @@ function conecta()
  return $conn;
 }
 
-function desconecta($conn)
-{
- pg_close($conn);
-}
-
-
 function menu($option)
 {
 ?>
@@ -89,12 +83,12 @@ function autentifica($user,$pass)
  {
 				 $_SESSION['userid'] = pg_result($res,1);
 				 $cod_auth = pg_result($res,1);
-         desconecta($conn);
+         pg_close($conn);
 				 return $cod_auth;
  }
  else
  {
-	desconecta($conn);
+	pg_close($conn);
   return 0;
  }
 }
@@ -107,7 +101,7 @@ function inserta($user,$pass)
  $sql = "insert into users (cod_auth,username,pass) values (1, '$user','$pass')";
  echo $sql;
  $res=pg_query($conn,$sql);
- desconecta($conn);
+ pg_close($conn);
  if($res) return 1;
  else
   {
