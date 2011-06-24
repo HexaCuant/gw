@@ -80,10 +80,19 @@ function	insertpro($proname)
 				$res = pg_query($conn,$sql);
 				if(!$res) echo "Error en la inserción del proyecto";
 				pg_close($conn);
+				createdir();
 				refresh();
 }
 
-
+function createdir(){
+				$sql = "select last_value from proyecto_id";
+				$conn = conecta();
+				$res = pg_query($conn,$sql);
+				$id = pg_fetch_result($res,0);
+				pg_close($conn);
+				$path = "/var/www/proyectos/".$id;
+				mkdir($path);
+}
 
 function testborrarpro()
 {

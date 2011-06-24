@@ -3,6 +3,7 @@ session_start();
 
 require_once("func_car.php");
 require_once("func_pro.php");
+require_once("func_generaciones.php");
 
 function cabecera()
 {

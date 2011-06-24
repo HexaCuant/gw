@@ -63,7 +63,7 @@ if($_SESSION['ident'])
      break;
 
          case 3;
-				 echo "opcion 3";
+				 include("generaciones.php");
      break;
 				}
 
