@@ -34,7 +34,7 @@ function makepoc($pop){
 				$line="*characters\n";
 				fwrite($fh,$line);
 				//bucle caracteres
-				$sql = "select caracter_id,ambiente from caracteres_proy where proyecto_id = ".$_SESSION['proactivo'];
+				$sql = "select caracter_id,ambiente from caracteres_proy where proyecto_id = ".$_SESSION['proactivo']." order by caracter_id";
 				$res=pg_query($conn,$sql);
 				$filas = pg_num_rows($res);
 				for ($i=0;$i<$filas;$i++){
@@ -48,6 +48,67 @@ function makepoc($pop){
 								if ($sexo=="t") $line=$line."0:";
 								fwrite($fh,$line);
 								//genes dentro de cada caracter
-
+								$sqlgen = "select gen_id from genes_car where car_id=".$id." order by gen_id";
+								$resgen = pg_query($conn,$sqlgen);
+								$filasgen = pg_num_rows($resgen);
+								for($j=0;$j<$filasgen;$j++){
+												//bucle de genes
+												$idgen = pg_fetch_result($resgen,$j,0);
+												$sqldatosgen = "select chr,pos,cod from genes where idglobal = ".$idgen;
+												$resdatosgen = pg_query($conn,$sqldatosgen);
+												$chr=pg_fetch_result($resdatosgen,0);
+												$pos=pg_fetch_result($resdatosgen,1);
+												$cod=pg_fetch_result($resdatosgen,2);
+												$line="\n".$idgen."=".$chr.":".$pos.":".$cod.":";
+												fwrite($fh,$line);
+												//bucle alelos de cada gen
+												$sqlalelos = "select id_alelo from alelos_gen where id_gen=".$idgen." order by id_alelo";
+												$resalelos = pg_query($conn,$sqlalelos);
+												$filasalelos = pg_num_rows($resalelos);
+												for($k=0;$k<$filasalelos;$k++){
+																$idalelo = pg_fetch_result($resalelos,$k,0);
+																$sqldatosalelo = "select valor,dominancia from alelos where id=".$idalelo;
+																$resdatosalelo = pg_query($conn,$sqldatosalelo);
+																$valor = pg_fetch_result($resdatosalelo,0);
+																$dominancia = pg_fetch_result($resdatosalelo,1);
+																$line = $idalelo.":".$valor.":".$dominancia.":";
+																fwrite($fh,$line);
+												}
+								}
+								$line="\n$=\n";
+								fwrite($fh,$line);
+								$line="states";
+								fwrite($fh,$line);
+								//Estados=sustratos
+								$sqlestados = "select sustratos from caracteres where id = ".$id." order by sustratos";
+								$resestados = pg_query($conn,$sqlestados);
+								$numestados = pg_fetch_result($resestados,0);
+								$line="\n0=1";
+								fwrite($fh,$line);
+								for($l=1;$l<$numestados;$l++){
+												$line="\n".$l."=0";
+												fwrite($fh,$line);
+								}
+								$line="\n$=\nconnections";
+								fwrite($fh,$line);
+								//conexiones
+								$sqlcon = "select estadoa,transicion,estadob from conexiones where car_id=".$id;
+								$rescon = pg_query($conn,$sqlcon);
+								$filascon = pg_num_rows($rescon);
+								for($m=0;$m<$filascon;$m++){
+												$estadoa=pg_fetch_result($rescon,$m,0);
+												$transicion=pg_fetch_result($rescon,$m,1);
+												$estadob=pg_fetch_result($rescon,$m,2);
+												$line = "\n".$estadoa."=".$transicion."=".$estadob;
+												fwrite($fh,$line);
+								}
+								$line="\n$=\n";
+								fwrite($fh,$line);
 				}
+				$line="@:\n";
+				fwrite($fh,$line);
+				//comprobar el tipo de cruce
+				//si es una generacon aleatoria:
+				$line="*create\n*end\n";
+				fwrite($fh,$line);
 }
