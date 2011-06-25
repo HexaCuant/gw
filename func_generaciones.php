@@ -41,23 +41,25 @@ function testnewrandom(){
 				}
 }
 
-function processline($line,$conn){
+function processline($line){
 				$data = explode("=",$line);
 				if ($data[0] > 0){
+								echo "\n";
+								?><tr><?
 								$idindiv = $data[0];
+								?><td><?=$idindiv?><?
 								$fenotipos = explode(":",$data[1]);
 								$i=0;
 								$j=0;
 								while($fenotipos[$i] !== "$"){
-												$name = $_SESSION['listcarac'][$j];
-												echo $name."->";
 												$i++;
-												echo $fenotipos[$i];
+												?><td><?=$fenotipos[$i]?><?
 												$i++;
-												echo "<br />";
 												$j++;
 												
 								}
+								?></tr><?
+								echo "\n";
 				}
 }
 
@@ -83,6 +85,7 @@ function testcarac($line){
 								 else{
 												 $name = pg_fetch_result($res,0);
 												 $_SESSION['listcarac'][$j]=$name;
+												 ?><th><?=$name?></th><?
 								 }
 								 $j++;
 								 $i++;
@@ -90,6 +93,7 @@ function testcarac($line){
 				 }
 				$_SESSION['missingnames']=false;
 				pg_close($conn);
+				?><tr><?
 }
 
 function abrirgeneracion($id){
@@ -101,14 +105,17 @@ function abrirgeneracion($id){
 				$filename = "../proyectos/".$_SESSION['proactivo']."/".$_SESSION['proactivo'].".dat".$id;
 				echo "\n<br />".$filename."\n<br />";
 				$fh = fopen($filename,"r");
+				?><table>
+				<tr><th>Id</th><?
 				if($fh){
 								while (($line = fgets($fh)) !== false){
 												if (checkline($line)){
 																if($_SESSION['missingnames']) testcarac($line);
-																processline($line,$conn);
+																processline($line);
 												}
 								}
 				}
+				?></table><?
 				fclose($fh);
 }
 
