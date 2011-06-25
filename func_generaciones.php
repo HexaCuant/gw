@@ -74,6 +74,8 @@ function makepoc($pop){
 																$line = $idalelo.":".$valor.":".$dominancia.":";
 																fwrite($fh,$line);
 												}
+												$line = "&:";
+												fwrite($fh,$line);
 								}
 								$line="\n$=\n";
 								fwrite($fh,$line);
@@ -111,4 +113,8 @@ function makepoc($pop){
 				//si es una generacon aleatoria:
 				$line="*create\n*end\n";
 				fwrite($fh,$line);
+				//ejecutar
+				$command = "gen2web ".$_SESSION['proactivo']." > /dev/null";
+				echo $command;
+				system($command);
 }
