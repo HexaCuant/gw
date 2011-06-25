@@ -1,39 +1,78 @@
 <?
 
 function formnewrandom(){
-?><form action="index.php?option=3#fin" method="post">
-Tamaño de población: <input type = "text" name="pop"></input>
-<input type="submit" name="newrandom" value="Crear Generación"></input><?
-}
-
-function testnewrandom(){
-				if(isset($_POST['newrandom'])){
-								$pop=$_POST['pop'];
-								echo "Población=".$pop;
-								makepoc($pop);
-				}
-}
-
-
-function makepoc($pop){
-				$path="/var/www/proyectos/".$_SESSION['proactivo']."/".$_SESSION['proactivo'].".poc";
-				$fh = fopen($path,"w");
-        $line = "#file created by GenWeb\n";
-				fwrite($fh,$line);
-				$line = "n".$pop."\n";
-				fwrite($fh,$line);
 				//generacion max
 				$sql="select max(generacion_id) from generaciones_proy where proy_id = ".$_SESSION['proactivo'];
 				$conn = conecta();
 				$res = pg_query($conn,$sql);
 				$generacion_id = pg_fetch_result($res,0);
 				$generacion_id++;
+				pg_close($conn);
 				//////
-				$line = "i".$generacion_id."\n";
+				?><form action="index.php?option=3#fin" method="post">
+				Tamaño de población: <input type = "text" name="pop"></input><br /><br />
+				Generación num. <input type="text" name="generacion_id" value="<?=$generacion_id?>"></input /><br /><br />
+				<input type="submit" name="newrandom" value="Crear Generación"></input><br /><br />
+<?
+				if($_SESSION['vergeneraciones']){
+								?><input type="submit" name="ocultargeneraciones" value="Ocultar Generaciones"></input><?
+				}
+				else{
+								?><input type="submit" name="vergeneraciones" value="Ver Generaciones"></input><?
+				}
+}
+
+function testnewrandom(){
+				if(isset($_POST['newrandom'])){
+								$pop=$_POST['pop'];
+								if($pop>0){
+												$gen=$_POST['generacion_id'];
+												echo "Generacion=".$gen;
+												makepoc($pop,$gen);
+								}
+				}
+				if(isset($_POST['vergeneraciones'])){
+								$_SESSION['vergeneraciones'] = TRUE;
+								refresh();
+				}
+				if(isset($_POST['ocultargeneraciones'])){
+								$_SESSION['vergeneraciones'] = FALSE;
+								refresh();
+				}
+}
+
+function testlistgeneraciones(){
+				if($_SESSION['vergeneraciones']){
+								echo "listar las generaciones";
+								$conn = conecta();
+								$sql="select distinct(generacion_id) from generaciones_proy where proy_id = ".$_SESSION['proactivo']." order by generacion_id";
+								$res = pg_query($conn,$sql);
+								$filas = pg_num_rows($res);
+								?><br /><br /><table><?
+								for($i=0;$i<$filas;$i++){
+												$id=pg_fetch_result($res,$i,0);
+												?><tr><th><a href="../proyectos/<?=$_SESSION['proactivo']?>/<?=$_SESSION['proactivo']?>.dat<?=$id?>">Generación <?=$id?></a></th></tr><?
+												echo "\n";
+								}
+								?></table><?
+								pg_close($conn);
+				}
+}
+
+
+function makepoc($pop,$gen){
+				$path="/var/www/proyectos/".$_SESSION['proactivo']."/".$_SESSION['proactivo'].".poc";
+				$fh = fopen($path,"w");
+        $line = "#file created by GenWeb\n";
+				fwrite($fh,$line);
+				$line = "n".$pop."\n";
+				fwrite($fh,$line);
+				$line = "i".$gen."\n";
 				fwrite($fh,$line);
 				$line="*characters\n";
 				fwrite($fh,$line);
 				//bucle caracteres
+				$conn = conecta();
 				$sql = "select caracter_id,ambiente from caracteres_proy where proyecto_id = ".$_SESSION['proactivo']." order by caracter_id";
 				$res=pg_query($conn,$sql);
 				$filas = pg_num_rows($res);
@@ -116,5 +155,13 @@ function makepoc($pop){
 				//ejecutar
 				$command = "gen2web ".$_SESSION['proactivo']." > /dev/null";
 				echo $command;
-				system($command);
+				system($command,$ret);
+				if($ret==0){
+								echo "creada generación";
+								$sqlnewgen ="insert into generaciones_proy (proy_id,generacion_id) values (".$_SESSION['proactivo'].", ".$gen.")";
+								$res=pg_query($conn,$sqlnewgen);
+				}else{
+								echo "ERROR: ".$ret.": no ha podido crearse la nueva generación.";
+				}
+				pg_close($conn);
 }

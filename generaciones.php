@@ -6,8 +6,9 @@ if (($_SESSION['proactivo'] > 0)){
 ?><h2>Crear Generación aleatoria</h2><?
 
 if (($_SESSION['proactivo'] > 0)){
-testnewrandom();
 formnewrandom();
+testnewrandom();
+testlistgeneraciones();
 }
 else{
 ?>No hay proyectos activos<?
