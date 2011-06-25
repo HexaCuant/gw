@@ -10,7 +10,7 @@ function formnewrandom(){
 				pg_close($conn);
 				//////
 				?><form action="index.php?option=3#fin" method="post">
-				Tamaño de población: <input type = "text" name="pop"></input><br /><br />
+				Tamaño de población: <input type = "text" name="pop" ></input><br /><br />
 				Generación num. <input type="text" name="generacion_id" value="<?=$generacion_id?>"></input /><br /><br />
 				<input type="submit" name="newrandom" value="Crear Generación"></input><br /><br />
 <?
@@ -41,6 +41,84 @@ function testnewrandom(){
 				}
 }
 
+function processline($line,$conn){
+				$data = explode("=",$line);
+				if ($data[0] > 0){
+								$idindiv = $data[0];
+								$fenotipos = explode(":",$data[1]);
+								$i=0;
+								$j=0;
+								while($fenotipos[$i] !== "$"){
+												$name = $_SESSION['listcarac'][$j];
+												echo $name."->";
+												$i++;
+												echo $fenotipos[$i];
+												$i++;
+												echo "<br />";
+												$j++;
+												
+								}
+				}
+}
+
+function checkline($line){
+				$data = explode("=",$line);
+				if ($data[0] > 0){
+								return true;
+				}else{
+								return false;
+				}
+}
+
+function testcarac($line){
+				$conn=conecta();
+				$data = explode("=",$line);
+				$fenotipos = explode(":",$data[1]);
+				$i=0;
+				$j=0;
+				 while($fenotipos[$i] !== "$"){
+								 $sql = "select name from caracteres where id = ".$fenotipos[$i];
+								 $res=pg_query($conn,$sql);
+								 if(!$res) echo "ERROR 52-func_generaciones";
+								 else{
+												 $name = pg_fetch_result($res,0);
+												 $_SESSION['listcarac'][$j]=$name;
+								 }
+								 $j++;
+								 $i++;
+								 $i++;
+				 }
+				$_SESSION['missingnames']=false;
+				pg_close($conn);
+}
+
+function abrirgeneracion($id){
+				?><form action = "index.php?option=3#fin" method="post">
+				<input type="submit" value="Cerrar"></input>
+				</form><?
+				$_SESSION['missingnames']=true;
+				echo "aqui se abre la generacion ".$id;
+				$filename = "../proyectos/".$_SESSION['proactivo']."/".$_SESSION['proactivo'].".dat".$id;
+				echo "\n<br />".$filename."\n<br />";
+				$fh = fopen($filename,"r");
+				if($fh){
+								while (($line = fgets($fh)) !== false){
+												if (checkline($line)){
+																if($_SESSION['missingnames']) testcarac($line);
+																processline($line,$conn);
+												}
+								}
+				}
+				fclose($fh);
+}
+
+function generacionbutton($id){
+?>
+<td><input type="submit" name="borrargeneracion" value="<?=$id?>"></input><input type="checkbox" name="confirmado"></input></td>
+<td><input type="submit" name="abrirgeneracion" value="<?=$id?>"></input></td>
+<?
+}
+
 function testlistgeneraciones(){
 				if($_SESSION['vergeneraciones']){
 								echo "listar las generaciones";
@@ -49,13 +127,26 @@ function testlistgeneraciones(){
 								$res = pg_query($conn,$sql);
 								$filas = pg_num_rows($res);
 								?><br /><br /><table><?
+								?><tr><th>N.</th><th>Borrar</th><th>Abrir</th></tr><?
 								for($i=0;$i<$filas;$i++){
 												$id=pg_fetch_result($res,$i,0);
-												?><tr><th><a href="../proyectos/<?=$_SESSION['proactivo']?>/<?=$_SESSION['proactivo']?>.dat<?=$id?>">Generación <?=$id?></a></th></tr><?
+												?><tr><td><?=$id?></td><?
+												generacionbutton($id);
+												?></tr><?
 												echo "\n";
 								}
 								?></table><?
 								pg_close($conn);
+				}
+				if(isset($_POST['borrargeneracion']) && isset($_POST['confirmado'])){
+								$id=$_POST['borrargeneracion'];
+								$conn=conecta();
+								$sql = "delete from generaciones_proy where proy_id = ".$_SESSION['proactivo']." and generacion_id = ".$id;
+								$res = pg_query($conn,$sql);
+								$file = "../proyectos/".$_SESSION['proactivo']."/".$_SESSION['proactivo'].".dat".$id;
+								$command = "rm ".$file;
+								system($command);
+								refresh();
 				}
 }
 
