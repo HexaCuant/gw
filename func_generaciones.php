@@ -48,17 +48,20 @@ function processline($line){
 								?><tr><?
 								$idindiv = $data[0];
 								?><td><?=$idindiv?><?
+								fwrite($_SESSION['out'],$data[0]);
 								$fenotipos = explode(":",$data[1]);
 								$i=0;
 								$j=0;
 								while($fenotipos[$i] !== "$"){
 												$i++;
 												?><td><?=$fenotipos[$i]?><?
+												fwrite($_SESSION['out']," ".$fenotipos[$i]);
 												$i++;
 												$j++;
 												
 								}
 								?></tr><?
+								fwrite($_SESSION['out'],"\n");
 								echo "\n";
 				}
 }
@@ -86,6 +89,7 @@ function testcarac($line){
 												 $name = pg_fetch_result($res,0);
 												 $_SESSION['listcarac'][$j]=$name;
 												 ?><th><?=$name?></th><?
+												 fwrite($_SESSION['out']," ".$name);
 								 }
 								 $j++;
 								 $i++;
@@ -94,6 +98,7 @@ function testcarac($line){
 				$_SESSION['missingnames']=false;
 				pg_close($conn);
 				?><tr><?
+				fwrite($_SESSION['out'],"\n");
 }
 
 function abrirgeneracion($id){
@@ -103,10 +108,12 @@ function abrirgeneracion($id){
 				$_SESSION['missingnames']=true;
 				echo "aqui se abre la generacion ".$id;
 				$filename = "../proyectos/".$_SESSION['proactivo']."/".$_SESSION['proactivo'].".dat".$id;
-				echo "\n<br />".$filename."\n<br />";
+				$outfilename = "../proyectos/".$_SESSION['proactivo']."/".$_SESSION['proactivo']."_".$id."_datos.csv";
 				$fh = fopen($filename,"r");
+				$_SESSION['out'] = fopen($outfilename,"w");
 				?><table>
 				<tr><th>Id</th><?
+				fwrite($_SESSION['out'],"Id");
 				if($fh){
 								while (($line = fgets($fh)) !== false){
 												if (checkline($line)){
@@ -117,6 +124,8 @@ function abrirgeneracion($id){
 				}
 				?></table><?
 				fclose($fh);
+				fclose($_SESSION['out']);
+				?><a href="<?=$outfilename?>">Descargar datos</a><?
 }
 
 function generacionbutton($id){
@@ -128,7 +137,6 @@ function generacionbutton($id){
 
 function testlistgeneraciones(){
 				if($_SESSION['vergeneraciones']){
-								echo "listar las generaciones";
 								$conn = conecta();
 								$sql="select distinct(generacion_id) from generaciones_proy where proy_id = ".$_SESSION['proactivo']." order by generacion_id";
 								$res = pg_query($conn,$sql);
