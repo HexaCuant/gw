@@ -3,17 +3,24 @@ if (($_SESSION['proactivo'] > 0)){
 				?><h2>Proyecto activo: <?=$_SESSION['proname']?></h2><?
 }
 
-?><h2>Crear Generación aleatoria</h2><?
 
-if (($_SESSION['proactivo'] > 0)){
-				if (isset($_POST['abrirgeneracion'])){
 								?><div class="derecha"><?
-								abrirgeneracion($_POST['abrirgeneracion']);
-								?></div><?
+if (($_SESSION['proactivo'] > 0)){
+				if (isset($_POST['abrirgeneracion']) || ($_SESSION['generacionactiva']>0)){
+								if (isset($_POST['abrirgeneracion'])) $_SESSION['generacionactiva']=$_POST['abrirgeneracion'];
+								abrirgeneracion($_SESSION['generacionactiva']);
 				}
+				if (isset($_POST['cerrargeneracion'])){
+								$_SESSION['generacionactiva']=0;
+								refresh();
+				}
+								?></div><?
+				?><fieldset><legend>Crear Generación aleatoria</legend><?
 				formnewrandom();
+				?></fieldset><?
 				testnewrandom();
 				testlistgeneraciones();
+				cruce();
 }
 else{
 ?>No hay proyectos activos<?

@@ -41,6 +41,13 @@ function testnewrandom(){
 				}
 }
 
+
+function indivbutton($id){
+				?><td><input type="submit" name="addindiv" value="<?=$id?>"></input>
+				<?
+}
+
+
 function processline($line){
 				$data = explode("=",$line);
 				if ($data[0] > 0){
@@ -55,10 +62,10 @@ function processline($line){
 								while($fenotipos[$i] !== "$"){
 												$i++;
 												?><td><?=$fenotipos[$i]?><?
+												indivbutton($idindiv);
 												fwrite($_SESSION['out']," ".$fenotipos[$i]);
 												$i++;
 												$j++;
-												
 								}
 								?></tr><?
 								fwrite($_SESSION['out'],"\n");
@@ -97,16 +104,16 @@ function testcarac($line){
 				 }
 				$_SESSION['missingnames']=false;
 				pg_close($conn);
-				?><tr><?
+				?><th>Selec.</th><tr><?
 				fwrite($_SESSION['out'],"\n");
 }
 
+
 function abrirgeneracion($id){
 				?><form action = "index.php?option=3#fin" method="post">
-				<input type="submit" value="Cerrar"></input>
-				</form><?
+				<input type="submit" name="cerrargeneracion" value="Cerrar"></input><?
 				$_SESSION['missingnames']=true;
-				echo "aqui se abre la generacion ".$id;
+				?><h2>Generacion <?=$id?></h2><?
 				$filename = "../proyectos/".$_SESSION['proactivo']."/".$_SESSION['proactivo'].".dat".$id;
 				$outfilename = "../proyectos/".$_SESSION['proactivo']."/".$_SESSION['proactivo']."_".$id."_datos.csv";
 				$fh = fopen($filename,"r");
@@ -122,7 +129,8 @@ function abrirgeneracion($id){
 												}
 								}
 				}
-				?></table><?
+				?></table>
+				</form><?
 				fclose($fh);
 				fclose($_SESSION['out']);
 				?><a href="<?=$outfilename?>">Descargar datos</a><?
@@ -162,6 +170,15 @@ function testlistgeneraciones(){
 								$command = "rm ".$file;
 								system($command);
 								refresh();
+				}
+}
+
+
+function cruce(){
+				//ejemplo cruce		1,6:5,3:=,10:
+				if(isset($_POST['addindiv'])){
+								$_SESSION['cruce']=$_SESSION['cruce'].$_POST['addindiv'].",".$_SESSION['generacionactiva'].":";
+												echo "cruce-> ".$_SESSION['cruce'];
 				}
 }
 
