@@ -28,7 +28,8 @@ function testnewrandom(){
 								if($pop>0){
 												$gen=$_POST['generacion_id'];
 												echo "Generacion=".$gen;
-												makepoc($pop,$gen);
+												$tipo="aleatoria";
+												makepoc($pop,$gen,$tipo);
 								}
 				}
 				if(isset($_POST['vergeneraciones'])){
@@ -110,7 +111,7 @@ function testcarac($line){
 
 
 function abrirgeneracion($id){
-				?><form action = "index.php?option=3#fin" method="post">
+				?><form action = "index.php?option=3#cruce" method="post">
 				<input type="submit" name="cerrargeneracion" value="Cerrar"></input><?
 				$_SESSION['missingnames']=true;
 				?><h2>Generacion <?=$id?></h2><?
@@ -173,17 +174,92 @@ function testlistgeneraciones(){
 				}
 }
 
-
-function cruce(){
-				//ejemplo cruce		1,6:5,3:=,10:
-				if(isset($_POST['addindiv'])){
-								$_SESSION['cruce']=$_SESSION['cruce'].$_POST['addindiv'].",".$_SESSION['generacionactiva'].":";
-												echo "cruce-> ".$_SESSION['cruce'];
+function crearcruce(){
+				//generacion max
+				$sql="select max(generacion_id) from generaciones_proy where proy_id = ".$_SESSION['proactivo'];
+				$conn = conecta();
+				$res = pg_query($conn,$sql);
+				$generacion_id = pg_fetch_result($res,0);
+				$generacion_id++;
+				pg_close($conn);
+				//////
+?><a name="cruce">
+<form action="index.php?option=3" method="post">
+				Generación num. <input type="text" name="generacion_id" value="<?=$generacion_id?>"></input /><br /><br />
+				Tamaño población <input type="text" name="poblacion" value=""></input /><br /><br />
+<?
+				if($_SESSION['creandocruce']){
+								?><input type="submit" name="ocultarparentales" value="Ocultar parentales"></input><?
 				}
+				else{
+								?><input type="submit" name="verparentales" value="Ver parentales"></input><?
+				}
+								?><input type="submit" name="cruzar" value="Generar nueva generación"></input><?
+
+				if(isset($_POST['verparentales'])){
+								$_SESSION['cruce_gen_id']=$_POST['generacion_id'];
+								$_SESSION['creandocruce']=TRUE;
+								refresh();
+				}
+				if(isset($_POST['ocultarparentales'])){
+								$_SESSION['cruce_gen_id']=$_POST['generacion_id'];
+								$_SESSION['creandocruce']=FALSE;
+								refresh();
+				}
+				if(isset($_POST['cruzar'])){
+								$pop = $_POST['poblacion'];
+								if ($pop > 0){
+												$gen=$_POST['generacion_id'];
+												$tipo="cruce";
+												makepoc($pop,$gen,$tipo);
+								}
+				}
+
+				if($_SESSION['creandocruce']){
+								?><h3>Parentales</h3><?
+								cruce();
+				}
+?>
+</form>
+<?
+}
+
+function parentalbutton($id){
+?>
+<td><input type="submit" name="borrarparental" value="<?=$id?>"></input><input type="checkbox" name="confirmado"></input></td>
+<?
 }
 
 
-function makepoc($pop,$gen){
+function cruce(){
+				//ejemplo cruce		1,6:5,3:=,10:
+				$conn=conecta();
+				if(isset($_POST['borrarparental'])){
+								$id = $_POST['borrarparental'];
+								$sql = "delete from parentales where id=".$id;
+								$res=pg_query($conn,$sql);
+				}
+				if(isset($_POST['addindiv'])){
+								$sql="insert into parentales (generacion_id, indiv_id, gener_indiv_id) values (".$_SESSION['cruce_gen_id'].",".$_POST['addindiv'].",".$_SESSION['generacionactiva'].")";
+								$res=pg_query($conn,$sql);
+				}
+				?><table><?
+				?><tr><th>N.</th><th>Indiv. Id</th><th>Generación</th><th>Borrar</th></tr><?
+				$sql="select id, indiv_id, gener_indiv_id from parentales where generacion_id = ".$_SESSION['cruce_gen_id']." order by gener_indiv_id, indiv_id";
+				$res = pg_query($conn,$sql);
+				$filas = pg_num_rows($res);
+				for($i=0;$i<$filas;$i++){
+								$id = pg_fetch_result($res,$i,0);
+								$indiv_id = pg_fetch_result($res,$i,1);
+								$gener = pg_fetch_result($res,$i,2);
+								?><tr><td><?=$id?></td><td><?=$indiv_id?></td><td><?=$gener?></td><?parentalbutton($id)?></tr><?
+				}
+				?></table><?
+				pg_close($conn);
+}
+
+
+function makepoc($pop,$gen,$tipo){
 				$path="/var/www/proyectos/".$_SESSION['proactivo']."/".$_SESSION['proactivo'].".poc";
 				$fh = fopen($path,"w");
         $line = "#file created by GenWeb\n";
@@ -273,8 +349,13 @@ function makepoc($pop,$gen){
 				fwrite($fh,$line);
 				//comprobar el tipo de cruce
 				//si es una generacon aleatoria:
+				if($tipo=="aleatoria"){
 				$line="*create\n*end\n";
 				fwrite($fh,$line);
+				}
+				if($tipo=="cruce"){
+
+				}
 				//ejecutar
 				$command = "gen2web ".$_SESSION['proactivo']." > /dev/null";
 				echo $command;

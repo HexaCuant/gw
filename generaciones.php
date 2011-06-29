@@ -20,7 +20,10 @@ if (($_SESSION['proactivo'] > 0)){
 				?></fieldset><?
 				testnewrandom();
 				testlistgeneraciones();
-				cruce();
+				?><br /><fieldset><legend>Crear un cruce</legend><?
+				crearcruce();
+//				cruce();
+				?></fieldset><?
 }
 else{
 ?>No hay proyectos activos<?

@@ -150,6 +150,31 @@ CREATE TABLE conexiones (
 ALTER TABLE public.conexiones OWNER TO genweb;
 
 --
+-- Name: cruces_proy; Type: TABLE; Schema: public; Owner: genweb; Tablespace: 
+--
+
+CREATE TABLE cruces_proy (
+    id_cruce integer,
+    id_proy integer
+);
+
+
+ALTER TABLE public.cruces_proy OWNER TO genweb;
+
+--
+-- Name: fenotipos_par; Type: TABLE; Schema: public; Owner: genweb; Tablespace: 
+--
+
+CREATE TABLE fenotipos_par (
+    parental_id integer,
+    caracter_id integer,
+    fenotipo double precision
+);
+
+
+ALTER TABLE public.fenotipos_par OWNER TO genweb;
+
+--
 -- Name: gen_id; Type: SEQUENCE; Schema: public; Owner: genweb
 --
 
@@ -209,6 +234,41 @@ CREATE TABLE genes_car (
 
 
 ALTER TABLE public.genes_car OWNER TO genweb;
+
+--
+-- Name: parental_id; Type: SEQUENCE; Schema: public; Owner: genweb
+--
+
+CREATE SEQUENCE parental_id
+    START WITH 1
+    INCREMENT BY 1
+    NO MAXVALUE
+    NO MINVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.parental_id OWNER TO genweb;
+
+--
+-- Name: parental_id; Type: SEQUENCE SET; Schema: public; Owner: genweb
+--
+
+SELECT pg_catalog.setval('parental_id', 21, true);
+
+
+--
+-- Name: parentales; Type: TABLE; Schema: public; Owner: genweb; Tablespace: 
+--
+
+CREATE TABLE parentales (
+    id integer DEFAULT nextval('parental_id'::regclass),
+    generacion_id integer,
+    indiv_id integer,
+    gener_indiv_id integer
+);
+
+
+ALTER TABLE public.parentales OWNER TO genweb;
 
 --
 -- Name: proyecto_id; Type: SEQUENCE; Schema: public; Owner: genweb
@@ -350,6 +410,22 @@ COPY conexiones (estadoa, transicion, estadob, car_id, id) FROM stdin;
 
 
 --
+-- Data for Name: cruces_proy; Type: TABLE DATA; Schema: public; Owner: genweb
+--
+
+COPY cruces_proy (id_cruce, id_proy) FROM stdin;
+\.
+
+
+--
+-- Data for Name: fenotipos_par; Type: TABLE DATA; Schema: public; Owner: genweb
+--
+
+COPY fenotipos_par (parental_id, caracter_id, fenotipo) FROM stdin;
+\.
+
+
+--
 -- Data for Name: generaciones_proy; Type: TABLE DATA; Schema: public; Owner: genweb
 --
 
@@ -385,6 +461,16 @@ COPY genes_car (gen_id, car_id) FROM stdin;
 17	2
 18	11
 19	11
+\.
+
+
+--
+-- Data for Name: parentales; Type: TABLE DATA; Schema: public; Owner: genweb
+--
+
+COPY parentales (id, generacion_id, indiv_id, gener_indiv_id) FROM stdin;
+19	8	2	1
+21	8	1	1
 \.
 
 
