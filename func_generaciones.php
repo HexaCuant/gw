@@ -350,12 +350,41 @@ function makepoc($pop,$gen,$tipo){
 				//comprobar el tipo de cruce
 				//si es una generacon aleatoria:
 				if($tipo=="aleatoria"){
-				$line="*create\n*end\n";
+				$line="*create\n";
 				fwrite($fh,$line);
 				}
 				if($tipo=="cruce"){
+								//Qué generaciones hay que leer
+								$sqlread = "select distinct gener_indiv_id from parentales where generacion_id = ".$_POST['generacion_id']." order by gener_indiv_id";
+								$resread = pg_query($conn,$sqlread);
+								$filas = pg_num_rows($resread);
+								for($i=0;$i<$filas;$i++){
+												$line="*read\n";
+												fwrite($fh,$line);
+												$line=pg_fetch_result($resread,$i,0);
+												$line = $line."\n";
+												fwrite($fh,$line);
+								}
 
+								//ejemplo cruce		1,6:5,3:=,10:
+								$line = "*cross\n";
+								fwrite($fh,$line);
+								$sqlcruce="select indiv_id, gener_indiv_id from parentales where generacion_id = ".$_POST['generacion_id']." order by gener_indiv_id, indiv_id";
+								$rescruce=pg_query($conn,$sqlcruce);
+								$filas = pg_num_rows($rescruce);
+								$line="";
+								for($i=0;$i<$filas;$i++){
+												$indiv = pg_fetch_result($rescruce,$i,0);
+												$gener = pg_fetch_result($rescruce,$i,1);
+												$line = $line.$indiv.",".$gener.":";
+								}
+								fwrite($fh,$line);
+								$poblacion=$_POST['poblacion'];
+								$line="=,".$poblacion.":\n";
+								fwrite($fh,$line);
 				}
+				$line = "*end\n";
+				fwrite($fh,$line);
 				//ejecutar
 				$command = "gen2web ".$_SESSION['proactivo']." > /dev/null";
 				echo $command;
@@ -364,6 +393,7 @@ function makepoc($pop,$gen,$tipo){
 								echo "creada generación";
 								$sqlnewgen ="insert into generaciones_proy (proy_id,generacion_id) values (".$_SESSION['proactivo'].", ".$gen.")";
 								$res=pg_query($conn,$sqlnewgen);
+								refresh();
 				}else{
 								echo "ERROR: ".$ret.": no ha podido crearse la nueva generación.";
 				}
