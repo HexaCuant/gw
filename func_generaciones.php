@@ -393,6 +393,8 @@ function makepoc($pop,$gen,$tipo){
 								echo "creada generación";
 								$sqlnewgen ="insert into generaciones_proy (proy_id,generacion_id) values (".$_SESSION['proactivo'].", ".$gen.")";
 								$res=pg_query($conn,$sqlnewgen);
+								$_SESSION['cruce_gen_id']=$_POST['generacion_id'];
+								$_SESSION['creandocruce']=FALSE;
 								refresh();
 				}else{
 								echo "ERROR: ".$ret.": no ha podido crearse la nueva generación.";
