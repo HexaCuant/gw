@@ -18,7 +18,6 @@ testalelo();
 
 if($_POST['newcar'] == "Nuevo Carácter")
 {
-				echo "pulsado nuevo caracter";
 	insertcar($_POST['carname']);
 }
 //seleccionar los proyectos del ususario
@@ -26,8 +25,10 @@ if($_POST['newcar'] == "Nuevo Carácter")
 listacar($_SESSION['userid']);
 ?></div><?
 
-formnewcar();
 
+				?><fieldset><legend>Crear Nuevo carácter</legend><?
+formnewcar();
+?></fieldset><?
 //if(isset($_SESSION['caractivo'])) datoscar($_SESSION['caractivo']);
 
 ?>
