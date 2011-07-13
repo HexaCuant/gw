@@ -1,3 +1,6 @@
 *~
 seg2011.css
 *.swp
+*.aux
+*.log
+*.pdf

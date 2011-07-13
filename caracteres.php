@@ -5,17 +5,13 @@ if (($_SESSION['proactivo'] > 0)){
 ?><div class="derecha"><?
 testcar($_POST['abrircar']);
 ?></div><?
-if(isset($_SESSION['genactivo'])) echo "activo: ".$_SESSION['genactivo'];
+//if(isset($_SESSION['genactivo'])) echo "activo: ".$_SESSION['genactivo'];
 ?><div class="derecha"><?
 testgen();
 testvergenes();
 testalelo();
-//if(isset($_POST['abrirgen'])){
-				testabrirgen($_POST['abrirgen']);
-//}
-
+testabrirgen($_POST['abrirgen']);
 ?></div><?
-
 if($_POST['newcar'] == "Nuevo Carácter")
 {
 	insertcar($_POST['carname']);
@@ -24,12 +20,8 @@ if($_POST['newcar'] == "Nuevo Carácter")
 ?><div class="izquierda"><?
 listacar($_SESSION['userid']);
 ?></div><?
-
-
-				?><fieldset><legend>Crear Nuevo carácter</legend><?
+?><fieldset><legend>Crear Nuevo carácter</legend><?
 formnewcar();
 ?></fieldset><?
-//if(isset($_SESSION['caractivo'])) datoscar($_SESSION['caractivo']);
-
 ?>
 <a name="fin">

@@ -293,13 +293,13 @@ function testvergenes(){
 												//mostrarlas
 												?><h2>Conexiones</h2><?
 												?><form action="index.php?option=1#fin" method="post"><?
-												?><table><tr><th>S1</th><th>gen</th><th>S2</th><th>Borrar</th></tr><?
+												?><table><tr><th>S</th><th>gen</th><th>P</th><th>Borrar</th></tr><?
 												for($i=0;$i<$filas;$i++){
 																$SA=pg_fetch_result($res,$i,0);
 																$gen=pg_fetch_result($res,$i,1);
 																$SB=pg_fetch_result($res,$i,2);
 																$id=pg_fetch_result($res,$i,3);
-																?><tr><td><?=$SA?></td><td><?=$gen?></td><td><?=$SB?></td><?
+																?><tr><td>S<?=$SA?></td><td><?=$gen?></td><td>S<?=$SB?></td><?
 																?><td><input type="submit" name="borrarconexion" value="<?=$id?>"></input><input type="checkbox" name="confirmado"></input></td><?
 												}
 												?></table></form><?
