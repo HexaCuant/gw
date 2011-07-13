@@ -1,0 +1,91 @@
+\documentclass[a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{pslatex}
+\usepackage{graphicx}
+\usepackage{tikz}
+\usepackage[spanish]{babel}
+\renewcommand\shorthandsspanish{}
+\title{Laboratorio virtual de Genética}
+\author{Miguel Burgos}
+
+\newcommand{\figura}[2]{\begin{center}\includegraphics[width=#1\textwidth]{figs/#2}\end{center}}
+
+\begin{document}
+\maketitle
+\section{Introducción}
+
+GenWeb es es un interfaz web a un laboratorio virtual de genética que permite realizar prácticas relacionadas con cualquier tema en el que intervengan cruzamientos, poblaciones, caracteres cualitativos, cuantitativos, interacciones génicas de todo tipo etc... Este interfaz se encarga de la interacción con el usuario y, a través de él, se definen los caracteres, genes, alelos e interacciones, se crean proyectos con los que sealizan las simulaciones y se obtienen los resultados de poblaciones que pueden descargarse para ser analizados con software de estadística u hojas de cálculo. Por detrás de GenWeb, otra aplicación llamada  Gengine recibe los datos enviados a través del interfaz, aplica algoritmos que permiten generar nuevos individuos en función de las reglas de herencia que se hayan definido a través del interfaz, y genera los resultados que son archivaods en directorios específicos de cada proyecto. El interfaz web accede a estos archivos así como a una base de datos postgresql con los que genera las páginas que se muestran a cada ususario.
+
+La aplicación GenWeb+GenGine es capaz de generar individuos y poblaciones siguiendo cualquier tipo de herencia que el usuario pueda definir, sin que \emph{a priori} haya ningún tipo de restricción a los caracteres, genes, alelos y posibles interacciones entre ellos. La herencia de un carácter dependerá de la manera en que el usuario defina los caracteres con los que pretenda realizar las simulaciones. Se pueden ralizar por tanto multitud de prácticas de Genética de la transmisión, Genética cuatitativa, Genética de poblaciones...
+
+En este proyecto se detallan dos prácticas, a modo de ejemplo, que se pretenden realizar durante el próximo curso, pero que, gracias a la flexibilidad del diseño de la aplicación contituirá únicamente las dos primeras de una larga lista que irá creándose con posterioridad y que podrán realizarse en la mayoría de las asignaturas y máster de postgrado que se imparten en el Departamento de Genética.
+
+Debido a esto, el diseño de caracteres es un aspecto fundamental en uso de la aplicación, por lo que en primer lugar se realizará una práctica en la que se aborden los puntos más importantes de este diseño.
+
+\section{diseño de caracteres con GenWeb}
+
+\subsection{Acceso al interfaz}
+
+El acceso al GenWeb está controlado por una página de identificación mediante usuario y contraseña. Más que restringir el acceso, este control pretende organizar los datos identificando a cada usuario y mostrándole únicamente sus proyectos, sus caracteres, o los caracteres que se hayan definidos como públicos, de manera que los datos generados por cada usuario no se mezclan con los de los demás.
+
+\figura{.5}{acceso}
+
+La página de acceso incluye botones para enviar las credenciales, borrar los campos de datos, crear un nuevo usuario o solicitar una nueva contraseña.
+
+\subsection{Menú principal}
+
+Una vez identificado, un menú con tres botones da acceso a las tres principales áreas de la aplicación:
+\begin{itemize}
+\item Creación de caracteres.
+\item Creación de proyectos.
+\item Creación de generaciones, Cruces, y acceso a los datos generados.
+\end{itemize}
+
+\figura{.5}{inicio}
+
+\subsection{Creación de un caŕacter}
+
+
+Para crear nuestro primer carácter pulsamos sobre el botón ``Caracteres'' y se muestra una tabla con los caracteres que se haya definido, que debería estar vacía, y un formulario para crear un nuevo carácter:
+
+
+Para poder practicar con los diferentes aspectos del interfaz se creará un carácter con cierta complejidad, en el que intervengan dos genes que muestren una interacción génica epistática recesiva.
+
+En primer lugar introducimos en nombre del carácter en el campo correspondiente. Llamaremos al carácter ``color''. La marca \emph{público} hará que otros usuarios puedan acceder y utilizar este carácter para sus propios proyectos, y la marca \emph{visible} hará que tengan acceso al diseño del carácter. Dejaremos ambas opciones sin marcar.
+
+\figura{.5}{caracter1}
+
+Una vez pulsado el botón ``Nuevo Caracter'' los datos aparecerán en la tabla de caracteres:
+
+
+\figura{.5}{caracter2}
+
+La columna Id muestra un número de identificación del carácter que se ha generado de forma automática. En las siguientes columnas se muestra el nombre del carácter, y botones para borrarlo o accceder a su diseño (Abrir). Estos botones muestran la Id del carácter. Para evitar un borrado accidental, el botón de borrar no surtirá efecto a menos que cuando se pulse se encuentre marcada la casilla junto a él.
+
+Si pulsamos el botón ``Abrir'', se nos muetra a la derecha algunos datos referentes al carácter recién creado:
+
+
+\figura{.5}{caracter3}
+
+La opción \emph{Sexo} se marca si el carácter que se define determinará el sexo del individuo. La dejaremos sin marcar porque no es este el caso que nos ocupa. Las opciones \emph{Visible} y \emph{Público} asociadas al carácter se muestran a continuación y pueden cambiarse en cualquier momento sin más que alterar las marcas correspondientes y pulsar sobre el botón ``Guardar cambios''. El botón ``Cerrar'' cierra de nuevo el carácter, y los otros dos botones sirven para acceder a los genes que intervienen en el carácter. Si pulsamos el botón ``Ver Genes'', aparece una tabla vacía, puesto que aún no hemos definido ningun gen para este carácter. El botón también cambiará mostrando la leyenda ``Ocultar Genes''. Más adelante veremos la utilidad del botón ``Ver Conexiones''.
+
+Obviamente para crear un nuevo gen deberíamos pulsar el botón ``Nuevo gen'', pero antes haremos algunas consideraciones sobre la forma en que pensamos diseñar este carácter.
+
+\subsubsection{Epistasis simple recesiva}
+
+Se produce una interacción génica epistática simple recesiva cuando dos genes codifican dos enzimas que actúan en dos pasos de una misma ruta metabólica, y se cuplen las condiciones esquematizadas en el siguiente esquema:
+
+\figura{.8}{esr}
+
+Supongamos dos genes $A$ y $B$ que actúan consecutivamente en la mima ruta metabólica de síntesis de un pigmento que colorea las flores de una planta. Existen dos alelos del gen $A$, $A_1$ y $a_2$. El alelos $a_2$ produce una enzima mutante no funcional. El sustrato de esa enzima está representado en el esquema como $S_0$. El número 1 dentro del círculo verde que representa $S_0$ corresponde a un valor arbitrario que se le asigna a ese sustrato, por ejemplo, podría representar una concentración, un número de moléculas, o una variedad concreta entre varios posibles sustratos. Un valor de 0 indicaría la ausencia del sustrato y por tanto haría que no se diera esa ruta metabólica. Por eso en el esquema se le ha asignado el valor 1, de manera que existe el sustrato $S_0$ y la enzima fabricada por el gen A podría actuar sobre él. Los alelos de $A$, representados dentro del cuadro rojo, actuarían sobre ese sustrato para convertirlo en $S_1$. La enzima codificada por $A_1$ actuaría sobre $S_0$ dando como producto de la reacción $S_1$. Esta acción se representa dándole a $S_1$ un valor distinto de 0, por ejemplo 1, como se representa en el esquema. Puesto que la enzima codificada por $a_2$ no es funcional, no podría actuar sobre $S_1$ y por eso el resultado sería la asignación de un valor 0 a $S_1$, indicando así la ausencia de producto. Los individuos que resulten homocigóticos para $a_2$ tendrán un valor 0 en $S_1$, por lo que la ruta metabólica se interrumpirá en este punto, y no se frabricará ningún pigmento. La presencia del alelo $A_1$, aunque sea en heterocigosis, resultará en la asignación de un valor $S_1=1$. Por lo tanto, $A_1$ se comporta como dominante y $a_2$ como recesivo.
+
+El producto $S_1$ es a la vez sustrato de la enzima codificada por el gen $B$. En este caso supongamos una dominancia completa de $B_1$ sobre $b_2$ en donde ambos alelos codifican una enzima funcional, pero que producen diferentes pigmentos. Podemos identificar los distintos pigmentos asignándole valores diferentes al producto $S_2$. Así, la enzima codificada por $B_1$ le asignaría un valor $S_2=2$ que podría corresponder, por ejemplo, a un color verde, y la enzima codificada por $s_2$ le asignaría un valor  $S_2=1$, que podría corresponder a un color rojo.
+
+Teniendo en cuenta las propiedades del diseño de éste caŕacter, una planta homocigótica $a_2a_2$ tendría las flores blancas, ya que la síntesis del pigmento se habría interrumpido en $S_1$ y, por lo tanto sería irrelevante qué alelos tuviese en el gen $B$. De esta forma el alelo receivo $a_2$ ejerce una interacción epistática sobre el gen $B$, es decir, una epistasis simple recesiva. Si una planta posee el alelo $A_1$, la síntesis del pigmento final dependerá entonces del gen $B$, pudiendo producir flores verdes o rojas dependiendo de la composición alélica de $B$.
+
+
+
+
+
+\end{document}
