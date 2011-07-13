@@ -321,7 +321,7 @@ function testvergenes(){
 <table><tr>
 <?
 								for($i=0;$i<$_SESSION['sustratos'];$i++){
-												?><td>S<?=$i?></td><?
+												?><th>S<?=$i?></th><?
 								}
 								?></tr><tr><?
 								for($i=0;$i<$_SESSION['sustratos'];$i++){
@@ -350,7 +350,7 @@ function testvergenes(){
 <table><tr>
 <?
 								for($i=0;$i<$_SESSION['sustratos'];$i++){
-												?><td>S<?=$i?></td><?
+												?><th>S<?=$i?></th><?
 								}
 								?></tr><tr><?
 								for($i=0;$i<$_SESSION['sustratos'];$i++){
