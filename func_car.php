@@ -299,7 +299,7 @@ function testvergenes(){
 																$gen=pg_fetch_result($res,$i,1);
 																$SB=pg_fetch_result($res,$i,2);
 																$id=pg_fetch_result($res,$i,3);
-																?><tr><th>S<?=$SA?></th><th><?=$gen?></th><th>S<?=$SB?></th><?
+																?><tr><td>S<?=$SA?></td><td><?=$gen?></td><td>S<?=$SB?></td><?
 																?><td><input type="submit" name="borrarconexion" value="<?=$id?>"></input><input type="checkbox" name="confirmado"></input></td><?
 												}
 												?></table></form><?
@@ -321,7 +321,7 @@ function testvergenes(){
 <table><tr>
 <?
 								for($i=0;$i<$_SESSION['sustratos'];$i++){
-												?><td>S<?=$i?></td><?
+												?><th>S<?=$i?></th><?
 								}
 								?></tr><tr><?
 								for($i=0;$i<$_SESSION['sustratos'];$i++){
@@ -350,7 +350,7 @@ function testvergenes(){
 <table><tr>
 <?
 								for($i=0;$i<$_SESSION['sustratos'];$i++){
-												?><td>S<?=$i?></td><?
+												?><th>S<?=$i?></th><?
 								}
 								?></tr><tr><?
 								for($i=0;$i<$_SESSION['sustratos'];$i++){
