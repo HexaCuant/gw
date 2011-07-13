@@ -4,6 +4,7 @@
 \usepackage{pslatex}
 \usepackage{graphicx}
 \usepackage{tikz}
+\usepackage{url}
 \usepackage[spanish]{babel}
 \renewcommand\shorthandsspanish{}
 \title{Laboratorio virtual de Genética}
@@ -82,10 +83,137 @@ Supongamos dos genes $A$ y $B$ que actúan consecutivamente en la mima ruta meta
 
 El producto $S_1$ es a la vez sustrato de la enzima codificada por el gen $B$. En este caso supongamos una dominancia completa de $B_1$ sobre $b_2$ en donde ambos alelos codifican una enzima funcional, pero que producen diferentes pigmentos. Podemos identificar los distintos pigmentos asignándole valores diferentes al producto $S_2$. Así, la enzima codificada por $B_1$ le asignaría un valor $S_2=2$ que podría corresponder, por ejemplo, a un color verde, y la enzima codificada por $s_2$ le asignaría un valor  $S_2=1$, que podría corresponder a un color rojo.
 
-Teniendo en cuenta las propiedades del diseño de éste caŕacter, una planta homocigótica $a_2a_2$ tendría las flores blancas, ya que la síntesis del pigmento se habría interrumpido en $S_1$ y, por lo tanto sería irrelevante qué alelos tuviese en el gen $B$. De esta forma el alelo receivo $a_2$ ejerce una interacción epistática sobre el gen $B$, es decir, una epistasis simple recesiva. Si una planta posee el alelo $A_1$, la síntesis del pigmento final dependerá entonces del gen $B$, pudiendo producir flores verdes o rojas dependiendo de la composición alélica de $B$.
+Teniendo en cuenta las propiedades del diseño de éste caŕacter, una planta homocigótica $a_2a_2$ tendría las flores blancas, ya que la síntesis del pigmento se habría interrumpido en $S_1$ y, por lo tanto sería irrelevante qué alelos tuviese en el gen $B$. De esta forma el alelo recesivo $a_2$ ejerce una interacción epistática sobre el gen $B$, es decir, una epistasis simple recesiva. Si una planta posee el alelo $A_1$, la síntesis del pigmento final dependerá entonces del gen $B$, pudiendo producir flores verdes o rojas dependiendo de la composición alélica de $B$.
+
+Una vez decidido como será el diseño del carácter veremos la forma de implmentarlo a través de GenWeb.
+
+\subsubsection{Epistasis simple recesiva en GenWeb}
+
+Puesto que ya sabemos como vamos a diseñar el carácter, pulsamos el botón ``Nuevo gen''. Aparecerá un formulario que nos permite asignarle un nombre, indicar el número de cromosoma donde queremos que se localize, así como su posición dentro del cromosoma. Para el caso que nos ocupa la posicón dentro del cromosoma es irrelevante, aunque sí tendremos que asegurarnos de situar cada gen en un cromosoma distinto de forma que tengan segregación independiente. Las marcas en X e Y se utilizan para indicar en qué cromosoma sexual se encontraría el gen, en caso en que fuese ligado al sexo, holándrico o pseudoautosómico. A y B se utilizan para indicar en qué cromosoma de una pareja autosómica se encuentra. Por defecto se encuentran marcados los dos cromosomas de una pareja autosómica. Marcar solo uno de ellos permitiría por ejemplo simular la presencia de una deleción que hubiese ocasionado la pérdida de uno de los alelos.
+
+Para nuestro diseño rellenaremos el formulario con los datos que se muestran en la figura a continuación:
 
 
+\figura{.8}{genA}
+
+Cuando pulsamos el botón ``Guardar Datos'' el formulario desaparece. Para poder ver el nuevo gen que hemos creado pulsamos el botón ``Ver Genes''. Aparecerá una tabla en la que podremos ver los datos que hemos introducido para este gen:
+
+\figura{.8}{tablaA}
+
+Ahora deberemos asignar alelos a este gen. Para ello debemos abrirlo pulsando sobre el botón de la columna ``Abrir'' que muestra la Id del nuevo gen. Al abrirlo nos aparecerá una tabla de alelos vacía, y un formulario para introducir los datos de un nuevo alelo, que rellenaremos como se muestra en la figura:
 
 
+\figura{.8}{nuevoalelo}
 
+El valor del alelo es el que éste alelo en particular asignaría al producto de la reacción en la ruta metabólica, o sumaría al valor de su sustrato en caso de tratarse de un gen con efecto acumulativo. La dominancia se expresa en \%. Un valor de 100 indicaría una dominancia completa, auque la relación con otros alelos dependerá también de los valores de dominancia de los demás alelos. Este valor puede ser superior al 100\%, lo que ocasionaría casos de sobredominancia, en los que los heterocigotos pueden tener valores fenotípicos superiores a los homócigotos para este alelo.
+
+\figura{.8}{A1}
+
+Tras pulsar el botón ``Nuevo Alelo'', los datos aparecerán en la tabla de alelos de este gen.
+
+Creamos ahora un nuevo alelo de nombre $a_2$, con un valor de 0 de acuerdo con nuestro diseño, que resultará en una variante no funcional de la enzima. Respecto al valor de dominancia, para que este alelo fuese completamente recesivo respecto a $A_1$ debería tener una dominancia 0.
+
+Una vez creado este nuevo alelo, la tabla de alelos del gen A quedaría así:
+
+
+\figura{.8}{alelosA}
+
+
+Pulsamos ahora sobre el botón ``Cerrar'' que hay sobre la tabla de alelos para cerrar el gen $A$.
+
+Ahora pasaremos a crear el gen $B$ repitiendo los mimos pasos. Los datos a consignar para el Gen $B$ y sus dos alelos son los siguientes:
+
+
+\figura{.8}{genB}
+
+Los valores que se observan en las tablas son los que deben introducirse en los respectivos formularios.
+
+Una vez que todo está correcto, podemos cerrar el gen $B$.
+
+\subsection{Conexiones entre los genes}
+
+Ya hemos creado los genes, pero no hemos establecido ninguna ruta metábólica con ellos. Si queremos que tengan determinado tipo de interacción, deberemos establecer las posiciones en las que actúan en la ruta.
+
+Para ello pulsamos el botón ``Ver conexiones''. Puesto que aún no hemos establecido ningna conexión entre los genes, solo veremos un mensaje indicando esta situación. Debajo vermos un botón rotulado ``Cambiar Sustratos'' y un campo donde escribir el número de sustratos, una tabla que muestra los dos genes junto con botones de selección, y otro botón rotulado ``Guardar conexión''. Al mismo tiempo, el botón para ver conexiones habrá cambiado por otro rotulado ``Ocultar Conexiones''.
+
+En primer lugar deberemos contar con los sustratos necesarios para nuestro diseño. Se entiende aquí sustrato en sentido amplio, ya que el sustrato de una enzima puede ser a su vez el producto de otra. Según nuestro diseño, la enzima codificada por el gen $A$ actuaría sobre un sustrato $S_0$ proporcionando el producto $S_1$ que, a su vez sería sustrato de $B$ proporcionando el pigmento final $S_2$. Necesitamos por tanto 3 sustratos para poder definir la ruta metabólica. Por tanto escribiremos un 3 en el campo ``Nº sustratos'' y pulsamos sobre el botón ``Cambiar sustratos''.
+
+Aparecerán tablas de sustratos similares a la de los genes, y estarán repetidas por encima y por debajo de esta tabla de genes.
+
+\figura{}{conexiones1}
+
+Para establecer una conexión, debemos elegir de la tabla de sustratos superior el sustrato que deseemos, a continuación elegimos el gen que codificará la enzima que actuará sobre ese sustrato, y elegiremos el producto de la reacción en la tabla inferior. Por ejemplo, según nuestro diseño debríamos elegir $S_0$ en la tabla superior, $A$ en la tabla de genes, y $S_1$ en la tabla inferior:
+
+\figura{.2}{con1}
+
+Tras pulsar el botón ``Guardar Conexión'', ésta aparecerá en la tabla de conexiones:
+
+
+\figura{.4}{tablacon1}
+
+A continuación crearemos la siguiente conexión entre $S_1$, $B$ y $S_2$, quedando la tabla de conexiones como sigue:
+
+
+\figura{.4}{tablacon2}
+
+Ya podemos dar por terminado nuestro diseño de un carácter con una herencia epistática recesiva en la que intervienen dos genes con dominancia completa.
+
+Pulsamos entonces consecutivamente sobre los botones: ``Ocultar Conexiones'', ``Ocultar Genes'', y ``Cerrar'', para cerrar definitivmente el carácter en el que hemos estado trabajando.
+
+De ahora en adelante podremos utilizar este carácter en nuestros proyectos.
+
+\section{Creación de un proyecto}
+
+Para crear nuestro primer proyecto pulsamos sobre el botón ``Proyectos'' del menú principal. Nos aparecerá una tabla de proyectos vacía y un pequeño formulario para crear un proyecto nuevo. Elegimos un nombre para ese proyecto, por ejemplo: ESD, y pulsamos sobre el botón ``Nuevo Proyecto''. Nuestro nuevo proyecto deberá entonces aparecer en la tabla:
+
+\figura{.7}{esd}
+
+Con esto solo hemos creado un proyecto vacío, deberemos abrirlo para poder trabajar en él. Al pulsar el botón ``Abrir'' veremos una tabla de caracteres asociados a este proyecto, que ahora estará vacía. En la parte superior se muestra el nombre y la Id del proyecto que se encuentra abierto.
+
+Debemos ahora asociar el carácter \emph{color} a este proyecto. Para ello pulsamos sobre el botón ``Caracteres'' del menú principal, y veremos que sobre la tabla de caracteres aparece el nombre del proyecto activo. Pulsamos una sola vez el botón de la columna ``Seleccionar'' que muestra la Id del carácter \emph{color}. Aparecerá un mensaje indicando que se ha insertado el carácter en el proyecto activo. De hecho, si volvemos al proyecto, veremos que en la tabla de caracteres asociados aparece ahora el carácter seleccionado.
+
+En esta tabla de caracteres asociados al proyecto el campo ``ambiente'' es un valor que determina las variaciones que los cambios ambientales pueden llegar a producir en el fenotipo de los individuos. En nuestro caso pretendemos que el carácter \emph{color} produzca flores de un color determinado de manera independiente a las condiciones ambientales, por lo que asignaremos el valor 0 a este campo, tras lo cual pulsaremos el botón de la columna ``Actualizar'' correspondiente a nuestro carácter. Este valor de ambiente puede modificarse en cualquier momento pulsando de nuevo en este botón.
+
+\section{Creación de una población}
+
+Vamos ahora a crear una población aleatoria en nuetro proyecto. Para ello pulsamos sobre el botón ``Generaciones'' del menu principal. En esta parte existen diversos formularios que nos permiten realizar diferentes tipos de operaciones. En nuestro caso nos interesa el apartado \emph{Crear Generación aleatoria}
+
+\figura{.7}{crear}
+
+Tecleamos un tamaño para la población, en el ejemplo: 200 individuos, y pulsamos sobre el botón ``Crear Generación''. No veremos ningún efecto salvo que el número de generación por defecto que aparece ahora en el formulario es el 2 en lugar de 1.
+
+Si queremos ver las generaciones que hemos creado pulsaremos sobre el botón ``Ver Generaciones''. Aparecerá una tabla que mostrará la generación recién creada:
+
+
+\figura{.3}{g1}
+
+Si pulsamos sobre el botón ``Abrir'' de la generación que nos interese ver nos aparecerá a la derecha una tabla con la lista de individuo de esa población y sus valores fenotípicos. Los botones de la columna ``Selec.'' sirven para seleccionar individuos concretos como parentales de una nueva generación, aunque no los utilizaremos en esta ocasión.
+
+\figura{.4}{tablageneracion}
+
+Al final de la tabla veremos un enlace para descargar los datos. Dependiendo del navegador que utilizemos podemos pulsar sobre él para descargar un archivo de texto con los datos de esta generación, o pulsar con el botón derecho del ratón y elegir ``Guardar enlace como\ldots'' o alguna opción similar.
+
+Elegiremos donde queremos guardar ese archivo en nuestro ordenador y, posteriormente lo analizaremos en una hoja de cálculo. el nombre del archivo, por ejemplo ``27\_1\_datos.csv indica la Id del proyecto (27) y la generación (1) a los que corresponde.
+
+\section{Análisis estadístico}
+
+Para el análisis estadístico de la población utilizaremos el programa \emph{gnumeric} que podremos descargar e instalar manualmente de:
+
+\begin{center}
+\url{http://projects.gnome.org/gnumeric/downloads.shtml}
+\end{center}
+
+si usamos Windows, o desde:
+
+\begin{center}
+http://www.flyn.org/apple/index.html
+\end{center}
+
+si usamos Mac, o con:
+
+\begin{center}
+	\textbf{sudo apt-get install gnumeric}
+\end{center}
+
+en distibuciones basadas en Linux Debian, o con tu gestor de paquetes favorito en cualquier otra distribución basada en UNIX
 \end{document}
