@@ -3,6 +3,7 @@
 \usepackage[T1]{fontenc}
 \usepackage{pslatex}
 \usepackage{graphicx}
+\usepackage[margin=1in]{geometry}
 \usepackage{tikz}
 \usepackage{url}
 \usepackage[spanish]{babel}
@@ -14,23 +15,30 @@
 
 \begin{document}
 \maketitle
+
+\tableofcontents
+
 \section{Introducción}
 
-GenWeb es es un interfaz web a un laboratorio virtual de genética que permite realizar prácticas relacionadas con cualquier tema en el que intervengan cruzamientos, poblaciones, caracteres cualitativos, cuantitativos, interacciones génicas de todo tipo etc... Este interfaz se encarga de la interacción con el usuario y, a través de él, se definen los caracteres, genes, alelos e interacciones, se crean proyectos con los que sealizan las simulaciones y se obtienen los resultados de poblaciones que pueden descargarse para ser analizados con software de estadística u hojas de cálculo. Por detrás de GenWeb, otra aplicación llamada  Gengine recibe los datos enviados a través del interfaz, aplica algoritmos que permiten generar nuevos individuos en función de las reglas de herencia que se hayan definido a través del interfaz, y genera los resultados que son archivaods en directorios específicos de cada proyecto. El interfaz web accede a estos archivos así como a una base de datos postgresql con los que genera las páginas que se muestran a cada ususario.
+GenWeb es es un interfaz web a un laboratorio virtual de genética que permite realizar prácticas relacionadas con cualquier tema en el que intervengan cruzamientos, poblaciones, caracteres cualitativos, cuantitativos, interacciones génicas de todo tipo etc... Este interfaz se encarga de la interacción con el usuario y, a través de él, se definen los caracteres, genes, alelos e interacciones, se crean proyectos con los que se realizan las simulaciones y se obtienen los resultados de poblaciones que pueden descargarse para ser analizados con software de estadística u hojas de cálculo. Por detrás de GenWeb, otra aplicación llamada  GenGine recibe los datos enviados a través del interfaz, aplica algoritmos que permiten generar nuevos individuos en función de las reglas de herencia que se hayan definido a través del interfaz, y genera los resultados que son archivaods en directorios específicos de cada proyecto. El interfaz web accede a estos archivos así como a una base de datos postgresql con los que generan las páginas que se muestran a cada ususario.
 
-La aplicación GenWeb+GenGine es capaz de generar individuos y poblaciones siguiendo cualquier tipo de herencia que el usuario pueda definir, sin que \emph{a priori} haya ningún tipo de restricción a los caracteres, genes, alelos y posibles interacciones entre ellos. La herencia de un carácter dependerá de la manera en que el usuario defina los caracteres con los que pretenda realizar las simulaciones. Se pueden ralizar por tanto multitud de prácticas de Genética de la transmisión, Genética cuatitativa, Genética de poblaciones...
+La aplicación GenWeb+GenGine es capaz de generar individuos y poblaciones siguiendo cualquier tipo de herencia que el usuario pueda definir, sin que \emph{a priori} haya ningún tipo de restricción a los caracteres, genes, alelos y posibles interacciones entre ellos. La herencia de un carácter dependerá de la manera en que el usuario defina los caracteres con los que pretendan realizar las simulaciones. Se pueden ralizar por tanto multitud de prácticas de Genética de la transmisión, Genética cuatitativa, Genética de poblaciones, etc...
 
-En este proyecto se detallan dos prácticas, a modo de ejemplo, que se pretenden realizar durante el próximo curso, pero que, gracias a la flexibilidad del diseño de la aplicación contituirá únicamente las dos primeras de una larga lista que irá creándose con posterioridad y que podrán realizarse en la mayoría de las asignaturas y máster de postgrado que se imparten en el Departamento de Genética.
+En este proyecto se detallan dos prácticas, a modo de ejemplo, que se pretenden realizar durante el próximo curso, pero que, gracias a la flexibilidad del diseño de la aplicación contituirán únicamente las dos primeras de una larga lista que irá creándose con posterioridad y que podrán realizarse en la mayoría de las asignaturas y máster de postgrado que se imparten en el Departamento de Genética.
 
-Debido a esto, el diseño de caracteres es un aspecto fundamental en uso de la aplicación, por lo que en primer lugar se realizará una práctica en la que se aborden los puntos más importantes de este diseño.
+El diseño de caracteres es un aspecto fundamental en el uso de la aplicación, por lo que en primer lugar se realizará una práctica en la que se aborden los puntos más importantes de este diseño.
 
-\section{diseño de caracteres con GenWeb}
+\section{Diseño de caracteres con GenWeb}
+
+En esta práctica los alumnos aprenderán a diseñar un carácter con GenWeb, obtener una población de individuos y analizar estadísticamente las frecuencias fenotípicas de esta población.
+
+Durante el transcurso de la práctica comprenderán la forma en que se producen las interacciones génicas cuando varios genes actúan sobre el mismo carácter, a través de las rutas biosintéticas de productos que ellos mismos deberán diseñar e implementar. Verán cómo la combinación alelatoria de los alelos de los genes que intervengan en el carácter resulta en unas proporciones fenotípicas determinadas que pueden ser útiles a la hora de identificar el modo de herencia de los caracteres, y aprenderán a analizar estadísticamente los datos tomados directamente de una población, aprendiendo a organizarlos, a identificar el modo de herencia y a calcular una significación estadística de estos resultados.
 
 \subsection{Acceso al interfaz}
 
 El acceso al GenWeb está controlado por una página de identificación mediante usuario y contraseña. Más que restringir el acceso, este control pretende organizar los datos identificando a cada usuario y mostrándole únicamente sus proyectos, sus caracteres, o los caracteres que se hayan definidos como públicos, de manera que los datos generados por cada usuario no se mezclan con los de los demás.
 
-\figura{.5}{acceso}
+\figura{.3}{acceso}
 
 La página de acceso incluye botones para enviar las credenciales, borrar los campos de datos, crear un nuevo usuario o solicitar una nueva contraseña.
 
@@ -43,7 +51,7 @@ Una vez identificado, un menú con tres botones da acceso a las tres principales
 \item Creación de generaciones, Cruces, y acceso a los datos generados.
 \end{itemize}
 
-\figura{.5}{inicio}
+\figura{.4}{inicio}
 
 \subsection{Creación de un caŕacter}
 
@@ -53,70 +61,71 @@ Para crear nuestro primer carácter pulsamos sobre el botón ``Caracteres'' y se
 
 Para poder practicar con los diferentes aspectos del interfaz se creará un carácter con cierta complejidad, en el que intervengan dos genes que muestren una interacción génica epistática recesiva.
 
-En primer lugar introducimos en nombre del carácter en el campo correspondiente. Llamaremos al carácter ``color''. La marca \emph{público} hará que otros usuarios puedan acceder y utilizar este carácter para sus propios proyectos, y la marca \emph{visible} hará que tengan acceso al diseño del carácter. Dejaremos ambas opciones sin marcar.
+En primer lugar introducimos el nombre del carácter en el campo correspondiente. Llamaremos al carácter ``color''. La marca \emph{público} hará que otros usuarios puedan acceder y utilizar este carácter para sus propios proyectos, y la marca \emph{visible} hará que tengan acceso al diseño del carácter. Dejaremos ambas opciones sin marcar.
 
-\figura{.5}{caracter1}
+\figura{.4}{caracter1}
 
 Una vez pulsado el botón ``Nuevo Caracter'' los datos aparecerán en la tabla de caracteres:
 
 
-\figura{.5}{caracter2}
+\figura{.3}{caracter2}
 
 La columna Id muestra un número de identificación del carácter que se ha generado de forma automática. En las siguientes columnas se muestra el nombre del carácter, y botones para borrarlo o accceder a su diseño (Abrir). Estos botones muestran la Id del carácter. Para evitar un borrado accidental, el botón de borrar no surtirá efecto a menos que cuando se pulse se encuentre marcada la casilla junto a él.
 
-Si pulsamos el botón ``Abrir'', se nos muetra a la derecha algunos datos referentes al carácter recién creado:
+Si pulsamos el botón ``Abrir'', se nos muestran a la derecha algunos datos referentes al carácter recién creado:
 
 
-\figura{.5}{caracter3}
+\figura{.3}{caracter3}
 
-La opción \emph{Sexo} se marca si el carácter que se define determinará el sexo del individuo. La dejaremos sin marcar porque no es este el caso que nos ocupa. Las opciones \emph{Visible} y \emph{Público} asociadas al carácter se muestran a continuación y pueden cambiarse en cualquier momento sin más que alterar las marcas correspondientes y pulsar sobre el botón ``Guardar cambios''. El botón ``Cerrar'' cierra de nuevo el carácter, y los otros dos botones sirven para acceder a los genes que intervienen en el carácter. Si pulsamos el botón ``Ver Genes'', aparece una tabla vacía, puesto que aún no hemos definido ningun gen para este carácter. El botón también cambiará mostrando la leyenda ``Ocultar Genes''. Más adelante veremos la utilidad del botón ``Ver Conexiones''.
+La opción \emph{Sexo} se marca si el carácter que se define determinará el sexo del individuo. La dejaremos sin marcar porque no es este el caso que nos ocupa. Las opciones \emph{Visible} y \emph{Público} asociadas al carácter se muestran a continuación y pueden cambiarse en cualquier momento sin más que alterar las marcas correspondientes y pulsar sobre el botón ``Guardar cambios''. El botón ``Cerrar'' cierra de nuevo el carácter, y los otros dos botones sirven para acceder a los genes que intervienen en el carácter. Si pulsamos el botón ``Ver Genes'', aparece una tabla vacía, puesto que aún no hemos definido ningun gen para este carácter. El botón también cambiará mostrando la leyenda ``Ocultar Genes''.
 
 Obviamente para crear un nuevo gen deberíamos pulsar el botón ``Nuevo gen'', pero antes haremos algunas consideraciones sobre la forma en que pensamos diseñar este carácter.
 
 \subsubsection{Epistasis simple recesiva}
 
-Se produce una interacción génica epistática simple recesiva cuando dos genes codifican dos enzimas que actúan en dos pasos de una misma ruta metabólica, y se cuplen las condiciones esquematizadas en el siguiente esquema:
+Se produce una interacción génica epistática simple recesiva cuando dos genes codifican dos enzimas que actúan en dos pasos de una misma ruta metabólica, y se cuplen las condiciones representadas en el siguiente esquema:
 
 \figura{.8}{esr}
 
 Supongamos dos genes $A$ y $B$ que actúan consecutivamente en la mima ruta metabólica de síntesis de un pigmento que colorea las flores de una planta. Existen dos alelos del gen $A$, $A_1$ y $a_2$. El alelos $a_2$ produce una enzima mutante no funcional. El sustrato de esa enzima está representado en el esquema como $S_0$. El número 1 dentro del círculo verde que representa $S_0$ corresponde a un valor arbitrario que se le asigna a ese sustrato, por ejemplo, podría representar una concentración, un número de moléculas, o una variedad concreta entre varios posibles sustratos. Un valor de 0 indicaría la ausencia del sustrato y por tanto haría que no se diera esa ruta metabólica. Por eso en el esquema se le ha asignado el valor 1, de manera que existe el sustrato $S_0$ y la enzima fabricada por el gen A podría actuar sobre él. Los alelos de $A$, representados dentro del cuadro rojo, actuarían sobre ese sustrato para convertirlo en $S_1$. La enzima codificada por $A_1$ actuaría sobre $S_0$ dando como producto de la reacción $S_1$. Esta acción se representa dándole a $S_1$ un valor distinto de 0, por ejemplo 1, como se representa en el esquema. Puesto que la enzima codificada por $a_2$ no es funcional, no podría actuar sobre $S_1$ y por eso el resultado sería la asignación de un valor 0 a $S_1$, indicando así la ausencia de producto. Los individuos que resulten homocigóticos para $a_2$ tendrán un valor 0 en $S_1$, por lo que la ruta metabólica se interrumpirá en este punto, y no se frabricará ningún pigmento. La presencia del alelo $A_1$, aunque sea en heterocigosis, resultará en la asignación de un valor $S_1=1$. Por lo tanto, $A_1$ se comporta como dominante y $a_2$ como recesivo.
 
-El producto $S_1$ es a la vez sustrato de la enzima codificada por el gen $B$. En este caso supongamos una dominancia completa de $B_1$ sobre $b_2$ en donde ambos alelos codifican una enzima funcional, pero que producen diferentes pigmentos. Podemos identificar los distintos pigmentos asignándole valores diferentes al producto $S_2$. Así, la enzima codificada por $B_1$ le asignaría un valor $S_2=2$ que podría corresponder, por ejemplo, a un color verde, y la enzima codificada por $s_2$ le asignaría un valor  $S_2=1$, que podría corresponder a un color rojo.
+El producto $S_1$ es a la vez sustrato de la enzima codificada por el gen $B$. En este caso supongamos una dominancia completa de $B_1$ sobre $b_2$ en donde ambos alelos codifican una enzima funcional, pero que producen diferentes pigmentos. Podemos identificar los distintos pigmentos asignándole valores diferentes al producto $S_2$. Así, la enzima codificada por $B_1$ le asignaría un valor $S_2=2$ que podría corresponder, por ejemplo, a un color verde, y la enzima codificada por $b_2$ le asignaría un valor  $S_2=1$, que podría corresponder a un color rojo.
 
 Teniendo en cuenta las propiedades del diseño de éste caŕacter, una planta homocigótica $a_2a_2$ tendría las flores blancas, ya que la síntesis del pigmento se habría interrumpido en $S_1$ y, por lo tanto sería irrelevante qué alelos tuviese en el gen $B$. De esta forma el alelo recesivo $a_2$ ejerce una interacción epistática sobre el gen $B$, es decir, una epistasis simple recesiva. Si una planta posee el alelo $A_1$, la síntesis del pigmento final dependerá entonces del gen $B$, pudiendo producir flores verdes o rojas dependiendo de la composición alélica de $B$.
 
-Una vez decidido como será el diseño del carácter veremos la forma de implmentarlo a través de GenWeb.
+Una vez decidido como será el diseño del carácter veremos la forma de implementarlo a través de GenWeb.
 
 \subsubsection{Epistasis simple recesiva en GenWeb}
 
-Puesto que ya sabemos como vamos a diseñar el carácter, pulsamos el botón ``Nuevo gen''. Aparecerá un formulario que nos permite asignarle un nombre, indicar el número de cromosoma donde queremos que se localize, así como su posición dentro del cromosoma. Para el caso que nos ocupa la posicón dentro del cromosoma es irrelevante, aunque sí tendremos que asegurarnos de situar cada gen en un cromosoma distinto de forma que tengan segregación independiente. Las marcas en X e Y se utilizan para indicar en qué cromosoma sexual se encontraría el gen, en caso en que fuese ligado al sexo, holándrico o pseudoautosómico. A y B se utilizan para indicar en qué cromosoma de una pareja autosómica se encuentra. Por defecto se encuentran marcados los dos cromosomas de una pareja autosómica. Marcar solo uno de ellos permitiría por ejemplo simular la presencia de una deleción que hubiese ocasionado la pérdida de uno de los alelos.
+Puesto que ya sabemos como vamos a diseñar el carácter, pulsamos el botón ``Nuevo gen''. Aparecerá un formulario que nos permite asignarle un nombre, indicar el número del cromosoma donde queremos que se localize, así como su posición dentro de este cromosoma. Para el caso que nos ocupa la posicón dentro del cromosoma es irrelevante, aunque sí tendremos que asegurarnos de situar cada gen en un cromosoma distinto de forma que tengan segregación independiente. Las marcas en X e Y se utilizan para indicar en qué cromosoma sexual se encontraría el gen, en caso en que fuese ligado al sexo, holándrico o pseudoautosómico. A y B se utilizan para indicar en qué cromosoma de una pareja autosómica se encuentra. Por defecto se encuentran marcados los dos cromosomas de una pareja autosómica. Marcar solo uno de ellos permitiría por ejemplo simular la presencia de una deleción que hubiese ocasionado la pérdida de uno de los alelos.
 
 Para nuestro diseño rellenaremos el formulario con los datos que se muestran en la figura a continuación:
 
 
-\figura{.8}{genA}
+\figura{.5}{genA}
 
-Cuando pulsamos el botón ``Guardar Datos'' el formulario desaparece. Para poder ver el nuevo gen que hemos creado pulsamos el botón ``Ver Genes''. Aparecerá una tabla en la que podremos ver los datos que hemos introducido para este gen:
+Cuando pulsamos el botón ``Guardar Datos'' el formulario desaparece. Para poder ver el nuevo gen que hemos creado pulsamos el botón ``Ver Genes''. Aparecerá una tabla en la que podremos ver los datos que hemos introducido:
 
-\figura{.8}{tablaA}
+\figura{.5}{tablaA}
 
 Ahora deberemos asignar alelos a este gen. Para ello debemos abrirlo pulsando sobre el botón de la columna ``Abrir'' que muestra la Id del nuevo gen. Al abrirlo nos aparecerá una tabla de alelos vacía, y un formulario para introducir los datos de un nuevo alelo, que rellenaremos como se muestra en la figura:
 
 
-\figura{.8}{nuevoalelo}
+\figura{.5}{nuevoalelo}
 
 El valor del alelo es el que éste alelo en particular asignaría al producto de la reacción en la ruta metabólica, o sumaría al valor de su sustrato en caso de tratarse de un gen con efecto acumulativo. La dominancia se expresa en \%. Un valor de 100 indicaría una dominancia completa, auque la relación con otros alelos dependerá también de los valores de dominancia de los demás alelos. Este valor puede ser superior al 100\%, lo que ocasionaría casos de sobredominancia, en los que los heterocigotos pueden tener valores fenotípicos superiores a los homócigotos para este alelo.
 
-\figura{.8}{A1}
 
 Tras pulsar el botón ``Nuevo Alelo'', los datos aparecerán en la tabla de alelos de este gen.
+
+\figura{.5}{A1}
 
 Creamos ahora un nuevo alelo de nombre $a_2$, con un valor de 0 de acuerdo con nuestro diseño, que resultará en una variante no funcional de la enzima. Respecto al valor de dominancia, para que este alelo fuese completamente recesivo respecto a $A_1$ debería tener una dominancia 0.
 
 Una vez creado este nuevo alelo, la tabla de alelos del gen A quedaría así:
 
 
-\figura{.8}{alelosA}
+\figura{.5}{alelosA}
 
 
 Pulsamos ahora sobre el botón ``Cerrar'' que hay sobre la tabla de alelos para cerrar el gen $A$.
@@ -124,7 +133,7 @@ Pulsamos ahora sobre el botón ``Cerrar'' que hay sobre la tabla de alelos para 
 Ahora pasaremos a crear el gen $B$ repitiendo los mimos pasos. Los datos a consignar para el Gen $B$ y sus dos alelos son los siguientes:
 
 
-\figura{.8}{genB}
+\figura{.5}{genB}
 
 Los valores que se observan en las tablas son los que deben introducirse en los respectivos formularios.
 
@@ -134,27 +143,28 @@ Una vez que todo está correcto, podemos cerrar el gen $B$.
 
 Ya hemos creado los genes, pero no hemos establecido ninguna ruta metábólica con ellos. Si queremos que tengan determinado tipo de interacción, deberemos establecer las posiciones en las que actúan en la ruta.
 
-Para ello pulsamos el botón ``Ver conexiones''. Puesto que aún no hemos establecido ningna conexión entre los genes, solo veremos un mensaje indicando esta situación. Debajo vermos un botón rotulado ``Cambiar Sustratos'' y un campo donde escribir el número de sustratos, una tabla que muestra los dos genes junto con botones de selección, y otro botón rotulado ``Guardar conexión''. Al mismo tiempo, el botón para ver conexiones habrá cambiado por otro rotulado ``Ocultar Conexiones''.
+Para ello pulsamos el botón ``Ver conexiones''. Puesto que aún no hemos establecido ningna conexión entre los genes, solo veremos un mensaje indicando esta situación. Debajo veremos un botón rotulado ``Cambiar Sustratos'' y un campo donde escribir el número de sustratos, una tabla que muestra los dos genes junto con botones de selección, y otro botón rotulado ``Guardar conexión''. Al mismo tiempo, el botón para ver conexiones habrá cambiado por otro rotulado ``Ocultar Conexiones''.
+
+\figura{.5}{conexiones1}
 
 En primer lugar deberemos contar con los sustratos necesarios para nuestro diseño. Se entiende aquí sustrato en sentido amplio, ya que el sustrato de una enzima puede ser a su vez el producto de otra. Según nuestro diseño, la enzima codificada por el gen $A$ actuaría sobre un sustrato $S_0$ proporcionando el producto $S_1$ que, a su vez sería sustrato de $B$ proporcionando el pigmento final $S_2$. Necesitamos por tanto 3 sustratos para poder definir la ruta metabólica. Por tanto escribiremos un 3 en el campo ``Nº sustratos'' y pulsamos sobre el botón ``Cambiar sustratos''.
 
 Aparecerán tablas de sustratos similares a la de los genes, y estarán repetidas por encima y por debajo de esta tabla de genes.
 
-\figura{}{conexiones1}
 
 Para establecer una conexión, debemos elegir de la tabla de sustratos superior el sustrato que deseemos, a continuación elegimos el gen que codificará la enzima que actuará sobre ese sustrato, y elegiremos el producto de la reacción en la tabla inferior. Por ejemplo, según nuestro diseño debríamos elegir $S_0$ en la tabla superior, $A$ en la tabla de genes, y $S_1$ en la tabla inferior:
 
-\figura{.2}{con1}
+\figura{.1}{con1}
 
 Tras pulsar el botón ``Guardar Conexión'', ésta aparecerá en la tabla de conexiones:
 
 
-\figura{.4}{tablacon1}
+\figura{.2}{tablacon1}
 
 A continuación crearemos la siguiente conexión entre $S_1$, $B$ y $S_2$, quedando la tabla de conexiones como sigue:
 
 
-\figura{.4}{tablacon2}
+\figura{.2}{tablacon2}
 
 Ya podemos dar por terminado nuestro diseño de un carácter con una herencia epistática recesiva en la que intervienen dos genes con dominancia completa.
 
@@ -166,34 +176,42 @@ De ahora en adelante podremos utilizar este carácter en nuestros proyectos.
 
 Para crear nuestro primer proyecto pulsamos sobre el botón ``Proyectos'' del menú principal. Nos aparecerá una tabla de proyectos vacía y un pequeño formulario para crear un proyecto nuevo. Elegimos un nombre para ese proyecto, por ejemplo: ESD, y pulsamos sobre el botón ``Nuevo Proyecto''. Nuestro nuevo proyecto deberá entonces aparecer en la tabla:
 
-\figura{.7}{esd}
+\figura{.5}{esd}
 
 Con esto solo hemos creado un proyecto vacío, deberemos abrirlo para poder trabajar en él. Al pulsar el botón ``Abrir'' veremos una tabla de caracteres asociados a este proyecto, que ahora estará vacía. En la parte superior se muestra el nombre y la Id del proyecto que se encuentra abierto.
 
-Debemos ahora asociar el carácter \emph{color} a este proyecto. Para ello pulsamos sobre el botón ``Caracteres'' del menú principal, y veremos que sobre la tabla de caracteres aparece el nombre del proyecto activo. Pulsamos una sola vez el botón de la columna ``Seleccionar'' que muestra la Id del carácter \emph{color}. Aparecerá un mensaje indicando que se ha insertado el carácter en el proyecto activo. De hecho, si volvemos al proyecto, veremos que en la tabla de caracteres asociados aparece ahora el carácter seleccionado.
+\figura{.5}{pabierto}
+
+Debemos ahora asociar el carácter \emph{color} a este proyecto. Para ello pulsamos sobre el botón ``Caracteres'' del menú principal, y veremos que sobre la tabla de caracteres aparece el nombre del proyecto activo. 
+
+\figura{.5}{selcaracter}
+
+Pulsamos una sola vez el botón de la columna ``Seleccionar'' que muestra la Id del carácter \emph{color}. Aparecerá un mensaje indicando que se ha insertado el carácter en el proyecto activo. De hecho, si volvemos al proyecto, veremos que en la tabla de caracteres asociados aparece ahora el carácter seleccionado.
+
+\figura{.5}{ambiente}
 
 En esta tabla de caracteres asociados al proyecto el campo ``ambiente'' es un valor que determina las variaciones que los cambios ambientales pueden llegar a producir en el fenotipo de los individuos. En nuestro caso pretendemos que el carácter \emph{color} produzca flores de un color determinado de manera independiente a las condiciones ambientales, por lo que asignaremos el valor 0 a este campo, tras lo cual pulsaremos el botón de la columna ``Actualizar'' correspondiente a nuestro carácter. Este valor de ambiente puede modificarse en cualquier momento pulsando de nuevo en este botón.
 
 \section{Creación de una población}
 
-Vamos ahora a crear una población aleatoria en nuetro proyecto. Para ello pulsamos sobre el botón ``Generaciones'' del menu principal. En esta parte existen diversos formularios que nos permiten realizar diferentes tipos de operaciones. En nuestro caso nos interesa el apartado \emph{Crear Generación aleatoria}
+Vamos ahora a crear una población aleatoria en nuestro proyecto. Para ello pulsamos sobre el botón ``Generaciones'' del menu principal. En esta parte existen diversos formularios que nos permiten realizar diferentes tipos de operaciones. En nuestro caso nos interesa el apartado \emph{Crear Generación aleatoria}
 
-\figura{.7}{crear}
+\figura{.5}{crear}
 
 Tecleamos un tamaño para la población, en el ejemplo: 200 individuos, y pulsamos sobre el botón ``Crear Generación''. No veremos ningún efecto salvo que el número de generación por defecto que aparece ahora en el formulario es el 2 en lugar de 1.
 
 Si queremos ver las generaciones que hemos creado pulsaremos sobre el botón ``Ver Generaciones''. Aparecerá una tabla que mostrará la generación recién creada:
 
 
-\figura{.3}{g1}
+\figura{.2}{g1}
 
 Si pulsamos sobre el botón ``Abrir'' de la generación que nos interese ver nos aparecerá a la derecha una tabla con la lista de individuo de esa población y sus valores fenotípicos. Los botones de la columna ``Selec.'' sirven para seleccionar individuos concretos como parentales de una nueva generación, aunque no los utilizaremos en esta ocasión.
 
-\figura{.4}{tablageneracion}
+\figura{.2}{tablageneracion}
 
 Al final de la tabla veremos un enlace para descargar los datos. Dependiendo del navegador que utilizemos podemos pulsar sobre él para descargar un archivo de texto con los datos de esta generación, o pulsar con el botón derecho del ratón y elegir ``Guardar enlace como\ldots'' o alguna opción similar.
 
-Elegiremos donde queremos guardar ese archivo en nuestro ordenador y, posteriormente lo analizaremos en una hoja de cálculo. el nombre del archivo, por ejemplo ``27\_1\_datos.csv indica la Id del proyecto (27) y la generación (1) a los que corresponde.
+Elegiremos donde queremos guardar ese archivo en nuestro ordenador y, posteriormente lo analizaremos en una hoja de cálculo. el nombre del archivo, por ejemplo ``27\_1\_datos.csv'' indica la Id del proyecto (27) y la generación (1) a los que corresponde.
 
 \section{Análisis estadístico}
 
@@ -206,7 +224,7 @@ Para el análisis estadístico de la población utilizaremos el programa \emph{g
 si usamos Windows, o desde:
 
 \begin{center}
-http://www.flyn.org/apple/index.html
+	\url{http://www.flyn.org/apple/index.html}
 \end{center}
 
 si usamos Mac, o con:
@@ -215,5 +233,131 @@ si usamos Mac, o con:
 	\textbf{sudo apt-get install gnumeric}
 \end{center}
 
-en distibuciones basadas en Linux Debian, o con tu gestor de paquetes favorito en cualquier otra distribución basada en UNIX
+en distibuciones basadas en Linux Debian, o con tu gestor de paquetes favorito en cualquier otra distribución basada en UNIX.
+
+En primer lugar abrimos el archivo que hemos descargado con gnumeric eligiendo desde el menú prinicpal del programa \textbf{Archivo}$\Rightarrow$\textbf{Abrir}. Se nos abrirá un díalogo que nos permitirá navegar por nuestros directorios hasta el archivo que hemos descargado desde GenWeb.
+
+No podemos abrir directamente ese archivo ya que no se trata de un archivo de gnumeric. En primer lugar debemos pulsar en el botón rotulado ``Avanzado'':
+
+\figura{0.6}{avanzado}
+
+Tras pulsarlo aparecerá un desplegable que, en principio tiene seleccionada la opción ``Automáticamente detectado'':
+
+\figura{1}{avanzado2}
+
+Sin embargo no es esa la opción que nos interesa, pulsamos sobre el desplegable y elegimos la opción ``Importar texto (configurable)'':
+
+
+\figura{1}{importar}
+
+Nos aparecerán una serie de diálogos a través de los cuales indicaremos a gnumeric la forma en que los datos están almacenados en el archivo. El primero de esos diálogos es el siguiente:
+
+\figura{1}{dialogo1}
+
+Las opciones por defecto que se observan en la figura son las apropiadas. No obtante comprobaremos que tenemos marcada la opción ``Delimitados'' como tipo de dato original. Pulsamos entonces sobre el botón rotulado ``Adelante'' para pasar al siguiente diálogo:
+
+
+\figura{1}{dialogo2}
+
+
+Aqui debemos asegurarnos de marcar la opción ``Espacio'' como carácter separador, y de que NO está marcada la opción ``Coma''. Pulsamos en ``Adelante'' para pasar al siguiente diálogo:
+
+\figura{1}{dialogo3}
+
+Y, por último, pulsamos en ``Terminar''. Tendremos entonces dos columnas de datos en la hoja de cálculo, la primera es la Id de cada individuo y la segunda su valor fenotípico:
+
+
+\figura{0.2}{columnas}
+
+Comenzaremos el análisis estadistico de los datos confeccionando un histograma de frecuencias fenotípicas. Para ello elegimos del menú principal de gnumeric las opciones: 
+
+\textbf{Estadística}$\Rightarrow$\textbf{Estadística descriptiva}$\Rightarrow$\textbf{Tablas de frecuencia}$\Rightarrow$\textbf{Histograma}
+
+Aparecerá un díalogo con varias pestañas. En la primera escribiremos como ``Rango de entrada'': \textbf{b2:b201}, ya que los fenotipos se encuentran en este rango de casillas si hemos generado una población de 200 individuos.
+
+\figura{0.6}{histograma1}
+
+Pasamos entonces a la pestaña ``Cutoffs''. Aquí se especifican las clases en las que serán divididos los datos. Aunque vemos que únicamente tenemos 3 clases fenotípicas, en otras ocasiones en las que las clases fenotípicas puedan no estar tan claramente definidas puede ser conveniente dividir los datos en clases pequeñas para poder observar con mayor detalle la distribución de fenotipos. En este caso lo haremos también así ya que es aplicable de una forma más general, y no supone ningún problema a la hora de observar clases fenotípicas claramente definidas como éstas. Puesto que el número mayor es 2, y por defecto, en gnumeric, los rangos están abiertos por su extremo superior, abarcaremos un rango total entre 0--2,1 (ligeramente superior a 2) y lo dividiremos en 21 clases fenotípcas. Para ello especificaremos los datos como se muestra en la figura:
+
+\figura{0.6}{histograma2}
+
+Debemos tener en cuenta que si gnumeric está en español, el carácter decimal es la coma, pero si está en inglés, es el punto.
+
+Pulsaremos entonces en la pestaña ``Gráficas y opciones'', y marcaremos la opción ``Gráfico de histograma''.
+
+\figura{0.6}{histograma3}
+
+A continuación pulsamos en la pestaña ``Salida'', elegimos la opción ``Rango de salida'' y escribimos ``d2'' en el campo correspondiente, para que los resultados aparezca en la misma hoja y tengan su esquina superior izquierda en esta casilla.
+
+\figura{0.6}{histograma-salida}
+
+Pulsamos entonces el botón ``Aceptar'' y aparecerá el histograma de frecuencias, sobre el que podemos pulsar y arrastrarlo hacia la derecha, ya que aparece sobre los datos numéricos con los que se ha hecho el histograma, quedando como se ve a continuación:
+
+\figura{0.8}{histograma4}
+
+En el ejemplo, vemos que hay 119 individuos con un valor fenotípico de 2, 32 con un valor de 1, y 49 con un valor de 0, que han caído dentro de tres de las clases en las que se ha dividido el rango de valores fenotípicos. Según el diseño del carácter, habíamos asignado el color blanco al valor 0, el rojo al valor 1, y el verde al valor 2. Construiremos una pequeña tabla en la hoja de cálculo que resuma estos resultados. Para ello escribimos los colores correspondientes y, junto a ellos ponemos una fórmula que copie los resultados de las casillas correspondientes de la tabla de frecuencias. En la hoja de cálculo, las casillas cuyo contenido comienzan por el símbolo ``='' se consideran fórmulas, por lo que en la casilla a la derecha de ``verde'' tecleamos = y, a continuación picamos sobre la casilla que tiene el total de individuos con valor fenotípico 2, la casilla F24 en nuestro caso, o también podemos directamente teclear =f24. Pulsamos ``Intro'' y deberá aparecer el todal de individuos, copiados de esa casilla. de la misma forma pondremos el total de individuos de color rojo y blanco:
+
+\figura{0.8}{tablita}
+
+Puesto que con dos genes y dos alelos cada uno se pueden formar $2^4=16$ clases genotípicas diferentes, calcularemos las proporciones de las tres clases fenotípicas en dieciseisavos para tener una visión mas precisa de la forma en que están distribuídas. Para ello deberemos dividir el número de individuos de cada clase fenotípica por el total y multiplicarlo por 16:
+\begin{displaymath}
+	P_{16}=\frac{N}{200}\times 16
+\end{displaymath}
+
+Para ello hacemos otra columna, y tecleamos la fórmula como se observa en la figura. En lugar de escribir directamente el número de individuos, anotamos la casilla donde éste se encuentra:
+
+\figura{0.6}{proporcion16}
+
+Al pulsar ``Intro'' deberá aparecer la proporción correspondiente. Seleccionamos la casilla donde acabamos de escribir picando sobre ella. Si está seleccionada presenta una línea doble alrededor, con un pequeño cuadrado en la esquina inferior derecha. Para copiar la fórmula actualizando automáticamente la casilla que hemos incluído en ella como la que contiene la frecuencia observada de la clase fenotípica, tendremos que picar sobre ese pequeño cuadrado de la esquina y estirar el marco doble hacia abajo, abarcando las tres casillas de las tres clases fenotípicas. la fórmula se copiará en todas ellas, actualizando la casilla de donde toma el total de cada clase:
+
+\figura{0.5}{copia16}
+
+Como podemos ver se aproxima a las proporciones 9:3:4, que son las que se esperaría obtener en una $F_2$, es decir en la descendecia de un cruce entre dihíbridos. 
+
+Es interesante que el alumno pueda razonar por su cuenta porqué se han obtenido estas proporciones en una población generada de forma aleatoria, y no mediante el cruce de dos dihíbridos.
+
+Para comprobar si las desviaciones respecto a estas propociones son lo suficientemente grandes como para rechazar que nuestros resultados las cumplan, podemos realizar un análisis de $\chi^2$. Para esto, deberemos calcular cuantos individuos de cada clase fenotípica se esperaría obtener si el total de individuos se repartiese según las proporciones teóricas. Por lo tanto deberemos dividir los 200 individuos del total en $\frac{9}{16}$, $\frac{3}{16}$ y $\frac{4}{16}$.
+
+Podemos crear una columna con las proporciones esperadas, y otra con los valores totales esperados, calculados según la fórmula que se observa en la figura, donde G29 corresponde con la proporción esperada (9):
+
+\figura{0.8}{esp-formula}
+
+Tras pulsar ``Intro'' y copiar la fórmula hacia abajo tendremos la distribución esperada:
+
+\figura{0.8}{esp}
+
+Ahora calcularemos los componentes de la $\chi^2$ según la fórmula:
+\begin{displaymath}
+	\frac{(Obs-Esp)^2}{Esp}
+\end{displaymath}
+
+Incluiremos esta fórmula en la casilla correspondiente sustituyendo los valores Observados y Esperados por los números de las casillas correspondientes, de manera que se actualizen al copiar la fórmula hacia abajo:
+
+\figura{1}{chi-formula}
+
+Una vez copiada, añadiremos una casilla más por debajo de las otras donde pondremos la fórmula con la suma de las tres casillas, como se puede ver en la siguiente figura [sum(i29:i31)], que sumaría el contenido de las casillas desde la I29 hasta la I31, y nos da el resultado mostrado de $1.20$.
+
+\figura{.4}{chi}
+
+Deberemos comparar este valor con los de una tabla de $\chi^2$ para calcular la probabilidad de cometer un error de tipo II, es decir, de equivocarnos si rechazamos la hipótesis que hemos supuesto de que el total de individuos están distribuídos según las proporciones 9:3:4. Nuestro estudio tiene tres clases fenotípicas y, por lo tanto, dos grados de libertad, por lo que compararemos el valor de $\chi^2=1.20$ obtenido con los que se observan en la segunda fila de la siguiente distribución de $\chi^2$:
+
+\begin{center}
+	\begin{tabular}{ccccccccc|ccc}
+		\hline
+		g.l.&0.95&0.90&0.80&0.70&0.50&0.30&0.20&0.10&0.05&0.01&0.001\\
+		\hline
+1&0.004&0.02&0.06&0.15&0.46&1.07&1.64&2.71&3.84&6.64&10.83\\
+2&0.10&0.21&0.45&0.71&1.39&2.41&3.22&4.60&5.99&9.21&13.82\\
+\hline
+	\end{tabular}
+\end{center}
+
+Nuestro valor es: $0.71<1.20<1.39$ que se corresponden con las columnas que indican una probabilidad $0.70>P>0.50$. Al ser la probabilidad de equivocarse al rechazar la hipótesis muy superior al máximo permitido de 0.05, podemos concluir que las desviaciones observadas no permiten rechazar la hipótesis de que las clases fenotípicas se encuentran distribuídas según las proporciones 9:3:4 esperadas en el caso de una herencia con interacción epistática doble recesiva entre dos genes con dos alelos.
+
+Por lo tanto, el diseño del carácter es correcto y se comporta como se esperabamos.
+
+
+
+
+
 \end{document}
