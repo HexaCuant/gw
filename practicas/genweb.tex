@@ -172,7 +172,7 @@ Pulsamos entonces consecutivamente sobre los botones: ``Ocultar Conexiones'', ``
 
 De ahora en adelante podremos utilizar este carácter en nuestros proyectos.
 
-\section{Creación de un proyecto}
+\subsection{Creación de un proyecto}
 
 Para crear nuestro primer proyecto pulsamos sobre el botón ``Proyectos'' del menú principal. Nos aparecerá una tabla de proyectos vacía y un pequeño formulario para crear un proyecto nuevo. Elegimos un nombre para ese proyecto, por ejemplo: ESD, y pulsamos sobre el botón ``Nuevo Proyecto''. Nuestro nuevo proyecto deberá entonces aparecer en la tabla:
 
@@ -192,7 +192,7 @@ Pulsamos una sola vez el botón de la columna ``Seleccionar'' que muestra la Id 
 
 En esta tabla de caracteres asociados al proyecto el campo ``ambiente'' es un valor que determina las variaciones que los cambios ambientales pueden llegar a producir en el fenotipo de los individuos. En nuestro caso pretendemos que el carácter \emph{color} produzca flores de un color determinado de manera independiente a las condiciones ambientales, por lo que asignaremos el valor 0 a este campo, tras lo cual pulsaremos el botón de la columna ``Actualizar'' correspondiente a nuestro carácter. Este valor de ambiente puede modificarse en cualquier momento pulsando de nuevo en este botón.
 
-\section{Creación de una población}
+\subsection{Creación de una población}
 
 Vamos ahora a crear una población aleatoria en nuestro proyecto. Para ello pulsamos sobre el botón ``Generaciones'' del menu principal. En esta parte existen diversos formularios que nos permiten realizar diferentes tipos de operaciones. En nuestro caso nos interesa el apartado \emph{Crear Generación aleatoria}
 
@@ -213,7 +213,7 @@ Al final de la tabla veremos un enlace para descargar los datos. Dependiendo del
 
 Elegiremos donde queremos guardar ese archivo en nuestro ordenador y, posteriormente lo analizaremos en una hoja de cálculo. el nombre del archivo, por ejemplo ``27\_1\_datos.csv'' indica la Id del proyecto (27) y la generación (1) a los que corresponde.
 
-\section{Análisis estadístico}
+\subsection{Análisis estadístico}
 
 Para el análisis estadístico de la población utilizaremos el programa \emph{gnumeric} que podremos descargar e instalar manualmente de:
 
@@ -355,6 +355,31 @@ Deberemos comparar este valor con los de una tabla de $\chi^2$ para calcular la 
 Nuestro valor es: $0.71<1.20<1.39$ que se corresponden con las columnas que indican una probabilidad $0.70>P>0.50$. Al ser la probabilidad de equivocarse al rechazar la hipótesis muy superior al máximo permitido de 0.05, podemos concluir que las desviaciones observadas no permiten rechazar la hipótesis de que las clases fenotípicas se encuentran distribuídas según las proporciones 9:3:4 esperadas en el caso de una herencia con interacción epistática doble recesiva entre dos genes con dos alelos.
 
 Por lo tanto, el diseño del carácter es correcto y se comporta como se esperabamos.
+
+\section{Caracteres cualitativos vs. cuantitativos}
+
+Un carácter cuantitativo es aquel en el que sus posibles fenotipos no pueden dividirse en diferentes clases por presentar una distribución contínua.
+
+Un ejemplo típico de carácter cuantitativo es la altura, por ejemplo la altura de una planta, que puede presentar cualquier valor dentro de cierto rango. La distribución contínua está provocada por la superposición de las variaciones genéticas entre individuos y de variaciones inducidas por las condiciones ambientales. Las distintas combinaciones genotípicas posibles darían individuos con diferentes alturas, que nos permitírían dividir una población en diferentes clases. Por ejemplo, suponiendo un gen con dos alelos con efecto aditivo tendríamos tres clases, dos de homocigotos y una de heterocitos, que presentarían diferentes alturas. Por el efecto de variaciones ambientales durante el crecimiento d ela planta, los individuos de cada clase podrían no tener todos la misma altura y podrían llegar a confundirse las tres clases si la distribución d ealturas d ecada una de ellas llegaran a solaparse. En ese momento el carácter sería cuantitativo. Esto significa por tanto que los carateres cualitativos y cuantitativos no son diferentes. Lo que es diferente es únicamente la manera de estudiarlos. Si se pueden distinguir las clases fenotípicas entonces podremos seguir la segregación de los alelos en sucesivos cruces, lo que nos podrá dar información quenos permita averiguar los genotipos que corresponden a clada clase, o el modo d eherencia del carácter, etc... Si las clases fenotípicas no pueden distinguirse porque se solapan, entonces no podemos agrupar los individuos de una población en clases diferentes, y tenemos que recurrir a estudios estadísticos de la distribución para poder obtener de ellos algún tipo de información.
+
+Si en un carácter intervienen muchos genes con pequeños efectos acumulativos, las poblaciones se dividirán en muchas clases distintas con pequeñas diferencias entre sí, por lo que variaciones ambientales relativamente pequeñas pueden hacer que se solapen. Por eso es común pensar que los caracteres cuantitativos dependen de muchos genes con efecto aditivo, y los cualitativos de pocos, pero, a la vista de lo que aquí hemos comentado, no tiene porqué ser necesariamente así. Un carácter cuantitativo puede depender también de pocos genes, y no todos esos genes tienen porqué contribuir de la misma forma, ni tienen porqué tener efectos aditivos. También puede haber dominancia entre sus alelos o interacciones génicas de todo tipo, por o qu erealmente no hay una diferencia genética entre ambos tipos de caracteres, sino únicamente distintas formas de estudiarlos. 
+
+Un mismo carácter puede por tanto ser a la vez cualitativo y cuantitativo si hay clases fenotípicas que se puedan distintguir del resto, pero las demas clases están solapadas y no se pueden separar. Podemos estudiar las clases que se pueden distinguir por métodos adecuados para caracteres cualitativos, y las demás por métodos para cuantitativos.
+
+Por ejemplo, volviendo a la altura de una planta, podemos tener una distribución contínua de alturas, pero también puede haber un gen con algún alelo mutante que cause enanismo. Las plantas enanas pueden ser claramente distinguibles del resto, aunque no tengan todas exactamente la misma altura, y podemos considerar plantas enanas:normales como un carácter cualitativo, mientras que en poblaciones donde no haya plantas enanas o entre individuos de alturas normales debamos aplicar métodos adecuados para caracteres cuantitativos.
+
+Para comprender cómo pueden darse estos casos vamos a diseñar en GenWeb un carácter que cumpla con estas características y obtendremos una población en la que se puedan distinguir la clases fenotípica enanas:normales, manteniendo una distribución contínua que no nos permite individualizar las clases fenotípicas entre las plantas normales.
+
+\subsection{Diseño del carácter ``altura de una planta''}
+
+Planearemos en primer lugar la forma en que vamos a diseñar este carácter.
+
+En primer lugar crearemos un gen que muestre una dominancia completa entre dos alelos. el alelo recesivo será responsable del enanismo, el alelo dominante producirá una altura normal que dependerá a su vez de varios otros genes con efecto acumulativo, con un alelo menor que incremente la altura cierto valor y un alelo mayor que lo incremente la altura en una mayor cantidad. Para que el alelo que causa el enanismo no deje actuar a los genes que determinan la altura de la planta deberá ejercer sobre todos ellos una epistasis recesiva.
+
+Recordaremos del ejercicio anterior que conseguíamos esta interacción génica anulando un sustrato intermedio que interrumpía así la ruta hasta el fenotipo final. Sin embargo esto ocasionará que el valor fenotípico final sea 0. Necesitamos por tanto dar una altura mínima a las plantas mediante un gen sobre que no tenga interacciones con el que causa el enanismo. Si nos decidimos por implicar a tres genes con efecto aditivo en la altura de la plata, un diseño que cumpliría con las condiciones que acabamos de considerar podría ser el siguiente:
+
+
+
 
 
 
