@@ -1,0 +1,354 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"  
+  "http://www.w3.org/TR/html4/loose.dtd">  
+<html xml:lang="es" > 
+<head><title>Analisis estad<img 
+src="ptmr8t-19.png" alt="i" class="x-x-19" />stico</title> 
+<meta http-equiv="Content-Type" content="text/html; charset=utf8"> 
+<meta name="generator" content="TeX4ht (http://www.cse.ohio-state.edu/~gurari/TeX4ht/)"> 
+<meta name="originator" content="TeX4ht (http://www.cse.ohio-state.edu/~gurari/TeX4ht/)"> 
+<!-- html,3,next,utf8,charset=utf8 --> 
+<meta name="src" content="genweb.tex"> 
+<meta name="date" content="2011-07-19 12:28:00"> 
+<link rel="stylesheet" type="text/css" href="genweb.css"> 
+</head><body 
+>
+   <!--l. 437--><div class="crosslinks"><p class="noindent">[<a 
+href="genwebsu10.html" >prev</a>] [<a 
+href="genwebsu10.html#tailgenwebsu10.html" >prev-tail</a>] [<a 
+href="#tailgenwebsu11.html">tail</a>] [<a 
+href="genwebse3.html#genwebsu11.html" >up</a>] </p></div>
+   <h4 class="subsectionHead"><span class="titlemark">3.4.    </span> <a 
+ id="x16-170003.4"></a>Análisis estadístico</h4>
+<!--l. 439--><p class="noindent" >Recordaremos que para abrir el archivo de datos en gnumeric debemos elegir la opción &#8220;Importar texto (configurable)&#8221;, y
+que es importante que en el segundo diálogo de importación seleccionemos &#8220;Espacio&#8221; como separador y comprobemos
+que NO tenemos seleccionado &#8220;coma&#8221;:
+<div class="center" 
+>
+<!--l. 441--><p class="noindent" >
+
+<!--l. 441--><p class="noindent" ><img 
+src="figs/alturaimportar.jpg" alt="PIC"  
+></div>
+<!--l. 443--><p class="indent" >   Una vez que tenemos los datos en la hoja de cálculo realizaremos el histograma de frecuencias fenotípicas para
+observar la distribución. Elegiremos las opciones:
+<!--l. 445--><p class="indent" >   <span 
+class="ptmb8t-">Estad</span><span 
+class="ptmb8t-">ística</span><span 
+class="zpzccmry-">&rArr;</span><span 
+class="ptmb8t-">Estad</span><span 
+class="ptmb8t-">ística descriptiva</span><span 
+class="zpzccmry-">&rArr;</span><span 
+class="ptmb8t-">Tablas de frecuencia</span><span 
+class="zpzccmry-">&rArr;</span><span 
+class="ptmb8t-">Histograma</span>
+<!--l. 447--><p class="indent" >   Como rango de entrada en la primera pestaña pondremos b2:b501, ya uqe tenemos 500 individuos:
+<div class="center" 
+>
+<!--l. 449--><p class="noindent" >
+
+<!--l. 449--><p class="noindent" ><img 
+src="figs/altura-rango.jpg" alt="PIC"  
+></div>
+<!--l. 451--><p class="indent" >   En la pestaña &#8220;Cutoffs&#8221;, puesto que los valore fenotípicos son mayores de 0 y menores de 500, elegiremos este rango
+total y lo dividiremos en 50 clases:
+<div class="center" 
+>
+<!--l. 453--><p class="noindent" >
+
+<!--l. 453--><p class="noindent" ><img 
+src="figs/altura-cutoffs.jpg" alt="PIC"  
+></div>
+<!--l. 455--><p class="indent" >   En la pestaña &#8220;Gráficas y opciones&#8221; elegimos &#8220;Gráfico de histograma&#8221;:
+<div class="center" 
+>
+<!--l. 458--><p class="noindent" >
+
+<!--l. 458--><p class="noindent" ><img 
+src="figs/altura-histograma.jpg" alt="PIC"  
+></div>
+<!--l. 460--><p class="indent" >   Y en la pestaña &#8220;Salida&#8221; elegimos &#8220;Rango de salida&#8221; y ponemos &#8220;d2&#8221; para que la esquina superior izquierda de la
+salida parta desde esa celda.
+<div class="center" 
+>
+<!--l. 463--><p class="noindent" >
+
+<!--l. 463--><p class="noindent" ><img 
+src="figs/altura-d2.jpg" alt="PIC"  
+></div>
+<!--l. 466--><p class="indent" >   Cuando pulsemos en el botón &#8220;Aceptar&#8221; podremos ver el histograma de frecuencias. Necesitaremos desplazarlo hacia
+la derecha para hacer visible la lista numérica de clases, y también puede ser conveniente estirarlo ligeramente en
+horizontal para distinguir con más facilidad las clases fenotípicas:
+                                                                                      
+                                                                                      
+<div class="center" 
+>
+<!--l. 469--><p class="noindent" >
+
+<!--l. 469--><p class="noindent" ><img 
+src="figs/altura-hist.jpg" alt="PIC"  
+></div>
+<!--l. 471--><p class="indent" >   Vemos que los datos preentan una distribución bimodal, con dos grupos claramente diferenciables, que presentan una
+distribución gaussiana. Consideradas por separado, cada una de las distribuciones tiene la apariencia típica de un carácter
+cuantitativo, en el que la superposición de la variación genética y las variaciones ambientales provocan una distribución
+contínua que hace imposible distinguir diferentes clases de individuos.
+<!--l. 473--><p class="indent" >   La distribución bimodal está causada por el gen que provoca enanismo. Las plantas homocigóticas <span 
+class="zptmcmrm-">e</span><sub><span 
+class="zptmcmr-x-x-74">2</span></sub><span 
+class="zptmcmrm-">e</span><sub><span 
+class="zptmcmr-x-x-74">2</span></sub> son enenas y
+presentan valores fenotípicos en torno a 100. Estas plantas serán las que forman la distribución de la izquierda. En la
+derecha deben encontrarse tanto las plantas <span 
+class="zptmcmrm-">E</span><sub><span 
+class="zptmcmr-x-x-74">1</span></sub><span 
+class="zptmcmrm-">E</span><sub><span 
+class="zptmcmr-x-x-74">1</span></sub> como las <span 
+class="zptmcmrm-">E</span><sub><span 
+class="zptmcmr-x-x-74">1</span></sub><span 
+class="zptmcmrm-">e</span><sub><span 
+class="zptmcmr-x-x-74">2</span></sub> y, entre estas, las habrá con las diferntes combinaciones
+genotípicsas posibles de los genes <span 
+class="zptmcmrm-">A</span>, <span 
+class="zptmcmrm-">B </span>y <span 
+class="zptmcmrm-">C</span>.
+<!--l. 475--><p class="indent" >   Si consideramos únicamente las plantas enanas:normales, esperamos que estén en una proporción 1:3.
+Vamos a considerar por tanto únicamente las dos clases que se pueden distinguir y a sumar los indiviudos
+que pertenecen a cada una de ellas y a comprobar mediante un análisis de <span 
+class="zptmcmrm-">&chi;</span><sup><span 
+class="zptmcmr-x-x-74">2</span></sup> si se puede o no rechazar
+que los datos se encuentren en estas proporciones. En la siguiente figura vemos el rango de valores que
+corresponden con la clase enanas seleccionadas con el rectángulo verde para incluirlas en la fórmula con la
+suma:
+<div class="center" 
+>
+<!--l. 477--><p class="noindent" >
+
+<!--l. 477--><p class="noindent" ><img 
+src="figs/rango1.jpg" alt="PIC"  
+></div>
+<!--l. 479--><p class="indent" >   De la misma manera seleccionamos y calculamos la suma del rango de plantas normales:
+<div class="center" 
+>
+<!--l. 481--><p class="noindent" >
+
+<!--l. 481--><p class="noindent" ><img 
+src="figs/rango2.jpg" alt="PIC"  
+></div>
+<!--l. 483--><p class="indent" >   Calulamos entonces las frecuencias observadas multiplicando los valores absolutos de cada clase por 4 y dividiéndolos
+por el total de individuos. Podemos introducir la fórmula en una de las casillas y copiarla en la otra si en lugar de poner los
+valores indicamos la celdilla de donde deban leerse:
+<div class="center" 
+>
+<!--l. 485--><p class="noindent" >
+
+<!--l. 485--><p class="noindent" ><img 
+src="figs/fobs4.jpg" alt="PIC"  
+></div>
+<!--l. 487--><p class="indent" >   Podemos crear otra columna con las proporciones esperadas 1:3, y otra más donde calcularemos la frecuencia absoluta
+esperada de cada clase de la siguiente forma:
+<div class="center" 
+>
+<!--l. 489--><p class="noindent" >
+
+<!--l. 489--><p class="noindent" ><img 
+src="figs/esp-altura.jpg" alt="PIC"  
+></div>
+<!--l. 491--><p class="indent" >   Calcularemos ahora los componentes de la <span 
+class="zptmcmrm-">chi</span><sup><span 
+class="zptmcmr-x-x-74">2</span></sup> aplicándo la fórmula:
+                                                                                      
+                                                                                      
+   <center class="par-math-display" >
+<img 
+src="genweb5x.png" alt="         2
+(Obs-&minus; Esp-)
+   Esp
+" class="par-math-display" ></center>
+<!--l. 495--><p class="nopar" >
+<!--l. 497--><p class="indent" >   Pulsando para cada dato en la celdillas de donde debe leerse, o escribiendo la posición de la celdillas directamente en la
+fórmula:
+<div class="center" 
+>
+<!--l. 499--><p class="noindent" >
+
+<!--l. 499--><p class="noindent" ><img 
+src="figs/chi-altura1.jpg" alt="PIC"  
+></div>
+<!--l. 501--><p class="indent" >   Después calcularemos la suma de los componentes de la <span 
+class="zptmcmrm-">&chi;</span><sup><span 
+class="zptmcmr-x-x-74">2</span></sup>:
+<div class="center" 
+>
+<!--l. 503--><p class="noindent" >
+
+<!--l. 503--><p class="noindent" ><img 
+src="figs/sumachi-altura.jpg" alt="PIC"  
+></div>
+<!--l. 505--><p class="indent" >   Compararemos el valor obtenido, en este caso 0.096:
+<div class="center" 
+>
+<!--l. 507--><p class="noindent" >
+
+<!--l. 507--><p class="noindent" ><img 
+src="figs/chi2-altura.jpg" alt="PIC"  
+></div>
+<!--l. 509--><p class="indent" >   con la distribución de <span 
+class="zptmcmrm-">&chi;</span><sup><span 
+class="zptmcmr-x-x-74">2</span></sup> considerando un grado de libertad, ya que tenemos únicamente dos clases:
+<div class="center" 
+>
+<!--l. 511--><p class="noindent" >
+<div class="tabular"> <table id="TBL-3" class="tabular" 
+cellspacing="0" cellpadding="0" rules="groups" 
+><colgroup id="TBL-3-1g"><col 
+id="TBL-3-1"><col 
+id="TBL-3-2"><col 
+id="TBL-3-3"><col 
+id="TBL-3-4"><col 
+id="TBL-3-5"><col 
+id="TBL-3-6"><col 
+id="TBL-3-7"><col 
+id="TBL-3-8"><col 
+id="TBL-3-9"></colgroup><colgroup id="TBL-3-10g"><col 
+id="TBL-3-10"><col 
+id="TBL-3-11"><col 
+id="TBL-3-12"></colgroup><tr 
+class="hline"><td><hr></td><td><hr></td><td><hr></td><td><hr></td><td><hr></td><td><hr></td><td><hr></td><td><hr></td><td><hr></td><td><hr></td><td><hr></td><td><hr></td></tr><tr  
+ style="vertical-align:baseline;" id="TBL-3-1-"><td  style="white-space:nowrap; text-align:center;" id="TBL-3-1-1"  
+class="td11">g.l.</td><td  style="white-space:nowrap; text-align:center;" id="TBL-3-1-2"  
+class="td11"> 0.95 </td><td  style="white-space:nowrap; text-align:center;" id="TBL-3-1-3"  
+class="td11">0.90</td><td  style="white-space:nowrap; text-align:center;" id="TBL-3-1-4"  
+class="td11">0.80</td><td  style="white-space:nowrap; text-align:center;" id="TBL-3-1-5"  
+class="td11">0.70</td><td  style="white-space:nowrap; text-align:center;" id="TBL-3-1-6"  
+class="td11">0.50</td><td  style="white-space:nowrap; text-align:center;" id="TBL-3-1-7"  
+class="td11">0.30</td><td  style="white-space:nowrap; text-align:center;" id="TBL-3-1-8"  
+class="td11">0.20</td><td  style="white-space:nowrap; text-align:center;" id="TBL-3-1-9"  
+class="td11">0.10</td><td  style="white-space:nowrap; text-align:center;" id="TBL-3-1-10"  
+class="td11">0.05</td><td  style="white-space:nowrap; text-align:center;" id="TBL-3-1-11"  
+class="td11">0.01</td><td  style="white-space:nowrap; text-align:center;" id="TBL-3-1-12"  
+class="td11">0.001</td>
+</tr><tr 
+class="hline"><td><hr></td><td><hr></td><td><hr></td><td><hr></td><td><hr></td><td><hr></td><td><hr></td><td><hr></td><td><hr></td><td><hr></td><td><hr></td><td><hr></td></tr><tr  
+ style="vertical-align:baseline;" id="TBL-3-2-"><td  style="white-space:nowrap; text-align:center;" id="TBL-3-2-1"  
+class="td11"> 1  </td><td  style="white-space:nowrap; text-align:center;" id="TBL-3-2-2"  
+class="td11">0.004</td><td  style="white-space:nowrap; text-align:center;" id="TBL-3-2-3"  
+class="td11">0.02</td><td  style="white-space:nowrap; text-align:center;" id="TBL-3-2-4"  
+class="td11">0.06</td><td  style="white-space:nowrap; text-align:center;" id="TBL-3-2-5"  
+class="td11">0.15</td><td  style="white-space:nowrap; text-align:center;" id="TBL-3-2-6"  
+class="td11">0.46</td><td  style="white-space:nowrap; text-align:center;" id="TBL-3-2-7"  
+class="td11">1.07</td><td  style="white-space:nowrap; text-align:center;" id="TBL-3-2-8"  
+class="td11">1.64</td><td  style="white-space:nowrap; text-align:center;" id="TBL-3-2-9"  
+class="td11">2.71</td><td  style="white-space:nowrap; text-align:center;" id="TBL-3-2-10"  
+class="td11">3.84</td><td  style="white-space:nowrap; text-align:center;" id="TBL-3-2-11"  
+class="td11">6.64</td><td  style="white-space:nowrap; text-align:center;" id="TBL-3-2-12"  
+class="td11">10.83</td>
+</tr><tr  
+ style="vertical-align:baseline;" id="TBL-3-3-"><td  style="white-space:nowrap; text-align:center;" id="TBL-3-3-1"  
+class="td11"> 2  </td><td  style="white-space:nowrap; text-align:center;" id="TBL-3-3-2"  
+class="td11"> 0.10 </td><td  style="white-space:nowrap; text-align:center;" id="TBL-3-3-3"  
+class="td11">0.21</td><td  style="white-space:nowrap; text-align:center;" id="TBL-3-3-4"  
+class="td11">0.45</td><td  style="white-space:nowrap; text-align:center;" id="TBL-3-3-5"  
+class="td11">0.71</td><td  style="white-space:nowrap; text-align:center;" id="TBL-3-3-6"  
+class="td11">1.39</td><td  style="white-space:nowrap; text-align:center;" id="TBL-3-3-7"  
+class="td11">2.41</td><td  style="white-space:nowrap; text-align:center;" id="TBL-3-3-8"  
+class="td11">3.22</td><td  style="white-space:nowrap; text-align:center;" id="TBL-3-3-9"  
+class="td11">4.60</td><td  style="white-space:nowrap; text-align:center;" id="TBL-3-3-10"  
+class="td11">5.99</td><td  style="white-space:nowrap; text-align:center;" id="TBL-3-3-11"  
+class="td11">9.21</td><td  style="white-space:nowrap; text-align:center;" id="TBL-3-3-12"  
+class="td11">13.82</td>
+</tr><tr 
+class="hline"><td><hr></td><td><hr></td><td><hr></td><td><hr></td><td><hr></td><td><hr></td><td><hr></td><td><hr></td><td><hr></td><td><hr></td><td><hr></td><td><hr></td></tr><tr  
+ style="vertical-align:baseline;" id="TBL-3-4-"><td  style="white-space:nowrap; text-align:center;" id="TBL-3-4-1"  
+class="td11">   </td></tr></table></div></div>
+<!--l. 522--><p class="indent" >   El valor de <span 
+class="zptmcmrm-">&chi;</span><sup><span 
+class="zptmcmr-x-x-74">2</span></sup> obtenido se encuentra entre <span 
+class="zptmcmr-">0</span><span 
+class="zptmcmrm-">.</span><span 
+class="zptmcmr-">06 </span><span 
+class="zptmcmrm-">&#x003C; </span><span 
+class="zptmcmr-">0</span><span 
+class="zptmcmrm-">.</span><span 
+class="zptmcmr-">096 </span><span 
+class="zptmcmrm-">&#x003C; </span><span 
+class="zptmcmr-">0</span><span 
+class="zptmcmrm-">.</span><span 
+class="zptmcmr-">15 </span>que se corresponden con unas probabilidades de
+<span 
+class="zptmcmr-">0</span><span 
+class="zptmcmrm-">.</span><span 
+class="zptmcmr-">80 </span><span 
+class="zptmcmrm-">&#x003E; P &#x003E; </span><span 
+class="zptmcmr-">0</span><span 
+class="zptmcmrm-">.</span><span 
+class="zptmcmr-">70</span>. Por tanto la probabilidad de equivocarnos si rechamos la hipótesis planteada de que los datos siguen
+unas proporciones 1:3 es muy superior al máximo poermitido de 0.05, por lo que no podemos rechazar esa
+suposición.
+<!--l. 524--><p class="indent" >   Como vemos, un carácter cuantitativo como la altura puede, en ciertas ocasiones ser analizado como cuantitativo
+cuando se puedne distinguir clases fenotípicas concretas. Si nuestro diseño del carácter es correcto la clase de plantas
+enenas debe corresponder a plantas hocigóticas <span 
+class="zptmcmrm-">e</span><sub><span 
+class="zptmcmr-x-x-74">2</span></sub><span 
+class="zptmcmrm-">e</span><sub><span 
+class="zptmcmr-x-x-74">2</span></sub>, aunque tengan distintas combinacioes de alelos en los
+demás genes, si las cruzamos entre sí deberemos obtener una población que constaría únicamente de plantas
+enenas.
+<!--l. 526--><p class="indent" >   Para comprobarlo, realizaremos un cruce eligiendo como parentales varias de las plantas que tengas valores
+fenotípicos en torno a 100. En GenWeb, nos aseguraremos que tenemos visibles las generaciones, si no es así pulsaremos
+el botón &#8220;Ver generaciones&#8221;, y que tenamos abierta la generación 1 que hemos creado inicialmente, si no es así
+pulsaremos sobre el botón &#8220;Abrir&#8221; correspondiente a ésta generación. Asimismo pulsaremos el botón &#8220;Ver parentales&#8221;
+dentro del recuadro &#8220;crear un cruce&#8221; para poder ver la tabla de parentales que vayamos seleccionado. La página deberá
+tener entonces un aspecto como el siguiente:
+                                                                                      
+                                                                                      
+<div class="center" 
+>
+<!--l. 528--><p class="noindent" >
+
+<!--l. 528--><p class="noindent" ><img 
+src="figs/cruce1.jpg" alt="PIC"  
+></div>
+<!--l. 531--><p class="indent" >   A continuación iremos eligiendo individuos con valores fenotípicos alrededor de 100 de la lista de individuos de la
+generación 1, pulsando el botón correspondiente de la columna &#8220;Selec.&#8221; para irlos seleccionando. Deberán de ir
+apareciendo en la tabla de parentales:
+<div class="center" 
+>
+<!--l. 533--><p class="noindent" >
+
+<!--l. 533--><p class="noindent" ><img 
+src="figs/parentales.jpg" alt="PIC"  
+></div>
+<!--l. 535--><p class="indent" >   Una vez seleccionados unos cuantos individuos ponemos el tamaño de la población que queremos generar (500 en el
+ejemplo) y pulsamos el botón &#8220;Crear nueva generación&#8221;. La nueva generación deberá entonces aparecer en la tabla de
+generaciones:
+<div class="center" 
+>
+<!--l. 538--><p class="noindent" >
+
+<!--l. 538--><p class="noindent" ><img 
+src="figs/g2.jpg" alt="PIC"  
+></div>
+<!--l. 540--><p class="indent" >   Podremos entonces abrir la generación 2, y observar los valores fenotípicos que tienen los individuos. Vemos que
+todos tienen valores inferiores a 200, por lo que elegiremos éste como valor máximo a la hora de representar el histograma
+de frecuencias. Bajaremos hasta la parte inferior de la lista de individuos, y descargaremos el archivo con los datos
+generados.
+<!--l. 542--><p class="indent" >   Ya conocemos los pasos que hay que seguir para importar estos datos como texto configurable en gnumeric, y generar
+un histograma de frecuencias en el que elegiremos, en la pestaña &#8220;Cutoffs&#8221;, un total de 20 clases con un rango ente 0 y
+200.
+<!--l. 544--><p class="indent" >   El g&#x0155;afico que obtenemos nos muestra que efectivamente tenemos una única distribución contínua de tipo
+gaussiano, con una media en torno a 100, como corresponde a una población formada únicmaente por plantas
+enanas.
+<div class="center" 
+>
+<!--l. 546--><p class="noindent" >
+
+<!--l. 546--><p class="noindent" ><img 
+src="figs/enanas.jpg" alt="PIC"  
+></div>
+   <!--l. 558--><div class="crosslinks"><p class="noindent">[<a 
+href="genwebsu10.html" >prev</a>] [<a 
+href="genwebsu10.html#tailgenwebsu10.html" >prev-tail</a>] [<a 
+href="genwebsu11.html" >front</a>] [<a 
+href="genwebse3.html#genwebsu11.html" >up</a>] </p></div>
+<!--l. 558--><p class="indent" >   <a 
+ id="tailgenwebsu11.html"></a>  
+</body></html> 
