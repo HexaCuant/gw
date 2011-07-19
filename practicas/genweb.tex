@@ -378,6 +378,104 @@ En primer lugar crearemos un gen que muestre una dominancia completa entre dos a
 
 Recordaremos del ejercicio anterior que conseguíamos esta interacción génica anulando un sustrato intermedio que interrumpía así la ruta hasta el fenotipo final. Sin embargo esto ocasionará que el valor fenotípico final sea 0. Necesitamos por tanto dar una altura mínima a las plantas mediante un gen sobre que no tenga interacciones con el que causa el enanismo. Si nos decidimos por implicar a tres genes con efecto aditivo en la altura de la plata, un diseño que cumpliría con las condiciones que acabamos de considerar podría ser el siguiente:
 
+\figura{1}{altura}
+
+En esta ruta partimos del sustrato $S_0$ con un valor 1, para que la ruta disponga de un sustrato de partida. Sobre éste actúa en gen X, con dos alelos codominantes que controbuyen por igual a la altura de la planta y que devuelven su valor directamente a $S_2$, contribuyendo a una altura mínima de la planta de manera independiente al resto de los genes. Sobre $S_0$ actúa también en gen E, cuyo alelo rececivo $e_2$, con valor 0 produce la interrupción de la ruta en $S_1$ cuando está en homocigosis, haciendo que no se sume el efecto de niguno de los genes $A$, $B$ o $C$ y causando por tanto enanismo en la planta. La presencia del alelo dominante $E_1$ le da a $S_1$ un valor 10 (que podrían ser una contribución de 10 cm a la altura final) y sobre $S_1$ actúan con efecto acumulativo los genes $A$, $B$ y $C$, con dos alelos cada uno, uno con un efecto mayor que contribuye con 100 cm, y otro con efecto menos que contribuye con 50 cm. Finalmente el efecto conjunto de todos estos genes ocasionarán una altura determinada de la planta, que podrá presentar también variaciones debidas a condiciones ambientales que pudieran afectar su crecimiento.
+
+\subsection{Implementación de los genes en GenWeb}
+
+Pueto que ya sabemos crear nuevos caracteres en GenWeb, no será necesario repetir todos los pasos básicos de nuevo. Simplmente creamos un nuevo gen llamado ``altura'', lo abrimos, y añadimos los siguientes genes:
+
+\figura{.5}{genesaltura}
+
+En este paso lo único relevante es dar a cada gen su nombre, según nuestro diseño, y colocarlos en cromosomas diferentes de modo que presenten segregación independiente.
+
+Una vez creados los genes debemos añadir los alelos correspondoentes a cada uno de ellos. Abrimos el gen $E$ y añadimos los dos alelos correspondientes:
+
+\figura{.5}{alelosE}
+
+Vemos que, de acuerdo con el diseño, hemos asignado una valor 10 a $E_1$ y 0 a $e_2$. Para que haya una dominancia completa, el valor de dominancia es respectivamente, 100 y 0.
+
+Para el caso de los genes $A$, $B$ y $C$, añadiremos en los trres casos alelos similares, como los del ejemplo del gen $A$:
+
+\figura{.5}{alelosalturaA}
+
+Para conseguir que un gen tenga efecto aditivo en GenWeb, se asigna un valor de dominancia de 1000 a todos los alelos que queremos que sean acumulativos.
+
+Por último nos falta añadir los alelos el gen $X$:
+
+\figura{.5}{alelosX}
+
+Ambos alelos tienen el mismo valor y presentan efecto acumulativo.
+
+para que estos genes interaccionen de la forma en que los hemos diseñado, deberemos conectarlos correctamente:
+
+\figura{.5}{conect-altura}
+
+Vemos que se han creado tres sustratos, y la forma en que se han realizado las conexiones. Las Id de cada gen pueden comprobarse en la tabla de genes.
+
+\subsection{Obtener una población aleatoria}
+
+Una vez creado el carácter podemos utilizarlo en proyectos. Crearemos un nuevo proyecto al que podremos llamar ``altura'' y, una vez creado lo abrimos:
+
+\figura{.6}{crearaltura}
+
+Una vez abierto volvemos a la página de ``Caracteres'' y sleccionamos el carácter:
+
+\figura{.6}{selecaltura}
+
+Para generar variaciones fenotípicas debidas al ambiente debemos poner un valor distinto de 0 en el campo ``Ambiente''. El valor de ese campo se expresa en las mismas unidades arbitrarias que se hayan elegido para el carácter. Con un poco de práctica se aprende a elegir unos valores acordes con el tipo de carácter que se haya diseñado. En nuestro caso haremos algunas consideraciones: las plantas más pequeñas tendrán un valor fenotípico en torno a 100, debido únicamente a la actuación del gen $X$. Aproximadamente un 10--20\% de este valor causará una dispersión de los valores fenotípicos que no será demasiado grande como para que lleguen a ocultar todas las diferencias genotípicas, así que probaremos con un valor de 20 para el ambiente, y pulsamos el botón ``Actualizar'' para que ese valor de variaciones ambientales se tenga en cuenta en las poblacones que creemos a partir de este momento.
+
+Iremos entonces a la página de ``Generaciones'', y en el apartado ``Crear Generación Aleatoria'' ponemos un tamaño de población de 500 individuos y pulsamos en ``Crear Generación''.
+
+Pulsamos entonces en ``Ver Generaciones'' y abrimos la generación 1:
+
+\figura{.7}{alturaG1}
+
+Bajamos entonces hasta el final de la tabla y descargamos el archivo con los datos generados a nuestro ordenador para realizar algún análisis estadístico.
+
+\subsection{Análisis estadístico}
+
+Recordaremos que para abrir el archivo de datos en gnumeric debemos elegir la opción ``Importar texto (configurable)'', y  que es importante que en el segundo diálogo de importación seleccionemos ``Espacio'' como separador y comprobemos que NO tenemos seleccionado ``coma'':
+
+\figura{1}{alturaimportar}
+
+Una vez que tenemos los datos en la hoja de cálculo realizaremos el histograma de frecuencias fenotípicas para observar la distribución. Elegiremos las opciones:
+
+\textbf{Estadística}$\Rightarrow$\textbf{Estadística descriptiva}$\Rightarrow$\textbf{Tablas de frecuencia}$\Rightarrow$\textbf{Histograma}
+
+Como rango de entrada en la primera pestaña pondremos b2:b501, ya uqe tenemos 500 individuos:
+
+\figura{.6}{altura-rango}
+
+En la pestaña ``Cutoffs'', puesto que los valore fenotípicos son mayores de 0 y menores de 500, elegiremos este rango total y lo dividiremos en 50 clases:
+
+\figura{.6}{altura-cutoffs}
+
+En la pestaña ``Gráficas y opciones'' elegimos ``Gráfico de histograma'':
+
+
+\figura{.6}{altura-histograma}
+
+Y en la pestaña ``Salida'' elegimos ``Rango de salida'' y ponemos ``d2'' para que la esquina superior izquierda de la salida parta desde esa celda.
+
+
+\figura{.6}{altura-d2}
+
+
+Cuando pulsemos en el botón ``Aceptar'' podremos ver el histograma de frecuencias. Necesitaremos desplazarlo hacia la derecha para hacer visible la lista numérica de clases, y también puede ser conveniente estirarlo ligeramente en horizontal para distinguir con más facilidad las clases fenotípicas:
+
+
+\figura{.6}{altura-hist}
+
+Vemos que los datos preentan una distribución bimodal, con dos grupos claramente diferenciables, que presentan una distribución gaussiana. Consideradas por separado, cada una de las distribuciones tiene la apariencia típica de un carácter cuantitativo, en el que la superposición de la variación genética y las variaciones ambientales provocan una distribución contínua que hace imposible distinguir diferentes clases de individuos.
+
+La distribución bimodal está causada por el gen que provoca enanismo. Las plantas homocigóticas $e_2e_2$ son enenas y presentan valores fenotípicos en torno a 100. Estas plantas serán las que forman la distribución de la izquierda. En la derecha deben encontrarse tanto las plantas $E_1E_1$ como las $E_1e_2$ y, entre estas, las habrá con las diferntes combinaciones genotípicsas posibles de los genes $A$, $B$ y $C$.
+
+Si consideramos únicamente las plantas enanas:normales, esperamos que estén en una proporción 1:3.
+
+
+
 
 
 
