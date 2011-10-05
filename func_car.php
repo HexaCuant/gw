@@ -1,11 +1,11 @@
 <?
-
 function listacar()
 {
 				$conn = conecta();
- //$sql="select distinct caracter_id from caracteres_proy where proyecto_id =".$proyecto_id;
- $sql="select id,name from caracteres order by id";
+				//$sql="select distinct caracter_id from caracteres_proy where proyecto_id =".$proyecto_id;
+				$sql="select id,name from caracteres where creatorid = '".$_SESSION['id']."' or public order by id";
  $res=pg_query($conn,$sql);
+ pg_close($conn);
  $rows=pg_NumRows($res);
 ?>
 <form action="index.php?option=1#fin" method="post">
@@ -30,7 +30,6 @@ function listacar()
  </table>
 </form>
  <?
- pg_close($conn);
  //formnewcar();
 }
 
@@ -94,7 +93,7 @@ function	insertcar($carname)
 				$conn = conecta();
 				if (isset($_POST['visible'])) $visible = "t"; else $visible="f";
 				if (isset($_POST['publico'])) $publico = "t"; else $publico="f";
-				$sql="insert into caracteres (name,creatorid,public,visible) values ('".$carname."','".$_SESSION['userid']."','".$publico."','".$visible."')";
+				$sql="insert into caracteres (name,creatorid,public,visible) values ('".$carname."','".$_SESSION['id']."','".$publico."','".$visible."')";
 				$res = pg_query($conn,$sql);
 				if(!$res) echo "Error en la inserción del proyecto";
 				pg_close($conn);
@@ -125,7 +124,7 @@ function testcar($id){
 								if (isset($_POST['public'])) $public="t"; else $public = "f";
 								$ambiente = $_POST['ambiente'];
 								$conn = conecta();
-								$sql = "update caracteres set visible='".$visible."', public='".$public."', sexo='".$sexo."', ambiente ='".$ambiente."' where id = ".$_SESSION['caractivo'];
+								$sql = "update caracteres set visible='".$visible."', public='".$public."', sexo='".$sexo."' where id = ".$_SESSION['caractivo'];
 								$res = pg_query($conn,$sql);
 								pg_close($conn);
 								if(!$res) echo "Error: carácter no encontrado";
@@ -140,9 +139,27 @@ function testcar($id){
 				if(isset($_SESSION['caractivo'])) datoscar($_SESSION['caractivo']);
 }
 
+function checkowner($id){
+				$conn = conecta();
+				$sql="select creatorid from caracteres where id=".$id;
+				$res=pg_query($conn,$sql);
+				pg_close($conn);
+				if (!$res) echo "ERROR: No se pudo borrar el carácter";
+				else $owner=pg_fetch_result($res,0,0);
+				if ($owner==$_SESSION['id']) return TRUE;
+				else return FALSE;
+				pg_close($conn);
+}
+
+
 function carbutton($id){
 ?>
-<td><input type="submit" name="borrarcar" value="<?=$id?>"></input><input type="checkbox" name="confirmado"></input></td>
+<td><input type="submit" name="borrarcar" value="<?=$id?>"></input>
+<?
+				if(checkowner($id)){
+?>
+<input type="checkbox" name="confirmado"></input></td>
+<?}?>
 <td><input type="submit" name="abrircar" value="<?=$id?>"></input></td> 
 <?
 				if($_SESSION['proactivo']){
@@ -160,7 +177,7 @@ function carbuttonproy($id){
 
 function datoscar($car_id){
 				        $conn = conecta();
-								$sql="select name,public,visible,sexo from caracteres where id=".$car_id;
+								$sql="select name,public,visible,sexo,creatorid from caracteres where id=".$car_id;
 								$res = pg_query($conn,$sql);
 								pg_close($conn);
 								if(!$res) echo "Error: carácter no encontrado";
@@ -169,6 +186,7 @@ function datoscar($car_id){
 												$public =  pg_fetch_result($res,0,1);
 												$visible =  pg_fetch_result($res,0,2);
 												$sexo =  pg_fetch_result($res,0,3);
+												$creatorid =  pg_fetch_result($res,0,4);
 								}
 ?>
 			<h2>Carácter:<?=$_SESSION['name_caractivo']?></h2>
@@ -177,9 +195,18 @@ function datoscar($car_id){
 			<p>Visible: <input type="checkbox" name="visible" <?if($visible == "t") print("checked")?>></input>
 			Público: <input type="checkbox" name="public" <?if($public == "t") print("checked")?>></input>
 			</p>
-      <input type="submit" value="Guardar Cambios" name="datoscar"></input><input type="submit" value="Cerrar" name="cerrarcar"></input></p>
+<?
+if($creatorid == $_SESSION['id']){
+?>
+			<input type="submit" value="Guardar Cambios" name="datoscar"></input>
+<?
+}
+?>
+<input type="submit" value="Cerrar" name="cerrarcar"></input></p>
 
 <?
+if(($creatorid == $_SESSION['id']) || ($visible == 't')){
+
 								if($_SESSION['vergenes']){
 ?>
 			<p><input type="submit" value="Ocultar Genes" name="ocultargenes"></input></p><?
@@ -187,8 +214,12 @@ function datoscar($car_id){
 								else{
 ?>
 												<p><input type="submit" value="Ver Genes" name="vergenes"></input></p><?
-								}?>
+								}
+}
+if($creatorid == $_SESSION['id']){
+?>
 			<p><input type="submit" value="Nuevo gen" name="nuevogen"></input></p>
+<?}?>
       </form>
 
 </div><?

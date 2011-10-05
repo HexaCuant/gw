@@ -12,7 +12,7 @@ formcierrapro();
 }
 else
 {
- listapro($_SESSION['userid']);
+ listapro($_SESSION['id']);
  formnewpro();
  if($_POST['newpro'] == "Nuevo Proyecto")
  {

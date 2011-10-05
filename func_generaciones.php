@@ -63,11 +63,11 @@ function processline($line){
 								while($fenotipos[$i] !== "$"){
 												$i++;
 												?><td><?=$fenotipos[$i]?><?
-												indivbutton($idindiv);
 												fwrite($_SESSION['out']," ".$fenotipos[$i]);
 												$i++;
 												$j++;
 								}
+												indivbutton($idindiv);
 								?></tr><?
 								fwrite($_SESSION['out'],"\n");
 								echo "\n";
@@ -240,12 +240,12 @@ function cruce(){
 								$res=pg_query($conn,$sql);
 				}
 				if(isset($_POST['addindiv'])){
-								$sql="insert into parentales (generacion_id, indiv_id, gener_indiv_id) values (".$_SESSION['cruce_gen_id'].",".$_POST['addindiv'].",".$_SESSION['generacionactiva'].")";
+								$sql="insert into parentales (generacion_id, indiv_id, gener_indiv_id,proy_id) values (".$_SESSION['cruce_gen_id'].",".$_POST['addindiv'].",".$_SESSION['generacionactiva'].",".$_SESSION['proactivo'].")";
 								$res=pg_query($conn,$sql);
 				}
 				?><table><?
 				?><tr><th>N.</th><th>Indiv. Id</th><th>Generación</th><th>Borrar</th></tr><?
-				$sql="select id, indiv_id, gener_indiv_id from parentales where generacion_id = ".$_SESSION['cruce_gen_id']." order by gener_indiv_id, indiv_id";
+				$sql="select id, indiv_id, gener_indiv_id from parentales where generacion_id = ".$_SESSION['cruce_gen_id']." and proy_id =". $_SESSION['proactivo']." order by gener_indiv_id, indiv_id";
 				$res = pg_query($conn,$sql);
 				$filas = pg_num_rows($res);
 				for($i=0;$i<$filas;$i++){
@@ -369,7 +369,7 @@ function makepoc($pop,$gen,$tipo){
 								//ejemplo cruce		1,6:5,3:=,10:
 								$line = "*cross\n";
 								fwrite($fh,$line);
-								$sqlcruce="select indiv_id, gener_indiv_id from parentales where generacion_id = ".$_POST['generacion_id']." order by gener_indiv_id, indiv_id";
+								$sqlcruce="select indiv_id, gener_indiv_id from parentales where generacion_id = ".$_POST['generacion_id']." and proy_id = ".$_SESSION['proactivo']."order by gener_indiv_id, indiv_id";
 								$rescruce=pg_query($conn,$sqlcruce);
 								$filas = pg_num_rows($rescruce);
 								$line="";

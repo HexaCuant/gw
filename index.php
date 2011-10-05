@@ -6,18 +6,20 @@ if(isset($_POST['pass'])) $pass=$_POST['pass']; else $pass="";
 
 cabecera($option);
 
-if($_POST['login'] == 'identificar')
-{
-				if(!isset($_SESSION['ident']))
-				{
-				 $_SESSION['cod_auth'] = autentifica($user,$pass);
-				if ($_SESSION['cod_auth'] > 0)
-				{
-								$_SESSION['ident']=TRUE;
-				}
-				$_SESSION['user']=$user;
+if($_POST['login'] == 'identificar'){
+				if(!isset($_SESSION['ident'])){
+								$_SESSION['cod_auth'] = autentifica($user,$pass);
+								if ($_SESSION['cod_auth'] > 0){
+												$_SESSION['ident']=TRUE;
+								$_SESSION['user']=$user;
+								$_SESSION['id']=getid($user);
+								}else{
+												echo "<h3>La identificación no es correcta</h3>";
+								}
 				}
 }
+
+
 else if($_POST['login'] == 'Nuevo Usuario')
 {
 				$_SESSION['cod_auth'] = inserta($user,$pass);
@@ -27,7 +29,8 @@ else if($_POST['login'] == 'Nuevo Usuario')
 								$_SESSION['ident']=TRUE;
 				}
 				$_SESSION['user']=$user;
-				}
+				$_SESSION['id']=getid($user);
+}
 
 else if($_POST['login'] == 'salir')
 {

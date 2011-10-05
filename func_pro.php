@@ -76,7 +76,7 @@ function testcierrapro()
 function	insertpro($proname)
 {
 				$conn = conecta();
-				$sql="insert into proyectos (proname,userid) values ('".$proname."','".$_SESSION['userid']."')";
+				$sql="insert into proyectos (proname,userid) values ('".$proname."','".$_SESSION['id']."')";
 				$res = pg_query($conn,$sql);
 				if(!$res) echo "Error en la inserción del proyecto";
 				pg_close($conn);
