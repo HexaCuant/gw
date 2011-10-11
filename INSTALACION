@@ -1,0 +1,39 @@
+1.- copiar los archivos al directorio de instalación
+
+Nota: el archivo rsync sincroniza los archivos necesarios desde una ubicación específica al directorio de destino. Se puede modificar como se desee, copiarlo al directorio de destino y darle permisos de ejecución para copiar los archivos en el destino y para mantenerlos actualizados realizando sincronizaciones cuando sea necesario.
+
+2.- editar func.php y añadir a pg_connect, en la función conecta() elservidor y puerto en caso en que las conexiones sean remotas. Ejemplo:
+
+pg_connect("host=pgsql_server port=5432 dbname=genweb user=genweb password=genweb");
+
+3.- si el servidor es remoto, copiar en él genweb.dump
+
+4.- crear una base de datos genweb, un usuario genweb de contraseña genweb, o cualesquiera otros valores que se hayan dado a estos parámetros en la función de conexión.
+
+#su - postgres
+
+#psql template1
+
+#CREATE USER genweb WITH PASSWORD 'genweb';
+
+#CREATE DATABASE genweb;
+
+#GRANT ALL PRIVILEGES ON DATABASE genweb to genweb;
+
+#/q
+
+5.-comprobar el acceso a la base de datos
+
+#psql genweb -U genweb
+
+6.-salir
+
+#\q
+
+7.-volcar el dump a la base de datos desde el directorio donde se haya copiado genweb.dump o dar la ruta completa
+
+psql genweb < genweb.dump
+
+
+
+

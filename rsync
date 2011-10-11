@@ -1,0 +1,2 @@
+rsync -avz --exclude "*~" --exclude ".git" --exclude "practicas" --exclude ".gitignore" mburgos@genweb.co.cc:/var/www/gw/ .
+
