@@ -34,6 +34,8 @@ pg_connect("host=pgsql_server port=5432 dbname=genweb user=genweb password=genwe
 
 psql genweb < genweb.dump
 
+8.-instalar los archivos binarios y crear el directorio de proyectos
 
+El scipts "binarios" copia los archivos necesrios en /usr/local/bin (necesita por tanto ejecutarse como root), crea el directorio de proyectos y cambia su propietario a www-data. Editar el script si se desea modificar su localización o el nombre.
 
 
