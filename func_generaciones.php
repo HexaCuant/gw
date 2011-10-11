@@ -134,7 +134,19 @@ function abrirgeneracion($id){
 				</form><?
 				fclose($fh);
 				fclose($_SESSION['out']);
-				?><a href="<?=$outfilename?>">Descargar datos</a><?
+				?><p><a href="<?=$outfilename?>">Descargar datos</a> (puntos decimales)</p><?
+				//archivo con comas decimales
+				$comafilename = "../proyectosGengine/".$_SESSION['proactivo']."/".$_SESSION['proactivo']."_".$id."_datos_coma.csv";
+				$fh = fopen($outfilename,"r");
+				$_SESSION['coma'] = fopen($comafilename,"w");
+				while (($line = fgets($fh)) !== false){
+								$comaline = preg_replace('@\.@',',',$line);
+								fwrite($_SESSION['coma'],$comaline);
+				}
+				fclose($fh);
+				fclose($_SESSION['coma']);
+				?><p><a href="<?=$comafilename?>">Descargar datos</a> (comas decimales)</p><?
+
 }
 
 function generacionbutton($id){
