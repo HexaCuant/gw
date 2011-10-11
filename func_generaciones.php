@@ -115,8 +115,8 @@ function abrirgeneracion($id){
 				<input type="submit" name="cerrargeneracion" value="Cerrar"></input><?
 				$_SESSION['missingnames']=true;
 				?><h2>Generacion <?=$id?></h2><?
-				$filename = "../proyectos/".$_SESSION['proactivo']."/".$_SESSION['proactivo'].".dat".$id;
-				$outfilename = "../proyectos/".$_SESSION['proactivo']."/".$_SESSION['proactivo']."_".$id."_datos.csv";
+				$filename = "../proyectosGengine/".$_SESSION['proactivo']."/".$_SESSION['proactivo'].".dat".$id;
+				$outfilename = "../proyectosGengine/".$_SESSION['proactivo']."/".$_SESSION['proactivo']."_".$id."_datos.csv";
 				$fh = fopen($filename,"r");
 				$_SESSION['out'] = fopen($outfilename,"w");
 				?><table>
@@ -167,7 +167,7 @@ function testlistgeneraciones(){
 								$conn=conecta();
 								$sql = "delete from generaciones_proy where proy_id = ".$_SESSION['proactivo']." and generacion_id = ".$id;
 								$res = pg_query($conn,$sql);
-								$file = "../proyectos/".$_SESSION['proactivo']."/".$_SESSION['proactivo'].".dat".$id;
+								$file = "../proyectosGengine/".$_SESSION['proactivo']."/".$_SESSION['proactivo'].".dat".$id;
 								$command = "rm ".$file;
 								system($command);
 								refresh();
