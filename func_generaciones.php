@@ -260,7 +260,7 @@ function cruce(){
 
 
 function makepoc($pop,$gen,$tipo){
-				$path="/var/www/proyectosGenweb/".$_SESSION['proactivo']."/".$_SESSION['proactivo'].".poc";
+				$path="/var/www/proyectosGengine/".$_SESSION['proactivo']."/".$_SESSION['proactivo'].".poc";
 				$fh = fopen($path,"w");
         $line = "#file created by GenWeb\n";
 				fwrite($fh,$line);
