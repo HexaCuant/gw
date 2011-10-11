@@ -2,6 +2,8 @@
 
 Nota: el archivo rsync sincroniza los archivos necesarios desde una ubicación específica al directorio de destino. Se puede modificar como se desee, copiarlo al directorio de destino y darle permisos de ejecución para copiar los archivos en el destino y para mantenerlos actualizados realizando sincronizaciones cuando sea necesario.
 
+IMPORTANTE: recordar restablecer los datos de conexión en func.php si se han modificado como se indica en el apartado 2 después de cada nueva sincronización. Puede ser util guardar una copia de la línea pg_connect en un archivo para recordar estos datos.
+
 2.- editar func.php y añadir a pg_connect, en la función conecta() elservidor y puerto en caso en que las conexiones sean remotas. Ejemplo:
 
 pg_connect("host=pgsql_server port=5432 dbname=genweb user=genweb password=genweb");
