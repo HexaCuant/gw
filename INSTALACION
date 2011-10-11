@@ -38,6 +38,37 @@ psql genweb < genweb.dump
 
 8.-instalar los archivos binarios y crear el directorio de proyectos
 
-El scipts "binario" copia los archivos necesrios en /usr/local/bin (necesita por tanto ejecutarse como root), crea el directorio de proyectos y cambia su propietario a www-data. Editar el script si se desea modificar su localización o el nombre.
+El script "binario" copia los archivos necesrios en /usr/local/bin (necesita por tanto ejecutarse como root), crea el directorio de proyectos y cambia su propietario a www-data. Editar el script si se desea modificar su localización o el nombre.
 
+Si es necesario compilar de nuevo gengine debido a la arquitectura de la máquina, han que clonar el repositorio gengine y tener instalado el paquete cons:
+
+git clone ssh://gitrepo@topoge.ugr.es/home/gitrepo/gengine .
+
+Luego hay que cambiar a la última rama y compilar. Por ejemplo:
+
+mburgos@mirnas:~/gitrepo/gengine$ git branch
+* master
+mburgos@mirnas:~/gitrepo/gengine$ git branch -a
+* master
+  remotes/origin/HEAD -> origin/master
+  remotes/origin/aditivo
+  remotes/origin/master
+  remotes/origin/newdat
+  remotes/origin/nocuant
+mburgos@mirnas:~/gitrepo/gengine$ git checkout -b aditivo origin/aditivo
+Branch aditivo set up to track remote branch aditivo from origin.
+Switched to a new branch 'aditivo'
+mburgos@mirnas:~/gitrepo/gengine$ git branch
+* aditivo
+  master
+mburgos@mirnas:~/gitrepo/gengine$ /usr/bin/cons gengine
+g++ -ggdb -c main.cc -o main.o
+g++ -ggdb -c character.cc -o character.o
+g++ -ggdb -c gene_description.cc -o gene_description.o
+g++ -ggdb -c idiogram.cc -o idiogram.o
+g++ -ggdb -c indiv.cc -o indiv.o
+g++ -ggdb -c list_base.cc -o list_base.o
+g++ -ggdb -c gamete.cc -o gamete.o
+g++ -ggdb -c random.cc -o random.o
+g++ -ggdb -o gengine main.o character.o gene_description.o idiogram.o indiv.o list_base.o petri.o gamete.o random.o
 
