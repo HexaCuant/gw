@@ -1,11 +1,11 @@
 <?
-
 function listacar()
 {
 				$conn = conecta();
- //$sql="select distinct caracter_id from caracteres_proy where proyecto_id =".$proyecto_id;
- $sql="select id,name from caracteres order by id";
+				//$sql="select distinct caracter_id from caracteres_proy where proyecto_id =".$proyecto_id;
+				$sql="select id,name from caracteres where creatorid = '".$_SESSION['id']."' or public order by id";
  $res=pg_query($conn,$sql);
+ pg_close($conn);
  $rows=pg_NumRows($res);
 ?>
 <form action="index.php?option=1#fin" method="post">
@@ -30,7 +30,6 @@ function listacar()
  </table>
 </form>
  <?
- pg_close($conn);
  //formnewcar();
 }
 
@@ -94,7 +93,7 @@ function	insertcar($carname)
 				$conn = conecta();
 				if (isset($_POST['visible'])) $visible = "t"; else $visible="f";
 				if (isset($_POST['publico'])) $publico = "t"; else $publico="f";
-				$sql="insert into caracteres (name,creatorid,public,visible) values ('".$carname."','".$_SESSION['userid']."','".$publico."','".$visible."')";
+				$sql="insert into caracteres (name,creatorid,public,visible) values ('".$carname."','".$_SESSION['id']."','".$publico."','".$visible."')";
 				$res = pg_query($conn,$sql);
 				if(!$res) echo "Error en la inserción del proyecto";
 				pg_close($conn);
@@ -125,7 +124,7 @@ function testcar($id){
 								if (isset($_POST['public'])) $public="t"; else $public = "f";
 								$ambiente = $_POST['ambiente'];
 								$conn = conecta();
-								$sql = "update caracteres set visible='".$visible."', public='".$public."', sexo='".$sexo."', ambiente ='".$ambiente."' where id = ".$_SESSION['caractivo'];
+								$sql = "update caracteres set visible='".$visible."', public='".$public."', sexo='".$sexo."' where id = ".$_SESSION['caractivo'];
 								$res = pg_query($conn,$sql);
 								pg_close($conn);
 								if(!$res) echo "Error: carácter no encontrado";
@@ -140,9 +139,33 @@ function testcar($id){
 				if(isset($_SESSION['caractivo'])) datoscar($_SESSION['caractivo']);
 }
 
+function getowner($id){
+				$conn_owner = conecta();
+				$sql="select creatorid from caracteres where id=".$id;
+				$res=pg_query($conn_owner,$sql);
+				pg_close($conn_owner);
+				if (!$res) echo "ERROR: No se pudo borrar el carácter";
+				else $_SESSION['owner']=pg_fetch_result($res,0,0);
+}
+
+function checkowner(){
+				if($_SESSION['owner'] == $_SESSION['id']) return TRUE;
+				else return FALSE;
+}
+
+
 function carbutton($id){
+				getowner($id);
+				if(checkowner()){
 ?>
-<td><input type="submit" name="borrarcar" value="<?=$id?>"></input><input type="checkbox" name="confirmado"></input></td>
+<td><input type="submit" name="borrarcar" value="<?=$id?>"></input>
+<input type="checkbox" name="confirmado"></input></td>
+<?
+				}else{
+								?><td></td><?
+				}
+
+?>
 <td><input type="submit" name="abrircar" value="<?=$id?>"></input></td> 
 <?
 				if($_SESSION['proactivo']){
@@ -159,8 +182,9 @@ function carbuttonproy($id){
 }
 
 function datoscar($car_id){
+				getowner($_SESSION['caractivo']);
 				        $conn = conecta();
-								$sql="select name,public,visible,sexo from caracteres where id=".$car_id;
+								$sql="select name,public,visible,sexo,creatorid from caracteres where id=".$car_id;
 								$res = pg_query($conn,$sql);
 								pg_close($conn);
 								if(!$res) echo "Error: carácter no encontrado";
@@ -169,6 +193,7 @@ function datoscar($car_id){
 												$public =  pg_fetch_result($res,0,1);
 												$visible =  pg_fetch_result($res,0,2);
 												$sexo =  pg_fetch_result($res,0,3);
+												$creatorid =  pg_fetch_result($res,0,4);
 								}
 ?>
 			<h2>Carácter:<?=$_SESSION['name_caractivo']?></h2>
@@ -177,9 +202,18 @@ function datoscar($car_id){
 			<p>Visible: <input type="checkbox" name="visible" <?if($visible == "t") print("checked")?>></input>
 			Público: <input type="checkbox" name="public" <?if($public == "t") print("checked")?>></input>
 			</p>
-      <input type="submit" value="Guardar Cambios" name="datoscar"></input><input type="submit" value="Cerrar" name="cerrarcar"></input></p>
+<?
+if($creatorid == $_SESSION['id']){
+?>
+			<input type="submit" value="Guardar Cambios" name="datoscar"></input>
+<?
+}
+?>
+<input type="submit" value="Cerrar" name="cerrarcar"></input></p>
 
 <?
+if(($creatorid == $_SESSION['id']) || ($visible == 't')){
+
 								if($_SESSION['vergenes']){
 ?>
 			<p><input type="submit" value="Ocultar Genes" name="ocultargenes"></input></p><?
@@ -187,8 +221,12 @@ function datoscar($car_id){
 								else{
 ?>
 												<p><input type="submit" value="Ver Genes" name="vergenes"></input></p><?
-								}?>
+								}
+}
+if($creatorid == $_SESSION['id']){
+?>
 			<p><input type="submit" value="Nuevo gen" name="nuevogen"></input></p>
+<?}?>
       </form>
 
 </div><?
@@ -210,10 +248,10 @@ function testvergenes(){
 								$sql="select gen_id from genes_car where car_id =".$_SESSION['caractivo']." order by gen_id";
 								$res = pg_query($conn,$sql);
 								$filas = pg_num_rows($res);
-?>
-<form action="index.php?option=1#fin" method="post">
-<table>
-				<tr><th>Id</th><th>Nombre</th><th>chr</th><th>pos</th><th>cod</th><th>Borrar</th><th>Abrir</th></tr><?
+								?>
+								<form action="index.php?option=1#fin" method="post">
+								<table>
+								<tr><th>Id</th><th>Nombre</th><th>chr</th><th>pos</th><th>cod</th><th>Borrar</th><th>Abrir</th></tr><?
 								        for ($i=0;$i<$filas;$i++){
 												        $gen_id = pg_fetch_result($res,$i,0);
 												        $sql = "select * from genes where idglobal =".$gen_id;
@@ -226,7 +264,10 @@ function testvergenes(){
 																$code=pg_fetch_result($resgen,5);
 ?>
 				<tr><td><?=$idglobal?></td><td><?=$name?></td><td><?=$chr?></td><td><?=$pos?></td><td><?=$code?></td>
-<?genbutton($idglobal)?>
+<?
+				        pg_close($conn);
+																genbutton($idglobal)
+?>
 </tr>
 <?
 												}
@@ -241,7 +282,6 @@ function testvergenes(){
 								?><input type="submit" name="verconexiones" value="Ver Conexiones"></input><?
 								}
 								?></form><?
-				pg_close($conn);
 								}
 				}
 				//GUARDAR CONEXIONES
@@ -287,6 +327,7 @@ function testvergenes(){
 								$sql="select estadoa,transicion,estadob,id from conexiones where car_id = ".$_SESSION['caractivo'];
 								$res = pg_query($conn,$sql);
 								if(!$res) echo "ERROR: buscando conexiones establecidas";
+								pg_close($conn);
 								$filas = pg_num_rows($res);
 								if ($filas == 0) echo "<h2>No se han establecido conexiones</h2>";
 								else{
@@ -300,10 +341,13 @@ function testvergenes(){
 																$SB=pg_fetch_result($res,$i,2);
 																$id=pg_fetch_result($res,$i,3);
 																?><tr><td>S<?=$SA?></td><td><?=$gen?></td><td>S<?=$SB?></td><?
-																?><td><input type="submit" name="borrarconexion" value="<?=$id?>"></input><input type="checkbox" name="confirmado"></input></td><?
+																if(checkowner()){
+																				?><td><input type="submit" name="borrarconexion" value="<?=$id?>"></input><input type="checkbox" name="confirmado"></input></td><?
+																}else{
+																				?><td></td><?
+																}
 												}
 												?></table></form><?
-												pg_close($conn);
 								}
 
 
@@ -317,7 +361,8 @@ function testvergenes(){
 								$filas = pg_num_rows($res);
 ?>
 <form action="index.php?option=1#fin" method="post">
-<input type="submit" name="cambiarsustratos" value="Cambiar Sustratos">Nº sustratos: </input><input type="text" name="sustratos"></input>
+<?if(checkowner()){
+?><input type="submit" name="cambiarsustratos" value="Cambiar Sustratos">Nº sustratos: </input><input type="text" name="sustratos"></input>
 <table><tr>
 <?
 								for($i=0;$i<$_SESSION['sustratos'];$i++){
@@ -327,6 +372,7 @@ function testvergenes(){
 								for($i=0;$i<$_SESSION['sustratos'];$i++){
 												?><td><input type="radio" name="SA" value="<?=$i?>"></input></td><?
 								}
+
 ?>
 </tr></table>
 
@@ -360,6 +406,7 @@ function testvergenes(){
 </tr></table>
 <input type="submit" name="conexion" value="Guardar Conexión"></input>
 <?
+}
 				}
 				
 }
@@ -407,17 +454,21 @@ B<input type="checkbox" name"B" checked></input>
 
 
 function genbutton($id){
-?>
-<td><input type="submit" name="borrargen" value="<?=$id?>"></input><input type="checkbox" name="confirmado"></input></td>
-<td><input type="submit" name="abrirgen" value="<?=$id?>"></input></td> 
-<?
+if(checkowner()){
+				?><td><input type="submit" name="borrargen" value="<?=$id?>"></input><input type="checkbox" name="confirmado"></input></td><?
+}else{
+				?><td></td><?
+}
+?><td><input type="submit" name="abrirgen" value="<?=$id?>"></input></td><?
 }
 
 
 function alelobutton($id){
-?>
-<td><input type="submit" name="borraralelo" value="<?=$id?>"></input><input type="checkbox" name="confirmado"></input></td>
-<?
+				if(checkowner()){
+								?><td><input type="submit" name="borraralelo" value="<?=$id?>"></input><input type="checkbox" name="confirmado"></input></td><?
+				}else{
+								?><td></td><?
+				}
 }
 
 function testalelo(){
@@ -442,7 +493,7 @@ function testabrirgen($id){
 								else{
 												$filas = pg_num_rows($res);
 ?>
-				<h2>Gen: <?=$_SESSION['genname']?></h2>
+				<h2>Alelos del gen: <?=$_SESSION['genname']?></h2>
 <?
 												//if($_SESSION['genactivo'] != 0){
 //				echo "<input type=\"submit\" name=\"cerrargen\" value=\"Cerrar\"></input>";
@@ -465,23 +516,19 @@ function testabrirgen($id){
 																$name = pg_fetch_result($resalelo,1);
 																$valor = pg_fetch_result($resalelo,2);
 																$dominancia = pg_fetch_result($resalelo,3);
-?>
-				<tr><td><?=$id?></td><td><?=$name?></td><td><?=$valor?></td><td><?=$dominancia?></td>
-<?alelobutton($id)?>
-</tr>
-<?
+																?><tr><td><?=$id?></td><td><?=$name?></td><td><?=$valor?></td><td><?=$dominancia?></td><?alelobutton($id)?></tr><?
 												}
-												?></table>
-
-<h2>Nuevo Alelo</h2>
-<p>Nombre: <input type="text" name="nombrealelo"></input></p>
-<p>Valor: <input type="text" name="valor"></input></p>
-<p>Dominancia: <input type="text" name="dominancia"></input></p>
-<input type="submit" name="nuevoalelo" value="Nuevo Alelo"></input>
+												?></table><?
+												if(checkowner()){
+																?><h2>Nuevo Alelo</h2>
+																<p>Nombre: <input type="text" name="nombrealelo"></input></p>
+																<p>Valor: <input type="text" name="valor"></input></p>
+																<p>Dominancia: <input type="text" name="dominancia"></input></p>
+																<input type="submit" name="nuevoalelo" value="Nuevo Alelo"></input>
 																
 																</form><?
+												}
 								}
-								echo "nuevo:".$_POST['nuevoalelo'];
 				}
 				if(isset($_POST['nuevoalelo'])) {
 								echo "pulsado nuevo alelo";
@@ -504,6 +551,7 @@ function testabrirgen($id){
 
 
 				}
+			
 				if(isset($_POST['borraralelo']) && isset($_POST['confirmado'])){
 								$id=$_POST['borraralelo'];
 								$sql="delete from alelos where id=".$id;

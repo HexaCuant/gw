@@ -64,7 +64,7 @@ else
 <p>Usuario<input type="text" name="user"></input></p>
 <p>Contrase&ntilde;a<input type="password" name="pass"></input></p>
 <p><input type="submit" value="identificar" name="login" /><input type="reset" value="borrar" /></p>
-<p><input type="submit" value="he olvidado mi contrase&ntilde;a" name="olvido" /></p>
+<!--<p><input type="submit" value="he olvidado mi contrase&ntilde;a" name="olvido" /></p>-->
 <p><input type="submit" value="Nuevo Usuario" name="login"/></p>
 </form>
 <?
@@ -94,13 +94,18 @@ function autentifica($user,$pass)
  }
 }
 
-
+function getid($user){
+				$conn=conecta();
+				$sql = "select id from users where username = '".$user."'";
+				$res = pg_query($conn,$sql);
+				$id = pg_result($res,0);
+				return $id;
+}
 
 function inserta($user,$pass)
 {
  $conn = conecta();
  $sql = "insert into users (cod_auth,username,pass) values (1, '$user','$pass')";
- echo $sql;
  $res=pg_query($conn,$sql);
  pg_close($conn);
  if($res) return 1;

@@ -29,7 +29,7 @@ ALTER TABLE public.alelo_id OWNER TO genweb;
 -- Name: alelo_id; Type: SEQUENCE SET; Schema: public; Owner: genweb
 --
 
-SELECT pg_catalog.setval('alelo_id', 36, true);
+SELECT pg_catalog.setval('alelo_id', 100, true);
 
 
 SET default_tablespace = '';
@@ -80,7 +80,7 @@ ALTER TABLE public.caracter_id OWNER TO genweb;
 -- Name: caracter_id; Type: SEQUENCE SET; Schema: public; Owner: genweb
 --
 
-SELECT pg_catalog.setval('caracter_id', 11, true);
+SELECT pg_catalog.setval('caracter_id', 26, true);
 
 
 --
@@ -131,7 +131,7 @@ ALTER TABLE public.conexion_id OWNER TO genweb;
 -- Name: conexion_id; Type: SEQUENCE SET; Schema: public; Owner: genweb
 --
 
-SELECT pg_catalog.setval('conexion_id', 9, true);
+SELECT pg_catalog.setval('conexion_id', 31, true);
 
 
 --
@@ -192,7 +192,7 @@ ALTER TABLE public.gen_id OWNER TO genweb;
 -- Name: gen_id; Type: SEQUENCE SET; Schema: public; Owner: genweb
 --
 
-SELECT pg_catalog.setval('gen_id', 19, true);
+SELECT pg_catalog.setval('gen_id', 41, true);
 
 
 --
@@ -253,7 +253,7 @@ ALTER TABLE public.parental_id OWNER TO genweb;
 -- Name: parental_id; Type: SEQUENCE SET; Schema: public; Owner: genweb
 --
 
-SELECT pg_catalog.setval('parental_id', 21, true);
+SELECT pg_catalog.setval('parental_id', 107, true);
 
 
 --
@@ -264,7 +264,8 @@ CREATE TABLE parentales (
     id integer DEFAULT nextval('parental_id'::regclass),
     generacion_id integer,
     indiv_id integer,
-    gener_indiv_id integer
+    gener_indiv_id integer,
+    proy_id integer
 );
 
 
@@ -288,7 +289,7 @@ ALTER TABLE public.proyecto_id OWNER TO genweb;
 -- Name: proyecto_id; Type: SEQUENCE SET; Schema: public; Owner: genweb
 --
 
-SELECT pg_catalog.setval('proyecto_id', 20, true);
+SELECT pg_catalog.setval('proyecto_id', 31, true);
 
 
 --
@@ -322,7 +323,7 @@ ALTER TABLE public.user_id OWNER TO genweb;
 -- Name: user_id; Type: SEQUENCE SET; Schema: public; Owner: genweb
 --
 
-SELECT pg_catalog.setval('user_id', 5, true);
+SELECT pg_catalog.setval('user_id', 9, true);
 
 
 --
@@ -353,6 +354,42 @@ COPY alelos (id, name, valor, dominancia) FROM stdin;
 34	a	5	1
 35	B	50	100
 36	b	10	4
+38	a	0	1
+39	R	100	100
+40	v	50	1
+41	A	100	100
+42	A	100	100
+43	a	10	0
+45	b	10	0
+46	B	100	100
+51	a1	5	0
+52	b1	10	0
+53	b1	5	0
+54	b2	10	0
+55	A1	1	100
+58	B1	2	100
+65	a2	0	0.0001
+66	b2	1	0.0001
+67	A1	1	100
+68	a2	0	0
+70	B1	2	100
+71	b2	1	0
+72	E1	10	100
+73	e2	0	0
+81	A1	100	1000
+82	a2	50	1000
+83	B1	100	1000
+84	b2	50	1000
+85	C1	100	1000
+86	c2	50	1000
+89	X1	100	1000
+90	X2	100	1000
+95	A	10	100
+96	a	1	0
+97	C	10	100
+98	c	2	0
+99	F	20	100
+100	f	3	0
 \.
 
 
@@ -369,6 +406,42 @@ COPY alelos_gen (id_gen, id_alelo) FROM stdin;
 7	34
 17	35
 17	36
+20	38
+21	39
+21	40
+20	41
+22	42
+22	43
+23	45
+23	46
+24	51
+24	52
+25	53
+25	54
+26	55
+27	58
+26	65
+27	66
+28	67
+28	68
+30	70
+30	71
+31	72
+31	73
+32	81
+32	82
+33	83
+33	84
+34	85
+34	86
+35	89
+35	90
+39	95
+39	96
+40	97
+40	98
+41	99
+41	100
 \.
 
 
@@ -377,8 +450,12 @@ COPY alelos_gen (id_gen, id_alelo) FROM stdin;
 --
 
 COPY caracteres (id, name, creatorid, public, visible, sexo, sustratos) FROM stdin;
-2	uno-vis	1	f	t	f	3
-11	color	1	t	t	\N	3
+18	altura	1	f	f	\N	3
+16	color	1	f	f	\N	3
+19	color	1	f	f	\N	\N
+23	color2	7	f	f	\N	2
+24	forma	7	f	f	\N	2
+26	forma	8	t	t	f	2
 \.
 
 
@@ -391,9 +468,17 @@ COPY caracteres_proy (caracter_id, proyecto_id, ambiente) FROM stdin;
 3	4	\N
 3	4	\N
 1	4	\N
+24	31	0
+23	31	0
 2	3	18
 2	20	50
 11	20	20
+13	22	0
+12	21	0
+14	23	0
+14	24	5
+16	27	0
+18	28	20
 \.
 
 
@@ -406,6 +491,26 @@ COPY conexiones (estadoa, transicion, estadob, car_id, id) FROM stdin;
 1	17	2	2	7
 0	18	1	11	8
 1	19	2	11	9
+0	20	1	12	10
+1	21	2	12	11
+0	22	1	13	12
+1	23	2	13	13
+0	24	1	14	14
+0	25	1	14	15
+0	26	1	15	16
+1	27	2	15	17
+0	28	1	16	19
+1	30	2	16	20
+0	31	1	18	21
+1	32	2	18	22
+1	33	2	18	23
+1	34	2	18	24
+0	35	2	18	26
+0	36	1	21	27
+0	37	1	21	28
+0	39	1	23	29
+0	40	1	24	30
+0	41	1	26	31
 \.
 
 
@@ -437,6 +542,63 @@ COPY generaciones_proy (proy_id, generacion_id) FROM stdin;
 3	7
 3	7
 20	1
+3	8
+3	9
+3	10
+22	1
+22	2
+22	3
+22	4
+22	5
+22	6
+22	7
+22	8
+22	9
+22	10
+22	11
+22	12
+22	13
+22	14
+23	1
+23	2
+24	1
+24	2
+24	3
+24	4
+24	5
+24	6
+24	7
+24	8
+24	9
+24	10
+24	11
+21	1
+26	1
+26	2
+26	3
+26	4
+26	5
+27	1
+28	1
+28	2
+30	1
+31	1
+31	2
+31	3
+31	4
+31	5
+31	6
+31	7
+31	8
+31	9
+31	10
+31	11
+31	12
+31	13
+31	14
+31	15
+31	16
+31	17
 \.
 
 
@@ -449,6 +611,26 @@ COPY genes (idglobal, id, name, chr, pos, cod) FROM stdin;
 17	\N	peso3	4	3	3
 18	\N	sin1	1	1	3
 19	\N	sin2	2	1	3
+20	\N	A	1	1	3
+21	\N	C	2	2	3
+22	\N	A1	1	10	3
+23	\N	A2	1	20	3
+24	\N	A1	1	1	3
+25	\N	B1	2	1	3
+26	\N	A	1	1	3
+27	\N	B	2	1	3
+28	\N	A	1	1	3
+29	\N	A	1	1	3
+30	\N	B	2	1	3
+31	\N	E	1	1	3
+32	\N	A	2	1	3
+33	\N	B	3	1	3
+34	\N	C	4	1	3
+35	\N	X	5	1	3
+38	\N	A	1	1	3
+39	\N	color	1	1	3
+40	\N	cubierta	1	10	3
+41	\N	F	1	1	3
 \.
 
 
@@ -461,6 +643,26 @@ COPY genes_car (gen_id, car_id) FROM stdin;
 17	2
 18	11
 19	11
+20	12
+21	12
+22	13
+23	13
+24	14
+25	14
+26	15
+27	15
+28	16
+29	17
+30	16
+31	18
+32	18
+33	18
+34	18
+35	18
+38	21
+39	23
+40	24
+41	26
 \.
 
 
@@ -468,9 +670,74 @@ COPY genes_car (gen_id, car_id) FROM stdin;
 -- Data for Name: parentales; Type: TABLE DATA; Schema: public; Owner: genweb
 --
 
-COPY parentales (id, generacion_id, indiv_id, gener_indiv_id) FROM stdin;
-19	8	2	1
-21	8	1	1
+COPY parentales (id, generacion_id, indiv_id, gener_indiv_id, proy_id) FROM stdin;
+33	5	5	1	\N
+34	5	16	1	\N
+38	7	10	1	\N
+39	7	16	1	\N
+40	8	20	7	\N
+41	8	10	7	\N
+42	9	19	7	\N
+43	9	10	7	\N
+44	10	1	9	\N
+45	10	3	9	\N
+46	11	1	10	\N
+47	11	2	10	\N
+48	12	1	11	\N
+49	12	6	11	\N
+50	13	10	10	\N
+51	13	10	12	\N
+52	14	9	13	\N
+53	14	11	13	\N
+56	3	2	2	\N
+57	3	14	2	\N
+59	3	60	2	\N
+61	3	25	2	\N
+62	3	409	2	\N
+63	4	1	2	\N
+64	4	18	2	\N
+65	4	24	2	\N
+66	4	29	2	\N
+67	4	31	2	\N
+69	4	70	2	\N
+70	4	100	2	\N
+71	4	156	2	\N
+72	6	6	5	\N
+73	6	20	5	\N
+74	6	45	5	\N
+75	6	97	5	\N
+76	6	72	5	\N
+77	2	1	1	\N
+78	2	2	1	\N
+79	2	56	1	\N
+80	2	78	1	\N
+81	2	110	1	\N
+82	2	456	1	\N
+83	2	2	1	31
+84	2	76	1	31
+85	3	1	2	31
+86	3	3	2	31
+87	4	1	3	31
+88	4	4	3	31
+89	5	30	4	31
+90	5	20	4	31
+91	6	10	5	31
+92	6	15	5	31
+93	7	18	6	31
+94	7	18	6	31
+95	8	1	7	31
+96	8	1	7	31
+97	9	2	8	31
+98	10	1	9	31
+99	12	76	1	31
+100	13	17	12	31
+101	13	21	12	31
+102	13	25	12	31
+103	14	76	1	31
+104	15	10	1	31
+105	16	2	1	31
+106	17	1	14	31
+107	17	38	16	31
 \.
 
 
@@ -479,9 +746,11 @@ COPY parentales (id, generacion_id, indiv_id, gener_indiv_id) FROM stdin;
 --
 
 COPY proyectos (id, proname, userid) FROM stdin;
-1	nuevo	\N
-3	tercero	1
-20	doscar	1
+28	Altura	1
+27	ESD	1
+29	uno	1
+30	uno	7
+31	rec1	7
 \.
 
 
@@ -490,11 +759,8 @@ COPY proyectos (id, proname, userid) FROM stdin;
 --
 
 COPY users (id, cod_auth, username, pass) FROM stdin;
-1	1	miguel	1234
-2	1	dfg	456
-3	1	tjkl	789
-4	1	fghj	5678
-5	1	ertyu	3456
+8	1	miguel	1234
+9	1	mburgos	cvi109
 \.
 
 

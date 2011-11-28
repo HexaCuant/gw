@@ -76,7 +76,7 @@ function testcierrapro()
 function	insertpro($proname)
 {
 				$conn = conecta();
-				$sql="insert into proyectos (proname,userid) values ('".$proname."','".$_SESSION['userid']."')";
+				$sql="insert into proyectos (proname,userid) values ('".$proname."','".$_SESSION['id']."')";
 				$res = pg_query($conn,$sql);
 				if(!$res) echo "Error en la inserción del proyecto";
 				pg_close($conn);
@@ -90,7 +90,7 @@ function createdir(){
 				$res = pg_query($conn,$sql);
 				$id = pg_fetch_result($res,0);
 				pg_close($conn);
-				$path = "/var/www/proyectos/".$id;
+				$path = "/var/www/proyectosGengine/".$id;
 				mkdir($path);
 }
 

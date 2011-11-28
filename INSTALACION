@@ -1,0 +1,74 @@
+1.- copiar los archivos al directorio de instalación
+
+Nota: el archivo rsync sincroniza los archivos necesarios desde una ubicación específica al directorio de destino. Se puede modificar como se desee, copiarlo al directorio de destino y darle permisos de ejecución (si no los tiene) para copiar los archivos en el destino y para mantenerlos actualizados realizando sincronizaciones cuando sea necesario.
+
+IMPORTANTE: recordar restablecer los datos de conexión en func.php si se han modificado como se indica en el apartado 2, después de cada nueva sincronización. Puede ser util guardar una copia de la línea pg_connect en un archivo para recordar estos datos.
+
+2.- editar func.php y añadir a pg_connect, en la función conecta() elservidor y puerto en caso en que las conexiones sean remotas. Ejemplo:
+
+pg_connect("host=pgsql_server port=5432 dbname=genweb user=genweb password=genweb");
+
+3.- si el servidor es remoto, copiar en él genweb.dump
+
+4.- crear una base de datos genweb, un usuario genweb de contraseña genweb, o cualesquiera otros valores que se hayan dado a estos parámetros en la función de conexión.
+
+#su - postgres
+
+#psql template1
+
+#CREATE USER genweb WITH PASSWORD 'genweb';
+
+#CREATE DATABASE genweb;
+
+#GRANT ALL PRIVILEGES ON DATABASE genweb to genweb;
+
+#/q
+
+5.-comprobar el acceso a la base de datos
+
+#psql genweb -U genweb
+
+6.-salir
+
+#\q
+
+7.-volcar el dump a la base de datos desde el directorio donde se haya copiado genweb.dump o dar la ruta completa
+
+psql genweb < genweb.dump
+
+8.-instalar los archivos binarios y crear el directorio de proyectos
+
+El script "binario" copia los archivos necesrios en /usr/local/bin (necesita por tanto ejecutarse como root), crea el directorio de proyectos y cambia su propietario a www-data. Editar el script si se desea modificar su localización o el nombre.
+
+Si es necesario compilar de nuevo gengine debido a la arquitectura de la máquina, han que clonar el repositorio gengine y tener instalado el paquete cons:
+
+git clone ssh://gitrepo@topoge.ugr.es/home/gitrepo/gengine .
+
+Luego hay que cambiar a la última rama y compilar. Por ejemplo:
+
+mburgos@mirnas:~/gitrepo/gengine$ git branch
+* master
+mburgos@mirnas:~/gitrepo/gengine$ git branch -a
+* master
+  remotes/origin/HEAD -> origin/master
+  remotes/origin/aditivo
+  remotes/origin/master
+  remotes/origin/newdat
+  remotes/origin/nocuant
+mburgos@mirnas:~/gitrepo/gengine$ git checkout -b aditivo origin/aditivo
+Branch aditivo set up to track remote branch aditivo from origin.
+Switched to a new branch 'aditivo'
+mburgos@mirnas:~/gitrepo/gengine$ git branch
+* aditivo
+  master
+mburgos@mirnas:~/gitrepo/gengine$ /usr/bin/cons gengine
+g++ -ggdb -c main.cc -o main.o
+g++ -ggdb -c character.cc -o character.o
+g++ -ggdb -c gene_description.cc -o gene_description.o
+g++ -ggdb -c idiogram.cc -o idiogram.o
+g++ -ggdb -c indiv.cc -o indiv.o
+g++ -ggdb -c list_base.cc -o list_base.o
+g++ -ggdb -c gamete.cc -o gamete.o
+g++ -ggdb -c random.cc -o random.o
+g++ -ggdb -o gengine main.o character.o gene_description.o idiogram.o indiv.o list_base.o petri.o gamete.o random.o
+

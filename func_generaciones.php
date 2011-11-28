@@ -63,11 +63,11 @@ function processline($line){
 								while($fenotipos[$i] !== "$"){
 												$i++;
 												?><td><?=$fenotipos[$i]?><?
-												indivbutton($idindiv);
 												fwrite($_SESSION['out']," ".$fenotipos[$i]);
 												$i++;
 												$j++;
 								}
+												indivbutton($idindiv);
 								?></tr><?
 								fwrite($_SESSION['out'],"\n");
 								echo "\n";
@@ -115,8 +115,8 @@ function abrirgeneracion($id){
 				<input type="submit" name="cerrargeneracion" value="Cerrar"></input><?
 				$_SESSION['missingnames']=true;
 				?><h2>Generacion <?=$id?></h2><?
-				$filename = "../proyectos/".$_SESSION['proactivo']."/".$_SESSION['proactivo'].".dat".$id;
-				$outfilename = "../proyectos/".$_SESSION['proactivo']."/".$_SESSION['proactivo']."_".$id."_datos.csv";
+				$filename = "../proyectosGengine/".$_SESSION['proactivo']."/".$_SESSION['proactivo'].".dat".$id;
+				$outfilename = "../proyectosGengine/".$_SESSION['proactivo']."/".$_SESSION['proactivo']."_".$id."_datos.csv";
 				$fh = fopen($filename,"r");
 				$_SESSION['out'] = fopen($outfilename,"w");
 				?><table>
@@ -134,7 +134,19 @@ function abrirgeneracion($id){
 				</form><?
 				fclose($fh);
 				fclose($_SESSION['out']);
-				?><a href="<?=$outfilename?>">Descargar datos</a><?
+				?><p><a href="<?=$outfilename?>">Descargar datos</a> (puntos decimales)</p><?
+				//archivo con comas decimales
+				$comafilename = "../proyectosGengine/".$_SESSION['proactivo']."/".$_SESSION['proactivo']."_".$id."_datos_coma.csv";
+				$fh = fopen($outfilename,"r");
+				$_SESSION['coma'] = fopen($comafilename,"w");
+				while (($line = fgets($fh)) !== false){
+								$comaline = preg_replace('@\.@',',',$line);
+								fwrite($_SESSION['coma'],$comaline);
+				}
+				fclose($fh);
+				fclose($_SESSION['coma']);
+				?><p><a href="<?=$comafilename?>">Descargar datos</a> (comas decimales)</p><?
+
 }
 
 function generacionbutton($id){
@@ -167,7 +179,7 @@ function testlistgeneraciones(){
 								$conn=conecta();
 								$sql = "delete from generaciones_proy where proy_id = ".$_SESSION['proactivo']." and generacion_id = ".$id;
 								$res = pg_query($conn,$sql);
-								$file = "../proyectos/".$_SESSION['proactivo']."/".$_SESSION['proactivo'].".dat".$id;
+								$file = "../proyectosGengine/".$_SESSION['proactivo']."/".$_SESSION['proactivo'].".dat".$id;
 								$command = "rm ".$file;
 								system($command);
 								refresh();
@@ -240,12 +252,12 @@ function cruce(){
 								$res=pg_query($conn,$sql);
 				}
 				if(isset($_POST['addindiv'])){
-								$sql="insert into parentales (generacion_id, indiv_id, gener_indiv_id) values (".$_SESSION['cruce_gen_id'].",".$_POST['addindiv'].",".$_SESSION['generacionactiva'].")";
+								$sql="insert into parentales (generacion_id, indiv_id, gener_indiv_id,proy_id) values (".$_SESSION['cruce_gen_id'].",".$_POST['addindiv'].",".$_SESSION['generacionactiva'].",".$_SESSION['proactivo'].")";
 								$res=pg_query($conn,$sql);
 				}
 				?><table><?
 				?><tr><th>N.</th><th>Indiv. Id</th><th>Generación</th><th>Borrar</th></tr><?
-				$sql="select id, indiv_id, gener_indiv_id from parentales where generacion_id = ".$_SESSION['cruce_gen_id']." order by gener_indiv_id, indiv_id";
+				$sql="select id, indiv_id, gener_indiv_id from parentales where generacion_id = ".$_SESSION['cruce_gen_id']." and proy_id =". $_SESSION['proactivo']." order by gener_indiv_id, indiv_id";
 				$res = pg_query($conn,$sql);
 				$filas = pg_num_rows($res);
 				for($i=0;$i<$filas;$i++){
@@ -260,7 +272,7 @@ function cruce(){
 
 
 function makepoc($pop,$gen,$tipo){
-				$path="/var/www/proyectos/".$_SESSION['proactivo']."/".$_SESSION['proactivo'].".poc";
+				$path="/var/www/proyectosGengine/".$_SESSION['proactivo']."/".$_SESSION['proactivo'].".poc";
 				$fh = fopen($path,"w");
         $line = "#file created by GenWeb\n";
 				fwrite($fh,$line);
@@ -369,7 +381,7 @@ function makepoc($pop,$gen,$tipo){
 								//ejemplo cruce		1,6:5,3:=,10:
 								$line = "*cross\n";
 								fwrite($fh,$line);
-								$sqlcruce="select indiv_id, gener_indiv_id from parentales where generacion_id = ".$_POST['generacion_id']." order by gener_indiv_id, indiv_id";
+								$sqlcruce="select indiv_id, gener_indiv_id from parentales where generacion_id = ".$_POST['generacion_id']." and proy_id = ".$_SESSION['proactivo']."order by gener_indiv_id, indiv_id";
 								$rescruce=pg_query($conn,$sqlcruce);
 								$filas = pg_num_rows($rescruce);
 								$line="";
