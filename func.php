@@ -107,7 +107,8 @@ function inserta($user,$pass)
 				$conn = conecta();
 				$sql="select * from users where username='".$user."'";
 				$res = pg_query($conn,$sql);
-				if($res){
+				$rows = pg_num_rows($res);
+				if($rows>0){
 echo "ERROR: El nombre de usuario ya existe";
 				}
 				else{
