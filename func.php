@@ -104,10 +104,17 @@ function getid($user){
 
 function inserta($user,$pass)
 {
- $conn = conecta();
+				$conn = conecta();
+				$sql="select * from users where username='".$user."'";
+				$res = pg_query($conn,$sql);
+				if($res){
+echo "ERROR: El nombre de usuario ya existe";
+				}
+				else{
  $sql = "insert into users (cod_auth,username,pass) values (1, '$user','$pass')";
  $res=pg_query($conn,$sql);
- pg_close($conn);
+ pg_close($conn)
+				};
  if($res) return 1;
  else
   {
