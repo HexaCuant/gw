@@ -247,15 +247,18 @@ function testvergenes(){
 								$conn = conecta();
 								$sql="select gen_id from genes_car where car_id =".$_SESSION['caractivo']." order by gen_id";
 								$res = pg_query($conn,$sql);
+				        pg_close($conn);
 								$filas = pg_num_rows($res);
 								?>
 								<form action="index.php?option=1#fin" method="post">
 								<table>
 								<tr><th>Id</th><th>Nombre</th><th>chr</th><th>pos</th><th>cod</th><th>Borrar</th><th>Abrir</th></tr><?
 								        for ($i=0;$i<$filas;$i++){
-												        $gen_id = pg_fetch_result($res,$i,0);
-												        $sql = "select * from genes where idglobal =".$gen_id;
-												        $resgen = pg_query($conn,$sql);
+																$gen_id = pg_fetch_result($res,$i,0);
+																$conngen=conecta();
+												        $sqlgen = "select * from genes where idglobal =".$gen_id;
+												        $resgen = pg_query($conngen,$sqlgen);
+																pg_close($conngen);
 																if(!$resgen) echo "ERROR: No se insertó la información del gen en la BD";
 																$idglobal=pg_fetch_result($resgen,0);
 																$name=pg_fetch_result($resgen,2);
@@ -265,7 +268,6 @@ function testvergenes(){
 ?>
 				<tr><td><?=$idglobal?></td><td><?=$name?></td><td><?=$chr?></td><td><?=$pos?></td><td><?=$code?></td>
 <?
-				        pg_close($conn);
 																genbutton($idglobal)
 ?>
 </tr>
