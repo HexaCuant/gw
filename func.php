@@ -104,10 +104,24 @@ function getid($user){
 
 function inserta($user,$pass)
 {
- $conn = conecta();
+				if(trim($user)=="" || trim($pass)==""){
+								echo "<h3>ERROR: El nombre y/o la contraseña no pueden estar vacíos</h3>";
+								return 0;
+				}
+
+				$conn = conecta();
+				$sql="select * from users where username='".$user."'";
+				$res = pg_query($conn,$sql);
+				$rows = pg_num_rows($res);
+				if($rows>0){
+								echo "ERROR: El nombre de usuario ya existe";
+								return 0;
+				}
+				else{
  $sql = "insert into users (cod_auth,username,pass) values (1, '$user','$pass')";
  $res=pg_query($conn,$sql);
  pg_close($conn);
+				}
  if($res) return 1;
  else
   {

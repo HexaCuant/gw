@@ -23,7 +23,7 @@ if($_POST['login'] == 'identificar'){
 else if($_POST['login'] == 'Nuevo Usuario')
 {
 				$_SESSION['cod_auth'] = inserta($user,$pass);
-				echo $_SESSION['cod_auth'];
+//				echo $_SESSION['cod_auth'];
 				if ($_SESSION['cod_auth'] > 0)
 				{
 								$_SESSION['ident']=TRUE;
