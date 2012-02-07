@@ -1,6 +1,7 @@
 <?php
+error_reporting(E_ALL);
+ini_set('display_errors', '1');
 session_start();
-
 require_once("func_car.php");
 require_once("func_pro.php");
 require_once("func_generaciones.php");
@@ -21,7 +22,7 @@ function cabecera()
 
 function conecta()
 {
- $conn = pg_connect("dbname=genweb user=genweb password=genweb");
+ $conn = pg_connect("dbname=genweb user=genweb password=1ene2007");
  if(pg_ErrorMessage($conn))
  {
   echo "<p><b>Ocurrió un error en la conexión a la base de datos</b></p>";
@@ -46,7 +47,7 @@ function menu($option)
 
 function autentificaform()
 {
-if($_SESSION['ident'])
+if(isset($_SESSION['ident']))
 {
 ?>
 				<h2>Identificado como <?=$_SESSION['user']?>

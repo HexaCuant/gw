@@ -6,6 +6,7 @@ if(isset($_POST['pass'])) $pass=$_POST['pass']; else $pass="";
 
 cabecera($option);
 
+if(isset($_POST['login'])){
 if($_POST['login'] == 'identificar'){
 				if(!isset($_SESSION['ident'])){
 								$_SESSION['cod_auth'] = autentifica($user,$pass);
@@ -18,6 +19,7 @@ if($_POST['login'] == 'identificar'){
 								}
 				}
 }
+
 
 
 else if($_POST['login'] == 'Nuevo Usuario')
@@ -39,7 +41,7 @@ else if($_POST['login'] == 'salir')
  $pass="";
  $_SESSION['cod_auth']=0;
 }
-
+}
 ?>
 
 
@@ -48,6 +50,7 @@ else if($_POST['login'] == 'salir')
 <h1>Genweb</h1>
 <?//control de usuarios
 autentificaform();
+if(isset($_SESSION['ident'])){
 if($_SESSION['ident'])
 {
 ?>
@@ -75,6 +78,7 @@ if($_SESSION['ident'])
 </div>
 
 <?
+}
 }
 ?>
 

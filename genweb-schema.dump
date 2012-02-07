@@ -1,0 +1,304 @@
+--
+-- PostgreSQL database dump
+--
+
+SET client_encoding = 'SQL_ASCII';
+SET check_function_bodies = false;
+SET client_min_messages = warning;
+
+--
+-- Name: SCHEMA public; Type: COMMENT; Schema: -; Owner: postgres
+--
+
+COMMENT ON SCHEMA public IS 'Standard public schema';
+
+
+SET search_path = public, pg_catalog;
+
+--
+-- Name: alelo_id; Type: SEQUENCE; Schema: public; Owner: genweb
+--
+
+CREATE SEQUENCE alelo_id
+    INCREMENT BY 1
+    NO MAXVALUE
+    NO MINVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.alelo_id OWNER TO genweb;
+
+SET default_tablespace = '';
+
+SET default_with_oids = false;
+
+--
+-- Name: alelos; Type: TABLE; Schema: public; Owner: genweb; Tablespace: 
+--
+
+CREATE TABLE alelos (
+    id integer DEFAULT nextval('alelo_id'::regclass),
+    name character varying(20),
+    valor double precision,
+    dominancia double precision
+);
+
+
+ALTER TABLE public.alelos OWNER TO genweb;
+
+--
+-- Name: alelos_gen; Type: TABLE; Schema: public; Owner: genweb; Tablespace: 
+--
+
+CREATE TABLE alelos_gen (
+    id_gen integer,
+    id_alelo integer
+);
+
+
+ALTER TABLE public.alelos_gen OWNER TO genweb;
+
+--
+-- Name: caracter_id; Type: SEQUENCE; Schema: public; Owner: genweb
+--
+
+CREATE SEQUENCE caracter_id
+    INCREMENT BY 1
+    NO MAXVALUE
+    NO MINVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.caracter_id OWNER TO genweb;
+
+--
+-- Name: caracteres; Type: TABLE; Schema: public; Owner: genweb; Tablespace: 
+--
+
+CREATE TABLE caracteres (
+    id integer DEFAULT nextval('caracter_id'::regclass),
+    name character varying(50),
+    creatorid integer,
+    public boolean,
+    visible boolean,
+    sexo boolean,
+    sustratos integer
+);
+
+
+ALTER TABLE public.caracteres OWNER TO genweb;
+
+--
+-- Name: caracteres_proy; Type: TABLE; Schema: public; Owner: genweb; Tablespace: 
+--
+
+CREATE TABLE caracteres_proy (
+    caracter_id integer,
+    proyecto_id integer,
+    ambiente integer
+);
+
+
+ALTER TABLE public.caracteres_proy OWNER TO genweb;
+
+--
+-- Name: conexion_id; Type: SEQUENCE; Schema: public; Owner: genweb
+--
+
+CREATE SEQUENCE conexion_id
+    INCREMENT BY 1
+    NO MAXVALUE
+    NO MINVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.conexion_id OWNER TO genweb;
+
+--
+-- Name: conexiones; Type: TABLE; Schema: public; Owner: genweb; Tablespace: 
+--
+
+CREATE TABLE conexiones (
+    estadoa integer,
+    transicion integer,
+    estadob integer,
+    car_id integer,
+    id integer DEFAULT nextval('conexion_id'::regclass)
+);
+
+
+ALTER TABLE public.conexiones OWNER TO genweb;
+
+--
+-- Name: cruces_proy; Type: TABLE; Schema: public; Owner: genweb; Tablespace: 
+--
+
+CREATE TABLE cruces_proy (
+    id_cruce integer,
+    id_proy integer
+);
+
+
+ALTER TABLE public.cruces_proy OWNER TO genweb;
+
+--
+-- Name: fenotipos_par; Type: TABLE; Schema: public; Owner: genweb; Tablespace: 
+--
+
+CREATE TABLE fenotipos_par (
+    parental_id integer,
+    caracter_id integer,
+    fenotipo double precision
+);
+
+
+ALTER TABLE public.fenotipos_par OWNER TO genweb;
+
+--
+-- Name: gen_id; Type: SEQUENCE; Schema: public; Owner: genweb
+--
+
+CREATE SEQUENCE gen_id
+    INCREMENT BY 1
+    NO MAXVALUE
+    NO MINVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.gen_id OWNER TO genweb;
+
+--
+-- Name: generaciones_proy; Type: TABLE; Schema: public; Owner: genweb; Tablespace: 
+--
+
+CREATE TABLE generaciones_proy (
+    proy_id integer,
+    generacion_id integer
+);
+
+
+ALTER TABLE public.generaciones_proy OWNER TO genweb;
+
+--
+-- Name: genes; Type: TABLE; Schema: public; Owner: genweb; Tablespace: 
+--
+
+CREATE TABLE genes (
+    idglobal integer DEFAULT nextval('gen_id'::regclass),
+    id integer,
+    name character varying(20),
+    chr integer,
+    pos double precision,
+    cod integer DEFAULT 3
+);
+
+
+ALTER TABLE public.genes OWNER TO genweb;
+
+--
+-- Name: genes_car; Type: TABLE; Schema: public; Owner: genweb; Tablespace: 
+--
+
+CREATE TABLE genes_car (
+    gen_id integer,
+    car_id integer
+);
+
+
+ALTER TABLE public.genes_car OWNER TO genweb;
+
+--
+-- Name: parental_id; Type: SEQUENCE; Schema: public; Owner: genweb
+--
+
+CREATE SEQUENCE parental_id
+    INCREMENT BY 1
+    NO MAXVALUE
+    NO MINVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.parental_id OWNER TO genweb;
+
+--
+-- Name: parentales; Type: TABLE; Schema: public; Owner: genweb; Tablespace: 
+--
+
+CREATE TABLE parentales (
+    id integer DEFAULT nextval('parental_id'::regclass),
+    generacion_id integer,
+    indiv_id integer,
+    gener_indiv_id integer,
+    proy_id integer
+);
+
+
+ALTER TABLE public.parentales OWNER TO genweb;
+
+--
+-- Name: proyecto_id; Type: SEQUENCE; Schema: public; Owner: genweb
+--
+
+CREATE SEQUENCE proyecto_id
+    INCREMENT BY 1
+    NO MAXVALUE
+    NO MINVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.proyecto_id OWNER TO genweb;
+
+--
+-- Name: proyectos; Type: TABLE; Schema: public; Owner: genweb; Tablespace: 
+--
+
+CREATE TABLE proyectos (
+    id integer DEFAULT nextval('proyecto_id'::regclass),
+    proname character varying(40),
+    userid integer
+);
+
+
+ALTER TABLE public.proyectos OWNER TO genweb;
+
+--
+-- Name: user_id; Type: SEQUENCE; Schema: public; Owner: genweb
+--
+
+CREATE SEQUENCE user_id
+    INCREMENT BY 1
+    NO MAXVALUE
+    NO MINVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.user_id OWNER TO genweb;
+
+--
+-- Name: users; Type: TABLE; Schema: public; Owner: genweb; Tablespace: 
+--
+
+CREATE TABLE users (
+    id integer DEFAULT nextval('user_id'::regclass),
+    cod_auth integer,
+    username character varying(20),
+    pass character varying(20)
+);
+
+
+ALTER TABLE public.users OWNER TO genweb;
+
+--
+-- Name: public; Type: ACL; Schema: -; Owner: postgres
+--
+
+REVOKE ALL ON SCHEMA public FROM PUBLIC;
+REVOKE ALL ON SCHEMA public FROM postgres;
+GRANT ALL ON SCHEMA public TO postgres;
+GRANT ALL ON SCHEMA public TO PUBLIC;
+
+
+--
+-- PostgreSQL database dump complete
+--
+
