@@ -6,7 +6,12 @@ if(isset($_SESSION['proactivo'])){
 }
 ?><div class="derecha"><?
 if(isset($_POST['abrircar'])) $_SESSION['caractivo'] = $_POST['abrircar'];
-if(isset($_POST['cerrarcar'])) unset($_SESSION['caractivo']);
+if(isset($_POST['cerrarcar'])){
+				unset($_SESSION['caractivo']);
+				$_SESSION['genactivo']=0;
+				$_SESSION['conexiones']=FALSE;
+				$_SESSION['vergenes']=FALSE;
+}
 if(isset($_SESSION['caractivo'])) testcar($_SESSION['caractivo']);
 ?></div><?
 //if(isset($_SESSION['genactivo'])) echo "activo: ".$_SESSION['genactivo'];
@@ -14,7 +19,8 @@ if(isset($_SESSION['caractivo'])) testcar($_SESSION['caractivo']);
 testgen();
 testvergenes();
 testalelo();
-if(isset($_POST['abrirgen'])) testabrirgen($_POST['abrirgen']);
+if (isset($_POST['abrirgen'])) testabrirgen($_POST['abrirgen']);
+else if ($_SESSION['genactivo'] != 0) testabrirgen($_SESSION['genactivo']);
 ?></div><?
 if(isset($_POST['newcar'])){
 				if($_POST['newcar'] == "Nuevo Carácter")

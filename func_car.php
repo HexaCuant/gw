@@ -1,4 +1,9 @@
 <?
+
+error_reporting(E_ALL);
+ini_set('display_errors', '1');
+
+
 if(!isset($_SESSION['conexiones'])) $_SESSION['conexiones']=FALSE;
 if(!isset($_SESSION['vergenes'])) $_SESSION['vergenes']=FALSE;
 
@@ -336,7 +341,7 @@ function testvergenes(){
 								pg_close($conn);
 				}
 
-				if($_SESSION['conexiones']){
+				if(isset($_SESSION['caractivo']) && $_SESSION['conexiones']){
 								//MOSTRAR LA CONEXIONES ESTABLECIDAS
 								$conn = conecta();
 								$sql="select estadoa,transicion,estadob,id from conexiones where car_id = ".$_SESSION['caractivo'];
@@ -495,6 +500,7 @@ function testalelo(){
 
 
 function testabrirgen($id){
+				echo "activo: ".$_SESSION['genactivo'];
 				        if(!isset($_SESSION['genactivo'])) $_SESSION['genactivo']=0;
 								$conn=conecta();
 				if(isset($_POST['abrirgen']) || $_SESSION['genactivo'] != 0){
@@ -541,7 +547,6 @@ function testabrirgen($id){
 																<p>Valor: <input type="text" name="valor"></input></p>
 																<p>Dominancia: <input type="text" name="dominancia"></input></p>
 																<input type="submit" name="nuevoalelo" value="Nuevo Alelo"></input>
-																
 																</form><?
 												}
 								}
