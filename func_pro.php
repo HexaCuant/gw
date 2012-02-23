@@ -104,21 +104,24 @@ function testborrarpro()
 	pg_query($conn,$sql);
 	pg_close($conn);
 	$_SESSION['proactivo']=0;
+	unset($_SESSION['proactivo']);
 	$_SESSION['proname']="";
+	unset($_SESSION['proname']);
+	
 	refresh();
  }
 }
 
-function testabrepro()
-{
- if (isset($_POST['abrirpro']) || ($_SESSION['proactivo'] < 0))
- {
-				 $proyecto_id = $_POST['abrirpro'];
-				 $_SESSION['proactivo']=$proyecto_id;
-				 $conn = conecta();
-				 $sql = "select proname from proyectos where id=".$_SESSION['proactivo'];
-				 $res = pg_query($conn,$sql);
-				 $_SESSION['proname'] = pg_fetch_result($res,0);
-				 pg_close($conn);
- }
+function testabrepro(){
+				if (isset($_POST['abrirpro'])){
+								$_SESSION['proactivo'] = $_POST['abrirpro'];
+								$proyecto_id = $_POST['abrirpro'];
+				}
+				if(isset($_SESSION['proactivo'])){
+								$conn = conecta();
+								$sql = "select proname from proyectos where id=".$_SESSION['proactivo'];
+								$res = pg_query($conn,$sql);
+								$_SESSION['proname'] = pg_fetch_result($res,0);
+								pg_close($conn);
+				}
 }

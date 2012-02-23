@@ -500,7 +500,6 @@ function testalelo(){
 
 
 function testabrirgen($id){
-				echo "activo: ".$_SESSION['genactivo'];
 				        if(!isset($_SESSION['genactivo'])) $_SESSION['genactivo']=0;
 								$conn=conecta();
 				if(isset($_POST['abrirgen']) || $_SESSION['genactivo'] != 0){

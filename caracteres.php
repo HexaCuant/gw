@@ -20,7 +20,7 @@ testgen();
 testvergenes();
 testalelo();
 if (isset($_POST['abrirgen'])) testabrirgen($_POST['abrirgen']);
-else if ($_SESSION['genactivo'] != 0) testabrirgen($_SESSION['genactivo']);
+else if (isset($_SESSION['genactivo'])) if ($_SESSION['genactivo'] != 0) testabrirgen($_SESSION['genactivo']);
 ?></div><?
 if(isset($_POST['newcar'])){
 				if($_POST['newcar'] == "Nuevo Carácter")
