@@ -1,4 +1,7 @@
 <?
+if(!isset($_SESSION['conexiones'])) $_SESSION['conexiones']=FALSE;
+if(!isset($_SESSION['vergenes'])) $_SESSION['vergenes']=FALSE;
+
 function listacar()
 {
 				$conn = conecta();
@@ -12,9 +15,11 @@ function listacar()
  <table>
  <tr><th>Id</th><th>Carácter</th><th>Borrar</th><th>Abrir</th>
 <?
+ if(isset($_SESSION['proactivo'])){
 				if($_SESSION['proactivo']){
 								?><th>Seleccionar</th><?
 				}
+ }
 ?>
 </tr>
  <?
@@ -35,7 +40,7 @@ function listacar()
 
 
 function listacar_proy($proyecto_id){
- $conn = conecta();
+				$conn = conecta();
 				if(isset($_POST['borrarcar']) && isset($_POST['confirmado'])){
 								$sql="delete from caracteres_proy where caracter_id = ".$_POST['borrarcar']." and proyecto_id = ".$_SESSION['proactivo'];
 								$res=pg_query($conn,$sql);
@@ -111,6 +116,11 @@ function testcar($id){
 												$_SESSION['conexiones']=FALSE;
 				}
 				else if(isset($_POST['borrarcar']) && isset($_POST['confirmado'])){
+								unset($_SESSION['caractivo']);
+								unset($_SESSION['name_caractivo']);
+								$_SESSION['vergenes']=FALSE;
+								$_SESSION['conexiones']=FALSE;
+
 								$id=$_POST['borrarcar'];
 								$sql="delete from caracteres where id=".$id;
 								$conn=conecta();
@@ -168,8 +178,10 @@ function carbutton($id){
 ?>
 <td><input type="submit" name="abrircar" value="<?=$id?>"></input></td> 
 <?
-				if($_SESSION['proactivo']){
-								?><td><input type="submit" name="seleccionar" value="<?=$id?>"></input><?
+				if(isset($_SESSION['proactivo'])){
+								if($_SESSION['proactivo']){
+												?><td><input type="submit" name="seleccionar" value="<?=$id?>"></input><?
+								}
 				}
 }
 
@@ -213,16 +225,15 @@ if($creatorid == $_SESSION['id']){
 
 <?
 if(($creatorid == $_SESSION['id']) || ($visible == 't')){
+												if($_SESSION['vergenes']){
+				?>
+							<p><input type="submit" value="Ocultar Genes" name="ocultargenes"></input></p><?
+												}else{
+				?>
+																<p><input type="submit" value="Ver Genes" name="vergenes"></input></p><?
+												}
+				}
 
-								if($_SESSION['vergenes']){
-?>
-			<p><input type="submit" value="Ocultar Genes" name="ocultargenes"></input></p><?
-								}
-								else{
-?>
-												<p><input type="submit" value="Ver Genes" name="vergenes"></input></p><?
-								}
-}
 if($creatorid == $_SESSION['id']){
 ?>
 			<p><input type="submit" value="Nuevo gen" name="nuevogen"></input></p>
@@ -242,6 +253,7 @@ function testvergenes(){
 
 
 				if(isset($_SESSION['caractivo'])){
+								if(isset($_SESSION['vergenes'])){
 								if(isset($_POST['vergenes']) || $_SESSION['vergenes']){
 								$_SESSION['vergenes']=TRUE;
 								$conn = conecta();
@@ -284,6 +296,7 @@ function testvergenes(){
 								?><input type="submit" name="verconexiones" value="Ver Conexiones"></input><?
 								}
 								?></form><?
+								}
 								}
 				}
 				//GUARDAR CONEXIONES
@@ -482,6 +495,7 @@ function testalelo(){
 
 
 function testabrirgen($id){
+				        if(!isset($_SESSION['genactivo'])) $_SESSION['genactivo']=0;
 								$conn=conecta();
 				if(isset($_POST['abrirgen']) || $_SESSION['genactivo'] != 0){
 								if ($_SESSION['genactivo'] == 0) $_SESSION['genactivo']=$id;

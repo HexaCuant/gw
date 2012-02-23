@@ -1,20 +1,26 @@
 <?
-if (($_SESSION['proactivo'] > 0)){
-				?><h2>Proyecto activo: <?=$_SESSION['proname']?></h2><?
+if(isset($_SESSION['proactivo'])){
+				if (($_SESSION['proactivo'] > 0)){
+								?><h2>Proyecto activo: <?=$_SESSION['proname']?></h2><?
+				}
 }
 ?><div class="derecha"><?
-testcar($_POST['abrircar']);
+if(isset($_POST['abrircar'])) $_SESSION['caractivo'] = $_POST['abrircar'];
+if(isset($_POST['cerrarcar'])) unset($_SESSION['caractivo']);
+if(isset($_SESSION['caractivo'])) testcar($_SESSION['caractivo']);
 ?></div><?
 //if(isset($_SESSION['genactivo'])) echo "activo: ".$_SESSION['genactivo'];
 ?><div class="derecha"><?
 testgen();
 testvergenes();
 testalelo();
-testabrirgen($_POST['abrirgen']);
+if(isset($_POST['abrirgen'])) testabrirgen($_POST['abrirgen']);
 ?></div><?
-if($_POST['newcar'] == "Nuevo Carácter")
-{
-	insertcar($_POST['carname']);
+if(isset($_POST['newcar'])){
+				if($_POST['newcar'] == "Nuevo Carácter")
+				{
+					insertcar($_POST['carname']);
+				}
 }
 //seleccionar los proyectos del ususario
 ?><div class="izquierda"><?
