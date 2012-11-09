@@ -18,9 +18,9 @@ function formnewrandom(){
 								if($_SESSION['vergeneraciones']==1){
 												?><input type="submit" name="ocultargeneraciones" value="Ocultar Generaciones"></input><?
 								}
-								else{
-												?><input type="submit" name="vergeneraciones" value="Ver Generaciones"></input><?
-								}
+				}
+				else{
+								?><input type="submit" name="vergeneraciones" value="Ver Generaciones"></input><?
 				}
 }
 
@@ -159,6 +159,7 @@ function generacionbutton($id){
 }
 
 function testlistgeneraciones(){
+				if(!isset($_SESSION['vergeneraciones'])) $_SESSION['vergeneraciones']=0;
 				if($_SESSION['vergeneraciones']){
 								$conn = conecta();
 								$sql="select distinct(generacion_id) from generaciones_proy where proy_id = ".$_SESSION['proactivo']." order by generacion_id";
