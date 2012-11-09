@@ -14,11 +14,13 @@ function formnewrandom(){
 				Generación num. <input type="text" name="generacion_id" value="<?=$generacion_id?>"></input /><br /><br />
 				<input type="submit" name="newrandom" value="Crear Generación"></input><br /><br />
 <?
-				if($_SESSION['vergeneraciones']){
-								?><input type="submit" name="ocultargeneraciones" value="Ocultar Generaciones"></input><?
-				}
-				else{
-								?><input type="submit" name="vergeneraciones" value="Ver Generaciones"></input><?
+				if(isset($_SESSION['vergeneraciones'])){
+								if($_SESSION['vergeneraciones']==1){
+												?><input type="submit" name="ocultargeneraciones" value="Ocultar Generaciones"></input><?
+								}
+								else{
+												?><input type="submit" name="vergeneraciones" value="Ver Generaciones"></input><?
+								}
 				}
 }
 
@@ -200,6 +202,7 @@ function crearcruce(){
 				Generación num. <input type="text" name="generacion_id" value="<?=$generacion_id?>"></input /><br /><br />
 				Tamaño población <input type="text" name="poblacion" value=""></input /><br /><br />
 <?
+				if(!isset($_SESSION['creandocruce'])) $_SESSION['creandocruce']=0;
 				if($_SESSION['creandocruce']){
 								?><input type="submit" name="ocultarparentales" value="Ocultar parentales"></input><?
 				}
