@@ -15,7 +15,6 @@ if(isset($_POST['cerrarcar'])){
 if(isset($_SESSION['caractivo'])) testcar($_SESSION['caractivo']);
 else if(isset($_POST['seleccionar'])) testcar($_POST['seleccionar']);
 ?></div><?
-//if(isset($_SESSION['genactivo'])) echo "activo: ".$_SESSION['genactivo'];
 ?><div class="derecha"><?
 testgen();
 testvergenes();
