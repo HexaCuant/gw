@@ -547,7 +547,11 @@ function testabrirgen($id){
 																?><h2>Nuevo Alelo</h2>
 																<p>Nombre: <input type="text" name="nombrealelo"></input></p>
 																<p>Valor: <input type="text" name="valor"></input></p>
+																<h3>Aditivo:
+																Sí: <input type="radio" name="aditivo" value="1">
+																No: <input type="radio" name="aditivo" value="0"></h3>
 																<p>Dominancia: <input type="text" name="dominancia"></input></p>
+																<p>Epistasis: <input type="text" name="dominancia"></input></p>
 																<input type="submit" name="nuevoalelo" value="Nuevo Alelo"></input>
 																</form><?
 												}
