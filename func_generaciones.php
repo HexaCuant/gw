@@ -18,9 +18,9 @@ function formnewrandom(){
 								if($_SESSION['vergeneraciones']==1){
 												?><input type="submit" name="ocultargeneraciones" value="Ocultar Generaciones"></input><?
 								}
-				}
-				else{
-								?><input type="submit" name="vergeneraciones" value="Ver Generaciones"></input><?
+								else{
+												?><input type="submit" name="vergeneraciones" value="Ver Generaciones"></input><?
+								}
 				}
 }
 

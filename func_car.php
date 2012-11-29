@@ -549,9 +549,9 @@ function testabrirgen($id){
 																<p>Valor: <input type="text" name="valor"></input></p>
 																<h3>Aditivo:
 																Sí: <input type="radio" name="aditivo" value="1">
-																No: <input type="radio" name="aditivo" value="0"></h3>
+																No: <input type="radio" name="aditivo" value="0" checked></h3>
 																<p>Dominancia: <input type="text" name="dominancia"></input></p>
-																<p>Epistasis: <input type="text" name="dominancia"></input></p>
+																<p>Epistasis: <input type="text" name="epistasis" value=0></input></p>
 																<input type="submit" name="nuevoalelo" value="Nuevo Alelo"></input>
 																</form><?
 												}
@@ -562,6 +562,10 @@ function testabrirgen($id){
 								$name = $_POST['nombrealelo'];
 								$valor = $_POST['valor'];
 								$dominancia = $_POST['dominancia'];
+								$aditivo = $_POST['aditivo'];
+								$epistasis = $_POST['epistasis'];
+								if ($aditivo == 1) $dominancia = $dominancia+1000;
+								if ($epistasis != 0) $dominancia = $dominancia + $epistasis*1000;
 								$sql = "insert into alelos (name, valor, dominancia) values ('".$name."','".$valor."','".$dominancia."')";
 								$res = pg_query($conn,$sql);
 								if(!$res) echo "ERROR: No se insertó la información del gen en la BD";
