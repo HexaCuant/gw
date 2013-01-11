@@ -21,6 +21,8 @@ function formnewrandom(){
 								else{
 												?><input type="submit" name="vergeneraciones" value="Ver Generaciones"></input><?
 								}
+				}else{
+												?><input type="submit" name="vergeneraciones" value="Ver Generaciones"></input><?
 				}
 }
 
