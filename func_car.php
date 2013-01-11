@@ -153,7 +153,7 @@ function testcar($id){
 								$res = pg_query($conn,$sql);
 								if(!$res) echo "Error: carácter no encontrado";
 								else echo "insertado el carácter ".$_POST['seleccionar']." en el proyecto ".$_SESSION['proactivo'];
-				}else{echo "fuera de seleccionar";}
+				}
 				if(isset($_SESSION['caractivo'])) datoscar($_SESSION['caractivo']);
 }
 
