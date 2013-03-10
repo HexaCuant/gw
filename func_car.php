@@ -13,6 +13,10 @@ if(!isset($_SESSION['vergenes'])) $_SESSION['vergenes']=FALSE;
 function listacar()
 {
 				$conn = conecta();
+				if(isset($_POST['borrarcar']) && isset($_POST['confirmado'])){
+								$sql="delete from caracteres where id=".$_POST['borrarcar'];
+								$res=pg_query($conn,$sql);
+				}	
 				//$sql="select distinct caracter_id from caracteres_proy where proyecto_id =".$proyecto_id;
 				$sql="select id,name from caracteres where creatorid = '".$_SESSION['id']."' or public order by id";
  $res=pg_query($conn,$sql);
@@ -131,6 +135,7 @@ function testcar($id){
 
 								$id=$_POST['borrarcar'];
 								$sql="delete from caracteres where id=".$id;
+								echo $sql."<br/>";
 								$conn=conecta();
 								$res=pg_query($conn,$sql);
 				pg_close($conn);

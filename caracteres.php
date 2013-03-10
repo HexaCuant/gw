@@ -30,7 +30,7 @@ if(isset($_POST['newcar'])){
 }
 //seleccionar los proyectos del ususario
 ?><div class="izquierda"><?
-listacar($_SESSION['userid']);
+listacar($_SESSION['id']);
 ?></div><?
 ?><fieldset><legend>Crear Nuevo carácter</legend><?
 formnewcar();
