@@ -1,11 +1,11 @@
-<?
+<?php 
 testborrarpro();
 testabrepro();
 testcierrapro();
 
 //seleccionar los proyectos del ususario
 if(isset($_SESSION['proactivo'])){
-								?><h2>Caracteres del proyecto: <?=$_SESSION['proname']?> (id=<?=$_SESSION['proactivo']?>)</h2><?
+								?><h2>Caracteres del proyecto: <?php echo $_SESSION['proname']?> (id=<?php echo $_SESSION['proactivo']?>)</h2><?php 
 								formcierrapro();
 								listacar_proy($_SESSION['proactivo']);
 				}else{

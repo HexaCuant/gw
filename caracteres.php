@@ -1,10 +1,10 @@
-<?
+<?php 
 if(isset($_SESSION['proactivo'])){
 				if (($_SESSION['proactivo'] > 0)){
-								?><h2>Proyecto activo: <?=$_SESSION['proname']?></h2><?
+								?><h2>Proyecto activo: <?php echo $_SESSION['proname']?></h2><?php 
 				}
 }
-?><div class="derecha"><?
+?><div class="derecha"><?php 
 if(isset($_POST['abrircar'])) $_SESSION['caractivo'] = $_POST['abrircar'];
 if(isset($_POST['cerrarcar'])){
 				unset($_SESSION['caractivo']);
@@ -14,14 +14,14 @@ if(isset($_POST['cerrarcar'])){
 }
 if(isset($_SESSION['caractivo'])) testcar($_SESSION['caractivo']);
 else if(isset($_POST['seleccionar'])) testcar($_POST['seleccionar']);
-?></div><?
-?><div class="derecha"><?
+?></div><?php 
+?><div class="derecha"><?php 
 testgen();
 testvergenes();
 testalelo();
 if (isset($_POST['abrirgen'])) testabrirgen($_POST['abrirgen']);
 else if (isset($_SESSION['genactivo'])) if ($_SESSION['genactivo'] != 0) testabrirgen($_SESSION['genactivo']);
-?></div><?
+?></div><?php 
 if(isset($_POST['newcar'])){
 				if($_POST['newcar'] == "Nuevo Carácter")
 				{
@@ -29,11 +29,11 @@ if(isset($_POST['newcar'])){
 				}
 }
 //seleccionar los proyectos del ususario
-?><div class="izquierda"><?
+?><div class="izquierda"><?php 
 listacar($_SESSION['id']);
-?></div><?
-?><fieldset><legend>Crear Nuevo carácter</legend><?
+?></div><?php 
+?><fieldset><legend>Crear Nuevo carácter</legend><?php 
 formnewcar();
-?></fieldset><?
+?></fieldset><?php 
 ?>
 <a name="fin">
