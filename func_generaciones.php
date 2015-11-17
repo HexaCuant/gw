@@ -138,11 +138,12 @@ function abrirgeneracion($id){
 				</form><?php 
 				fclose($fh);
 				fclose($_SESSION['out']);
-				?><p><a href="<?php echo $outfilename?>">Descargar datos</a> (puntos decimales)</p><?php 
+				$puntofilename = "/proyectosGengine/".$_SESSION['proactivo']."/".$_SESSION['proactivo']."_".$id."_datos.csv";
+	?><p><a href="<?php echo $puntofilename?>">Descargar datos</a> (puntos decimales)</p><?php 
 				//archivo con comas decimales
-				$comafilename = "/var/www/proyectosGengine/".$_SESSION['proactivo']."/".$_SESSION['proactivo']."_".$id."_datos_coma.csv";
+				$comafilename = "/proyectosGengine/".$_SESSION['proactivo']."/".$_SESSION['proactivo']."_".$id."_datos_coma.csv";
 				$fh = fopen($outfilename,"r");
-				$_SESSION['coma'] = fopen($comafilename,"w");
+				$_SESSION['coma'] = fopen("/var/www/".$comafilename,"w");
 				while (($line = fgets($fh)) !== false){
 								$comaline = preg_replace('@\.@',',',$line);
 								fwrite($_SESSION['coma'],$comaline);
@@ -165,7 +166,6 @@ function testlistgeneraciones(){
 				if($_SESSION['vergeneraciones']){
 								$conn = conecta();
 								$sql="select distinct(generacion_id) from generaciones_proy where proy_id = ".$_SESSION['proactivo']." order by generacion_id";
-								echo $sql;
 								$res = pg_query($conn,$sql);
 								$filas = pg_num_rows($res);
 								?><br /><br /><table><?php 
