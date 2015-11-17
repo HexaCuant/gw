@@ -22,7 +22,7 @@ pg_connect("host=pgsql_server port=5432 dbname=genweb user=genweb password=genwe
 
 #GRANT ALL PRIVILEGES ON DATABASE genweb to genweb;
 
-#/q
+#\q
 
 5.-comprobar el acceso a la base de datos
 

@@ -22,7 +22,7 @@ function cabecera()
 
 function conecta()
 {
- $conn = pg_connect("dbname=genweb user=genweb password=1ene2007");
+			$conn = pg_connect("dbname=genweb user=genweb password=genweb");
  if(pg_ErrorMessage($conn))
  {
   echo "<p><b>Ocurrió un error en la conexión a la base de datos</b></p>";
