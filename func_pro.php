@@ -1,4 +1,4 @@
-<?
+<?php 
 function listapro($id)
 {
  $conn = conecta();
@@ -9,28 +9,28 @@ function listapro($id)
 <form action="index.php?option=2" method="post">
  <table>
  <tr><th>Id</th><th>Nombre Proyecto</th><th>Borrar</th><th>Abrir</th></tr>
- <?
+ <?php 
  for ($i=0;$i<$rows;$i++)
  {
   $id = pg_result($res,$i,0);
   $proname = pg_result($res,$i,1);
-	?><tr><td><?=$id?></td><td><?=$proname?></td><?
+	?><tr><td><?php echo $id?></td><td><?php echo $proname?></td><?php 
   probutton($id);
-	?></tr><?
+	?></tr><?php 
  }
  ?>
  </table>
 </form>
- <?
+ <?php 
  pg_close($conn);
 }
 
 function probutton($id)
 {
 ?>
-				<td><input type="submit" name="borrarpro" value="<?=$id?>"></input><input type="checkbox" name="confirmado"></input></td>
-				<td><input type="submit" name="abrirpro" value="<?=$id?>"</td> 
-<?
+				<td><input type="submit" name="borrarpro" value="<?php echo $id?>"></input><input type="checkbox" name="confirmado"></input></td>
+				<td><input type="submit" name="abrirpro" value="<?php echo $id?>"</td> 
+<?php 
 }
 
 function formnewpro()
@@ -40,7 +40,7 @@ function formnewpro()
  <p>Nombre:<input type="text" name="proname"></input></p>
  <p><input type="submit" value="Nuevo Proyecto" name="newpro" /><input type="reset" value="borrar" /></p>
  </form>
- <?
+ <?php 
 }
 
 
@@ -58,7 +58,7 @@ function formcierrapro()
  <form action="index.php?option=2" method="post">
  <p><input type="submit" value="Cerrar Proyecto" name="cerrarpro" />
  </form>
-<?
+<?php 
 }
 
 function testcierrapro()

@@ -26,6 +26,24 @@ pg_connect("host=pgsql_server port=5432 dbname=genweb user=genweb password=genwe
 
 5.-comprobar el acceso a la base de datos
 
+*******************************************
+NOTA: 
+
+Comprobar que se ha cambiado la línea:
+
+local all all peer
+
+por:
+
+local all all md5
+
+en /etc/postgresql/9.1/main/pg_hba.conf (cambiar 9.1 por la versión de postgresql)
+
+y reiniciar postgresql
+
+*******************************************
+
+
 #psql genweb -U genweb
 
 6.-salir

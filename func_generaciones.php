@@ -1,4 +1,4 @@
-<?
+<?php 
 
 function formnewrandom(){
 				//generacion max
@@ -11,18 +11,18 @@ function formnewrandom(){
 				//////
 				?><form action="index.php?option=3#fin" method="post">
 				Tamaño de población: <input type = "text" name="pop" ></input><br /><br />
-				Generación num. <input type="text" name="generacion_id" value="<?=$generacion_id?>"></input /><br /><br />
+				Generación num. <input type="text" name="generacion_id" value="<?php echo $generacion_id?>"></input /><br /><br />
 				<input type="submit" name="newrandom" value="Crear Generación"></input><br /><br />
-<?
+<?php 
 				if(isset($_SESSION['vergeneraciones'])){
 								if($_SESSION['vergeneraciones']==1){
-												?><input type="submit" name="ocultargeneraciones" value="Ocultar Generaciones"></input><?
+												?><input type="submit" name="ocultargeneraciones" value="Ocultar Generaciones"></input><?php 
 								}
 								else{
-												?><input type="submit" name="vergeneraciones" value="Ver Generaciones"></input><?
+												?><input type="submit" name="vergeneraciones" value="Ver Generaciones"></input><?php 
 								}
 				}else{
-												?><input type="submit" name="vergeneraciones" value="Ver Generaciones"></input><?
+												?><input type="submit" name="vergeneraciones" value="Ver Generaciones"></input><?php 
 				}
 }
 
@@ -48,8 +48,8 @@ function testnewrandom(){
 
 
 function indivbutton($id){
-				?><td><input type="submit" name="addindiv" value="<?=$id?>"></input>
-				<?
+				?><td><input type="submit" name="addindiv" value="<?php echo $id?>"></input>
+				<?php 
 }
 
 
@@ -57,22 +57,22 @@ function processline($line){
 				$data = explode("=",$line);
 				if ($data[0] > 0){
 								echo "\n";
-								?><tr><?
+								?><tr><?php 
 								$idindiv = $data[0];
-								?><td><?=$idindiv?><?
+								?><td><?php echo $idindiv?><?php 
 								fwrite($_SESSION['out'],$data[0]);
 								$fenotipos = explode(":",$data[1]);
 								$i=0;
 								$j=0;
 								while($fenotipos[$i] !== "$"){
 												$i++;
-												?><td><?=$fenotipos[$i]?><?
+												?><td><?php echo $fenotipos[$i]?><?php 
 												fwrite($_SESSION['out']," ".$fenotipos[$i]);
 												$i++;
 												$j++;
 								}
 												indivbutton($idindiv);
-								?></tr><?
+								?></tr><?php 
 								fwrite($_SESSION['out'],"\n");
 								echo "\n";
 				}
@@ -100,7 +100,7 @@ function testcarac($line){
 								 else{
 												 $name = pg_fetch_result($res,0);
 												 $_SESSION['listcarac'][$j]=$name;
-												 ?><th><?=$name?></th><?
+												 ?><th><?php echo $name?></th><?php 
 												 fwrite($_SESSION['out']," ".$name);
 								 }
 								 $j++;
@@ -109,22 +109,22 @@ function testcarac($line){
 				 }
 				$_SESSION['missingnames']=false;
 				pg_close($conn);
-				?><th>Selec.</th><tr><?
+				?><th>Selec.</th><tr><?php 
 				fwrite($_SESSION['out'],"\n");
 }
 
 
 function abrirgeneracion($id){
 				?><form action = "index.php?option=3#cruce" method="post">
-				<input type="submit" name="cerrargeneracion" value="Cerrar"></input><?
+				<input type="submit" name="cerrargeneracion" value="Cerrar"></input><?php 
 				$_SESSION['missingnames']=true;
-				?><h2>Generacion <?=$id?></h2><?
+				?><h2>Generacion <?php echo $id?></h2><?php 
 				$filename = "../proyectosGengine/".$_SESSION['proactivo']."/".$_SESSION['proactivo'].".dat".$id;
 				$outfilename = "../proyectosGengine/".$_SESSION['proactivo']."/".$_SESSION['proactivo']."_".$id."_datos.csv";
 				$fh = fopen($filename,"r");
 				$_SESSION['out'] = fopen($outfilename,"w");
 				?><table>
-				<tr><th>Id</th><?
+				<tr><th>Id</th><?php 
 				fwrite($_SESSION['out'],"Id");
 				if($fh){
 								while (($line = fgets($fh)) !== false){
@@ -135,10 +135,10 @@ function abrirgeneracion($id){
 								}
 				}
 				?></table>
-				</form><?
+				</form><?php 
 				fclose($fh);
 				fclose($_SESSION['out']);
-				?><p><a href="<?=$outfilename?>">Descargar datos</a> (puntos decimales)</p><?
+				?><p><a href="<?php echo $outfilename?>">Descargar datos</a> (puntos decimales)</p><?php 
 				//archivo con comas decimales
 				$comafilename = "../proyectosGengine/".$_SESSION['proactivo']."/".$_SESSION['proactivo']."_".$id."_datos_coma.csv";
 				$fh = fopen($outfilename,"r");
@@ -149,15 +149,15 @@ function abrirgeneracion($id){
 				}
 				fclose($fh);
 				fclose($_SESSION['coma']);
-				?><p><a href="<?=$comafilename?>">Descargar datos</a> (comas decimales)</p><?
+				?><p><a href="<?php echo $comafilename?>">Descargar datos</a> (comas decimales)</p><?php 
 
 }
 
 function generacionbutton($id){
 ?>
-<td><input type="submit" name="borrargeneracion" value="<?=$id?>"></input><input type="checkbox" name="confirmado"></input></td>
-<td><input type="submit" name="abrirgeneracion" value="<?=$id?>"></input></td>
-<?
+<td><input type="submit" name="borrargeneracion" value="<?php echo $id?>"></input><input type="checkbox" name="confirmado"></input></td>
+<td><input type="submit" name="abrirgeneracion" value="<?php echo $id?>"></input></td>
+<?php 
 }
 
 function testlistgeneraciones(){
@@ -167,16 +167,16 @@ function testlistgeneraciones(){
 								$sql="select distinct(generacion_id) from generaciones_proy where proy_id = ".$_SESSION['proactivo']." order by generacion_id";
 								$res = pg_query($conn,$sql);
 								$filas = pg_num_rows($res);
-								?><br /><br /><table><?
-								?><tr><th>N.</th><th>Borrar</th><th>Abrir</th></tr><?
+								?><br /><br /><table><?php 
+								?><tr><th>N.</th><th>Borrar</th><th>Abrir</th></tr><?php 
 								for($i=0;$i<$filas;$i++){
 												$id=pg_fetch_result($res,$i,0);
-												?><tr><td><?=$id?></td><?
+												?><tr><td><?php echo $id?></td><?php 
 												generacionbutton($id);
-												?></tr><?
+												?></tr><?php 
 												echo "\n";
 								}
-								?></table><?
+								?></table><?php 
 								pg_close($conn);
 				}
 				if(isset($_POST['borrargeneracion']) && isset($_POST['confirmado'])){
@@ -202,17 +202,17 @@ function crearcruce(){
 				//////
 ?><a name="cruce">
 <form action="index.php?option=3" method="post">
-				Generación num. <input type="text" name="generacion_id" value="<?=$generacion_id?>"></input /><br /><br />
+				Generación num. <input type="text" name="generacion_id" value="<?php echo $generacion_id?>"></input /><br /><br />
 				Tamaño población <input type="text" name="poblacion" value=""></input /><br /><br />
-<?
+<?php 
 				if(!isset($_SESSION['creandocruce'])) $_SESSION['creandocruce']=0;
 				if($_SESSION['creandocruce']){
-								?><input type="submit" name="ocultarparentales" value="Ocultar parentales"></input><?
+								?><input type="submit" name="ocultarparentales" value="Ocultar parentales"></input><?php 
 				}
 				else{
-								?><input type="submit" name="verparentales" value="Ver parentales"></input><?
+								?><input type="submit" name="verparentales" value="Ver parentales"></input><?php 
 				}
-								?><input type="submit" name="cruzar" value="Generar nueva generación"></input><?
+								?><input type="submit" name="cruzar" value="Generar nueva generación"></input><?php 
 
 				if(isset($_POST['verparentales'])){
 								$_SESSION['cruce_gen_id']=$_POST['generacion_id'];
@@ -234,18 +234,18 @@ function crearcruce(){
 				}
 
 				if($_SESSION['creandocruce']){
-								?><h3>Parentales</h3><?
+								?><h3>Parentales</h3><?php 
 								cruce();
 				}
 ?>
 </form>
-<?
+<?php 
 }
 
 function parentalbutton($id){
 ?>
-<td><input type="submit" name="borrarparental" value="<?=$id?>"></input><input type="checkbox" name="confirmado"></input></td>
-<?
+<td><input type="submit" name="borrarparental" value="<?php echo $id?>"></input><input type="checkbox" name="confirmado"></input></td>
+<?php 
 }
 
 
@@ -261,8 +261,8 @@ function cruce(){
 								$sql="insert into parentales (generacion_id, indiv_id, gener_indiv_id,proy_id) values (".$_SESSION['cruce_gen_id'].",".$_POST['addindiv'].",".$_SESSION['generacionactiva'].",".$_SESSION['proactivo'].")";
 								$res=pg_query($conn,$sql);
 				}
-				?><table><?
-				?><tr><th>N.</th><th>Indiv. Id</th><th>Generación</th><th>Borrar</th></tr><?
+				?><table><?php 
+				?><tr><th>N.</th><th>Indiv. Id</th><th>Generación</th><th>Borrar</th></tr><?php 
 				$sql="select id, indiv_id, gener_indiv_id from parentales where generacion_id = ".$_SESSION['cruce_gen_id']." and proy_id =". $_SESSION['proactivo']." order by gener_indiv_id, indiv_id";
 				$res = pg_query($conn,$sql);
 				$filas = pg_num_rows($res);
@@ -270,9 +270,9 @@ function cruce(){
 								$id = pg_fetch_result($res,$i,0);
 								$indiv_id = pg_fetch_result($res,$i,1);
 								$gener = pg_fetch_result($res,$i,2);
-								?><tr><td><?=$id?></td><td><?=$indiv_id?></td><td><?=$gener?></td><?parentalbutton($id)?></tr><?
+								?><tr><td><?php echo $id?></td><td><?php echo $indiv_id?></td><td><?php echo $gener?></td><?php parentalbutton($id)?></tr><?php 
 				}
-				?></table><?
+				?></table><?php 
 				pg_close($conn);
 }
 

@@ -1,4 +1,4 @@
-<?php
+<?php 
 error_reporting(E_ALL);
 ini_set('display_errors', '1');
 session_start();
@@ -17,7 +17,7 @@ function cabecera()
   <title>GenWeb</title>
   </head>
 	<body>
- <?
+ <?php 
 }
 
 function conecta()
@@ -36,12 +36,12 @@ function menu($option)
 ?>
 <div class="divmenu">
 <ul class="menu2011">
-<li <?if ($option==1)  print("class=\"verde\"");?>><a href="index.php?option=1">Caracteres</a></li>
-<li <?if ($option==2)  print("class=\"verde\"");?>><a href="index.php?option=2">Proyectos</a></li>
-<li <?if ($option==3)  print("class=\"verde\"");?>><a href="index.php?option=3">Generaciones</a></li>
+<li <?php if ($option==1)  print("class=\"verde\"");?>><a href="index.php?option=1">Caracteres</a></li>
+<li <?php if ($option==2)  print("class=\"verde\"");?>><a href="index.php?option=2">Proyectos</a></li>
+<li <?php if ($option==3)  print("class=\"verde\"");?>><a href="index.php?option=3">Generaciones</a></li>
 </ul>
 </div>
-<?
+<?php 
 }
 
 
@@ -50,12 +50,12 @@ function autentificaform()
 if(isset($_SESSION['ident']))
 {
 ?>
-				<h2>Identificado como <?=$_SESSION['user']?>
+				<h2>Identificado como <?php echo $_SESSION['user']?>
 <form action="index.php" method="post">
 <input type="submit" value="salir" name="login" />
 </form>
 </h2>
-<?
+<?php 
 }
 else
 {
@@ -68,11 +68,11 @@ else
 <!--<p><input type="submit" value="he olvidado mi contrase&ntilde;a" name="olvido" /></p>-->
 <p><input type="submit" value="Nuevo Usuario" name="login"/></p>
 </form>
-<?
+<?php 
 }
 ?>
 
-<?
+<?php 
 }
 
 function autentifica($user,$pass)

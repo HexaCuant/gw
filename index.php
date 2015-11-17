@@ -48,16 +48,16 @@ else if($_POST['login'] == 'salir')
 
 
 <h1>Genweb</h1>
-<?//control de usuarios
+<?php //control de usuarios
 autentificaform();
 if(isset($_SESSION['ident'])){
 if($_SESSION['ident'])
 {
 ?>
-	<?menu($option);?>
+	<?php menu($option);?>
 
 <div class="tab">
-<?
+<?php 
 				switch ($option)
 				{
          case 1;
@@ -77,7 +77,7 @@ if($_SESSION['ident'])
 
 </div>
 
-<?
+<?php 
 }
 }
 ?>
