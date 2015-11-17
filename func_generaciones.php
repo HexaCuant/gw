@@ -119,8 +119,8 @@ function abrirgeneracion($id){
 				<input type="submit" name="cerrargeneracion" value="Cerrar"></input><?php 
 				$_SESSION['missingnames']=true;
 				?><h2>Generacion <?php echo $id?></h2><?php 
-				$filename = "../proyectosGengine/".$_SESSION['proactivo']."/".$_SESSION['proactivo'].".dat".$id;
-				$outfilename = "../proyectosGengine/".$_SESSION['proactivo']."/".$_SESSION['proactivo']."_".$id."_datos.csv";
+				$filename = "/var/www/proyectosGengine/".$_SESSION['proactivo']."/".$_SESSION['proactivo'].".dat".$id;
+				$outfilename = "/var/www/proyectosGengine/".$_SESSION['proactivo']."/".$_SESSION['proactivo']."_".$id."_datos.csv";
 				$fh = fopen($filename,"r");
 				$_SESSION['out'] = fopen($outfilename,"w");
 				?><table>
@@ -140,7 +140,7 @@ function abrirgeneracion($id){
 				fclose($_SESSION['out']);
 				?><p><a href="<?php echo $outfilename?>">Descargar datos</a> (puntos decimales)</p><?php 
 				//archivo con comas decimales
-				$comafilename = "../proyectosGengine/".$_SESSION['proactivo']."/".$_SESSION['proactivo']."_".$id."_datos_coma.csv";
+				$comafilename = "/var/www/proyectosGengine/".$_SESSION['proactivo']."/".$_SESSION['proactivo']."_".$id."_datos_coma.csv";
 				$fh = fopen($outfilename,"r");
 				$_SESSION['coma'] = fopen($comafilename,"w");
 				while (($line = fgets($fh)) !== false){
@@ -165,6 +165,7 @@ function testlistgeneraciones(){
 				if($_SESSION['vergeneraciones']){
 								$conn = conecta();
 								$sql="select distinct(generacion_id) from generaciones_proy where proy_id = ".$_SESSION['proactivo']." order by generacion_id";
+								echo $sql;
 								$res = pg_query($conn,$sql);
 								$filas = pg_num_rows($res);
 								?><br /><br /><table><?php 
@@ -184,7 +185,7 @@ function testlistgeneraciones(){
 								$conn=conecta();
 								$sql = "delete from generaciones_proy where proy_id = ".$_SESSION['proactivo']." and generacion_id = ".$id;
 								$res = pg_query($conn,$sql);
-								$file = "../proyectosGengine/".$_SESSION['proactivo']."/".$_SESSION['proactivo'].".dat".$id;
+								$file = "/var/www/proyectosGengine/".$_SESSION['proactivo']."/".$_SESSION['proactivo'].".dat".$id;
 								$command = "rm ".$file;
 								system($command);
 								refresh();
