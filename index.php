@@ -2,12 +2,14 @@
 require_once("func.php");
 if(isset($_GET['option'])) $option=$_GET['option']; else $option=0;
 if(isset($_POST['user'])) $user=$_POST['user']; else $user="";
+if(isset($_POST['folder'])) $folder=$_POST['folder']; else $folder="";
+$user = $user."-".$folder;
 if(isset($_POST['pass'])) $pass=$_POST['pass']; else $pass="";
 
 cabecera($option);
 
 if(isset($_POST['login'])){
-if($_POST['login'] == 'identificar'){
+			if($_POST['login'] == 'Entrar'){
 				if(!isset($_SESSION['ident'])){
 								$_SESSION['cod_auth'] = autentifica($user,$pass);
 								if ($_SESSION['cod_auth'] > 0){
@@ -22,10 +24,10 @@ if($_POST['login'] == 'identificar'){
 
 
 
-else if($_POST['login'] == 'Nuevo Usuario')
+else if($_POST['login'] == 'Nueva carpeta')
 {
 				$_SESSION['cod_auth'] = inserta($user,$pass);
-//				echo $_SESSION['cod_auth'];
+				echo $_SESSION['cod_auth'];
 				if ($_SESSION['cod_auth'] > 0)
 				{
 								$_SESSION['ident']=TRUE;
@@ -47,9 +49,12 @@ else if($_POST['login'] == 'salir')
 
 
 
-<h1>Genweb</h1>
+<h1>GenWeb</h1>
+<div class="centrado">
+			<div class="login">
 <?php //control de usuarios
-autentificaform();
+			autentificaform();
+?></div></div><?php
 if(isset($_SESSION['ident'])){
 if($_SESSION['ident'])
 {

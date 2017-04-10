@@ -1,34 +1,57 @@
 body{
-background-color:#225;
-color:#aa3;
+background-color:#bbb;
+color:#222;
 }
 
 h1{
-background-color:#fdd;
-color:#755;
+background-color:#fff;
+color:#222;
+text-align: center;
 }
 
 h2{
-background-color:#dfd;
-color: #353;
+background-color:#fff;
+color: #222;
 }
 
 table{
-background-color:#ffa;
+background-color:#bbb;
 color: black;
 }
 
 th{
-background-color:#aa5;
+background-color:#aaa;
 }
 
 legend{
- background-color:#aa5;
+ background-color:#aaa;
  color: black;
  border: 2pt solid white;
  margin: 1ex;
 }
 
+.login{
+width: auto;
+height: auto;
+display: inline-block;
+margin:0 auto;
+margin-left: auto;
+margin-right: auto;
+padding:10pt;
+border:2px solid black;
+border-radius:10px;
+box-shadow: 10px 10px 5px #888888;
+background-color: #ddd;
+}
+
+.centrado{
+text-align:center;
+}
+
+.centerblock{
+  margin-left: auto;
+  margin-right: auto;
+}
 
 .derecha{
 				position: relative;
@@ -55,7 +78,8 @@ background-color:#bbb;
 .menu2011
 {
 /* width:1000px;*/
- background-color:#999;
+ background-color:#bbb;
+	/*
  border-style:solid;
  border-width:2px;
   border-color:#eee;
@@ -63,33 +87,38 @@ background-color:#bbb;
 	border-right:solid #777;
 padding:5px;
 padding-bottom:7px;
+*/
+border-width:1px;
+border-bottom:solid #222;
 font-weight: bold;
+padding-bottom:0px;
 }
 
 
 ul.menu2011
 {
 	list-style:none;
-	margin:10px;
+	margin-bottom:10px;
 	line-height: 200%;
 }
 
 ul.menu2011 li
 {
 /* position:relative;*/
-	background-color:#ddd;
-	padding:3px;
+	background-color:#bbb;
+	padding:11px;
 	padding-left:5px;
 	padding-right:5px;
 /*	float: left;*/
  width: 100px;
  height: 30px;
- font-size:75%;
- border-top:solid #900 2px;
- border-left: solid #851 2px;
- border-bottom:solid #431 2px;
- border-right: solid #fff 2px; 
- border-top: solid #ffb 2px;
+ font-size:100%;
+ 
+	border-top:solid #222 2px;
+ border-left: solid #222 2px;
+ border-bottom:solid #222 0px;
+ border-right: solid #222 2px; 
+
  }
 
 ul.menu2011 li:hover
@@ -135,7 +164,7 @@ ul.menu2011 li:hover > ul
 
 ul.menu2011 li.verde
 {
-  background-color:#6F6;
+  background-color:#fff;
 }
 
 table
@@ -145,10 +174,10 @@ table
 
 th
 {
- border: 1px solid black;
+ border: 0px solid black;
  }
 
 td
 {
- border: 1px solid black;
+ border: 0px solid black;
 }

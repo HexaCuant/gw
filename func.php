@@ -1,6 +1,6 @@
 <?php 
-error_reporting(E_ALL);
-ini_set('display_errors', '1');
+//error_reporting(E_ALL);
+//ini_set('display_errors', '1');
 session_start();
 require_once("func_car.php");
 require_once("func_pro.php");
@@ -50,7 +50,7 @@ function autentificaform()
 if(isset($_SESSION['ident']))
 {
 ?>
-				<h2>Identificado como <?php echo $_SESSION['user']?>
+				<h2>Usuario-Carpeta: <?php echo $_SESSION['user']?>
 <form action="index.php" method="post">
 <input type="submit" value="salir" name="login" />
 </form>
@@ -60,13 +60,15 @@ if(isset($_SESSION['ident']))
 else
 {
 ?>
- <h2>Identifícate</h2>
 <form action="index.php" method="post">
-<p>Usuario<input type="text" name="user"></input></p>
-<p>Contrase&ntilde;a<input type="password" name="pass"></input></p>
-<p><input type="submit" value="identificar" name="login" /><input type="reset" value="borrar" /></p>
-<!--<p><input type="submit" value="he olvidado mi contrase&ntilde;a" name="olvido" /></p>-->
-<p><input type="submit" value="Nuevo Usuario" name="login"/></p>
+			<p>Crea o entra en una carpeta para tu proyecto</p><p> Protégela con contraseña</p>
+			<table>
+						<tr><td>Usuario</td><td><input type="text" name="user"></input></td></tr>
+						<tr><td>Carpeta</td><td><input type="text" name="folder"></input></td></tr>
+						<tr><td>Contrase&ntilde;a</td><td><input type="password" name="pass"></input></td></tr>
+			</table>
+			<p><input type="submit" value="Entrar" name="login" />&nbsp;<input type="reset" value="borrar" /></p>
+<p><input type="submit" value="Nueva carpeta" name="login"/></p>
 </form>
 <?php 
 }

@@ -98,8 +98,8 @@ function formnewcar()
  ?>
  <form action="index.php?option=1#fin" method="post">
  <p>Nombre:<input type="text" name="carname"></input></p>
-<p>Visible:<input type="checkbox" name="visible"></input>
-Público:<input type="checkbox" name="publico"></input></p>
+<!--<p>Visible:<input type="checkbox" name="visible"></input>
+Público:<input type="checkbox" name="publico"></input></p>-->
  <p><input type="submit" value="Nuevo Carácter" name="newcar" /><input type="reset" value="borrar" /></p>
  </form>
  <?php 
