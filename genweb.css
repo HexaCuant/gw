@@ -6,9 +6,9 @@ color:#222;
 h1{
 background-color:#fff;
 height:200px;
-background: url('GW200.png'),url('hist.png');
-background-repeat: no-repeat no-repeat;
-background-position: left,right;
+background: url('GW200.png'),url('calc.png'),url('hist.png') white;
+background-repeat: no-repeat;
+background-position: left,center,right;
 color:#222;
 text-align: center;
 }
