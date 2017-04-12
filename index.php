@@ -49,7 +49,7 @@ else if($_POST['login'] == 'salir')
 
 
 
-<h1>GenWeb</h1>
+<h1></h1>
 <div class="centrado">
 			<div class="login">
 <?php //control de usuarios

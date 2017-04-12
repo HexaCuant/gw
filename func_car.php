@@ -224,8 +224,8 @@ function datoscar($car_id){
 			<h2>Carácter:<?php echo $_SESSION['name_caractivo']?></h2>
 			<form action="index.php?option=1#fin" method="post">
 			<p>Sexo: <input type="checkbox" name="sexo"  <?php if($sexo == "t") print("checked")?>></input></p>
-			<p>Visible: <input type="checkbox" name="visible" <?php if($visible == "t") print("checked")?>></input>
-			Público: <input type="checkbox" name="public" <?php if($public == "t") print("checked")?>></input>
+			<!--<p>Visible: <input type="checkbox" name="visible"--> <?php #if($visible == "t") print("checked")?><!-- ></input>-->
+			<!--Público: <input type="checkbox" name="public"--> <?php #if($public == "t") print("checked")?><!-- ></input>-->
 			</p>
 <?php 
 if($creatorid == $_SESSION['id']){

@@ -1,16 +1,20 @@
 body{
-background-color:#bbb;
+background-color:#eee;
 color:#222;
 }
 
 h1{
 background-color:#fff;
+height:200px;
+background: url('GW200.png'),url('hist.png');
+background-repeat: no-repeat no-repeat;
+background-position: left,right;
 color:#222;
 text-align: center;
 }
 
 h2{
-background-color:#fff;
+background-color:#fcc;
 color: #222;
 }
 
@@ -60,7 +64,7 @@ float: right;
 border: 1px solid black;
 margin:1ex;
 padding:1ex;
-background-color:#bfb;
+background-color:#bbb;
 }
 
 .bloque{
@@ -123,7 +127,7 @@ ul.menu2011 li
 
 ul.menu2011 li:hover
 {
- background-color:#6F6;
+ background-color:#fcc;
 }
 
 ul.menu2011 li A
