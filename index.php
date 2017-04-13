@@ -38,7 +38,7 @@ else if($_POST['login'] == 'Nueva carpeta')
 
 else if($_POST['login'] == 'salir')
 {
- session_unset($_SESSION['ident']);
+			if (isset($_SESSION['ident'])) session_unset($_SESSION['ident']);
  $user="";
  $pass="";
  $_SESSION['cod_auth']=0;

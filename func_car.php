@@ -563,7 +563,7 @@ function testabrirgen($id){
 								}
 				}
 				if(isset($_POST['nuevoalelo'])) {
-								echo "pulsado nuevo alelo";
+//								echo "pulsado nuevo alelo";
 								$name = $_POST['nombrealelo'];
 								$valor = $_POST['valor'];
 								$dominancia = $_POST['dominancia'];

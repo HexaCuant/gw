@@ -406,7 +406,7 @@ function makepoc($pop,$gen,$tipo){
 				fwrite($fh,$line);
 				//ejecutar
 				$command = "gen2web ".$_SESSION['proactivo']." > /dev/null";
-				echo $command;
+				//echo $command;
 				system($command,$ret);
 				if($ret==0){
 								echo "creada generación";
