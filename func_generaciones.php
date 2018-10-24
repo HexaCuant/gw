@@ -119,8 +119,8 @@ function abrirgeneracion($id){
 				<input type="submit" name="cerrargeneracion" value="Cerrar"></input><?php 
 				$_SESSION['missingnames']=true;
 				?><h2>Generacion <?php echo $id?></h2><?php 
-				$filename = "/var/www/proyectosGengine/".$_SESSION['proactivo']."/".$_SESSION['proactivo'].".dat".$id;
-				$outfilename = "/var/www/proyectosGengine/".$_SESSION['proactivo']."/".$_SESSION['proactivo']."_".$id."_datos.csv";
+				$filename = "/var/www/proyectosGengine3/".$_SESSION['proactivo']."/".$_SESSION['proactivo'].".dat".$id;
+				$outfilename = "/var/www/proyectosGengine3/".$_SESSION['proactivo']."/".$_SESSION['proactivo']."_".$id."_datos.csv";
 				$fh = fopen($filename,"r");
 				$_SESSION['out'] = fopen($outfilename,"w");
 				?><table>
@@ -138,10 +138,10 @@ function abrirgeneracion($id){
 				</form><?php 
 				fclose($fh);
 				fclose($_SESSION['out']);
-				$puntofilename = "/proyectosGengine/".$_SESSION['proactivo']."/".$_SESSION['proactivo']."_".$id."_datos.csv";
+				$puntofilename = "/proyectosGengine3/".$_SESSION['proactivo']."/".$_SESSION['proactivo']."_".$id."_datos.csv";
 	?><p><a href="<?php echo $puntofilename?>">Descargar datos</a> (puntos decimales)</p><?php 
 				//archivo con comas decimales
-				$comafilename = "/proyectosGengine/".$_SESSION['proactivo']."/".$_SESSION['proactivo']."_".$id."_datos_coma.csv";
+				$comafilename = "/proyectosGengine3/".$_SESSION['proactivo']."/".$_SESSION['proactivo']."_".$id."_datos_coma.csv";
 				$fh = fopen($outfilename,"r");
 				$_SESSION['coma'] = fopen("/var/www/".$comafilename,"w");
 				while (($line = fgets($fh)) !== false){
@@ -185,7 +185,7 @@ function testlistgeneraciones(){
 								$conn=conecta();
 								$sql = "delete from generaciones_proy where proy_id = ".$_SESSION['proactivo']." and generacion_id = ".$id;
 								$res = pg_query($conn,$sql);
-								$file = "/var/www/proyectosGengine/".$_SESSION['proactivo']."/".$_SESSION['proactivo'].".dat".$id;
+								$file = "/var/www/proyectosGengine3/".$_SESSION['proactivo']."/".$_SESSION['proactivo'].".dat".$id;
 								$command = "rm ".$file;
 								system($command);
 								refresh();
@@ -279,7 +279,7 @@ function cruce(){
 
 
 function makepoc($pop,$gen,$tipo){
-				$path="/var/www/proyectosGengine/".$_SESSION['proactivo']."/".$_SESSION['proactivo'].".poc";
+				$path="/var/www/proyectosGengine3/".$_SESSION['proactivo']."/".$_SESSION['proactivo'].".poc";
 				$fh = fopen($path,"w");
         $line = "#file created by GenWeb\n";
 				fwrite($fh,$line);
@@ -406,7 +406,7 @@ function makepoc($pop,$gen,$tipo){
 				fwrite($fh,$line);
 				//ejecutar
 				$command = "gen2web ".$_SESSION['proactivo']." > /dev/null";
-				//echo $command;
+#				echo $command;
 				system($command,$ret);
 				if($ret==0){
 								echo "creada generación";

@@ -2,3 +2,4 @@ cd bin
 cp * /usr/local/bin/
 mkdir /var/www/proyectosGengine
 chown www-data:www-data /var/www/proyectosGengine
+#chown http:http /var/www/proyectosGengine
