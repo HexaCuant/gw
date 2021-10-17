@@ -5,7 +5,7 @@ function formnewrandom(){
 				$sql="select max(generacion_id) from generaciones_proy where proy_id = ".$_SESSION['proactivo'];
 				$conn = conecta();
 				$res = pg_query($conn,$sql);
-				$generacion_id = pg_fetch_result($res,0);
+				$generacion_id = pg_fetch_result($res,0,0);
 				$generacion_id++;
 				pg_close($conn);
 				//////
@@ -98,7 +98,7 @@ function testcarac($line){
 								 $res=pg_query($conn,$sql);
 								 if(!$res) echo "ERROR 52-func_generaciones";
 								 else{
-												 $name = pg_fetch_result($res,0);
+												 $name = pg_fetch_result($res,0,0);
 												 $_SESSION['listcarac'][$j]=$name;
 												 ?><th><?php echo $name?></th><?php 
 												 fwrite($_SESSION['out']," ".$name);
@@ -197,7 +197,7 @@ function crearcruce(){
 				$sql="select max(generacion_id) from generaciones_proy where proy_id = ".$_SESSION['proactivo'];
 				$conn = conecta();
 				$res = pg_query($conn,$sql);
-				$generacion_id = pg_fetch_result($res,0);
+				$generacion_id = pg_fetch_result($res,0,0);
 				$generacion_id++;
 				pg_close($conn);
 				//////
@@ -300,7 +300,7 @@ function makepoc($pop,$gen,$tipo){
 								$ambiente=pg_fetch_result($res,$i,1);
 								$sqlamb = "select sexo from caracteres where id = ".$id;
 								$resamb=pg_query($conn,$sqlamb);
-								$sexo=pg_fetch_result($resamb,0);
+								$sexo=pg_fetch_result($resamb,0,0);
 								$line=$id.":".$ambiente.":";
 								if ($sexo=="t") $line=$line."0:";
 								fwrite($fh,$line);
@@ -313,9 +313,9 @@ function makepoc($pop,$gen,$tipo){
 												$idgen = pg_fetch_result($resgen,$j,0);
 												$sqldatosgen = "select chr,pos,cod from genes where idglobal = ".$idgen;
 												$resdatosgen = pg_query($conn,$sqldatosgen);
-												$chr=pg_fetch_result($resdatosgen,0);
-												$pos=pg_fetch_result($resdatosgen,1);
-												$cod=pg_fetch_result($resdatosgen,2);
+												$chr=pg_fetch_result($resdatosgen,0,0);
+												$pos=pg_fetch_result($resdatosgen,0,1);
+												$cod=pg_fetch_result($resdatosgen,0,2);
 												$line="\n".$idgen."=".$chr.":".$pos.":".$cod.":";
 												fwrite($fh,$line);
 												//bucle alelos de cada gen
@@ -326,8 +326,8 @@ function makepoc($pop,$gen,$tipo){
 																$idalelo = pg_fetch_result($resalelos,$k,0);
 																$sqldatosalelo = "select valor,dominancia from alelos where id=".$idalelo;
 																$resdatosalelo = pg_query($conn,$sqldatosalelo);
-																$valor = pg_fetch_result($resdatosalelo,0);
-																$dominancia = pg_fetch_result($resdatosalelo,1);
+																$valor = pg_fetch_result($resdatosalelo,0,0);
+																$dominancia = pg_fetch_result($resdatosalelo,0,1);
 																$line = $idalelo.":".$valor.":".$dominancia.":";
 																fwrite($fh,$line);
 												}
@@ -341,7 +341,7 @@ function makepoc($pop,$gen,$tipo){
 								//Estados=sustratos
 								$sqlestados = "select sustratos from caracteres where id = ".$id." order by sustratos";
 								$resestados = pg_query($conn,$sqlestados);
-								$numestados = pg_fetch_result($resestados,0);
+								$numestados = pg_fetch_result($resestados,0,0);
 								$line="\n0=1";
 								fwrite($fh,$line);
 								for($l=1;$l<$numestados;$l++){

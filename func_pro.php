@@ -88,7 +88,7 @@ function createdir(){
 				$sql = "select last_value from proyecto_id";
 				$conn = conecta();
 				$res = pg_query($conn,$sql);
-				$id = pg_fetch_result($res,0);
+				$id = pg_fetch_result($res,0,0);
 				pg_close($conn);
 				$path = "/var/www/proyectosGengine3/".$id;
 				mkdir($path);
@@ -121,7 +121,7 @@ function testabrepro(){
 								$conn = conecta();
 								$sql = "select proname from proyectos where id=".$_SESSION['proactivo'];
 								$res = pg_query($conn,$sql);
-								$_SESSION['proname'] = pg_fetch_result($res,0);
+								$_SESSION['proname'] = pg_fetch_result($res,0,0);
 								pg_close($conn);
 				}
 }

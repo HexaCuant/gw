@@ -79,7 +79,7 @@ function listacar_proy($proyecto_id){
   $id = pg_fetch_result($res,$i,0);
   $sql="select name from caracteres where id =".$id;
 	$resname=pg_query($conn,$sql);
-	$name = pg_fetch_result($resname,0);
+	$name = pg_fetch_result($resname,0,0);
 	$ambiente = pg_fetch_result($res,$i,1);
 	?><tr><td><?php echo $id?></td><td><?php echo $name?></td><td><input type="text" name="<?php echo $id?>ambiente" value="<?php echo $ambiente?>"></input><?php 
   carbuttonproy($id);
@@ -399,7 +399,7 @@ function testvergenes(){
 								$conn = conecta();
 								$sql = "select sustratos from caracteres where id=".$_SESSION['caractivo'];
 								$res = pg_query($conn,$sql);
-								$_SESSION['sustratos'] = pg_fetch_result($res,0);
+								$_SESSION['sustratos'] = pg_fetch_result($res,0,0);
 								$sql="select gen_id from genes_car where car_id =".$_SESSION['caractivo']." order by gen_id";
 								$res = pg_query($conn,$sql);
 								$filas = pg_num_rows($res);
@@ -426,7 +426,7 @@ function testvergenes(){
 												$id = pg_fetch_result($res,$i,0);
 												$sqlgen="select name from genes where idglobal=".$id;
 												$resgen=pg_query($conn,$sqlgen);
-												$name=pg_fetch_result($resgen,0);
+												$name=pg_fetch_result($resgen,0,0);
 																?><th><?php echo $name?></th>
 <?php 
 								}
@@ -531,7 +531,7 @@ function testabrirgen($id){
 								$sql="select name from genes where idglobal=".$_SESSION['genactivo'];
 								$res = pg_query($conn,$sql);
 								if(!$res) echo "Error: gen no encontrado";
-								else $_SESSION['genname'] = pg_fetch_result($res,0);
+								else $_SESSION['genname'] = pg_fetch_result($res,0,0);
 								$sql="select id_alelo from alelos_gen where id_gen=".$_SESSION['genactivo'];
 								$res = pg_query($conn,$sql);
 								if(!$res) echo "Error: alelos no encontrados";
@@ -557,10 +557,10 @@ function testabrirgen($id){
 																$sql = "select * from alelos where id=".$id_alelo;
 																$resalelo = pg_query($conn,$sql);
 																if(!$resalelo) echo "ERROR: Alelo no encontrado";
-																$id = pg_fetch_result($resalelo,0);
-																$name = pg_fetch_result($resalelo,1);
-																$valor = pg_fetch_result($resalelo,2);
-																$dominancia = pg_fetch_result($resalelo,3);
+																$id = pg_fetch_result($resalelo,0,0);
+																$name = pg_fetch_result($resalelo,0,1);
+																$valor = pg_fetch_result($resalelo,0,2);
+																$dominancia = pg_fetch_result($resalelo,0,3);
 																?><tr><td><?php echo $id?></td><td><?php echo $name?></td><td><?php echo $valor?></td><td><?php echo $dominancia?></td><?php alelobutton($id)?></tr><?php 
 												}
 												?></table><?php 
