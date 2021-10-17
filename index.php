@@ -11,7 +11,10 @@ cabecera($option);
 if(isset($_POST['login'])){
 			if($_POST['login'] == 'Entrar'){
 				if(!isset($_SESSION['ident'])){
-								$_SESSION['cod_auth'] = autentifica($user,$pass);
+												$_SESSION['cod_auth'] = autentifica($user,$pass);
+												#debug
+												#echo "<br/>".$_SESSION['cod_auth'];
+												#
 								if ($_SESSION['cod_auth'] > 0){
 												$_SESSION['ident']=TRUE;
 								$_SESSION['user']=$user;
@@ -38,7 +41,10 @@ else if($_POST['login'] == 'Nueva carpeta')
 
 else if($_POST['login'] == 'salir')
 {
-			if (isset($_SESSION['ident'])) session_unset($_SESSION['ident']);
+  #debug
+  #echo $_SESSION['ident'];
+  ###
+			if (isset($_SESSION['ident'])) session_unset();
  $user="";
  $pass="";
  $_SESSION['cod_auth']=0;

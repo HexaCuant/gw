@@ -12,8 +12,8 @@ function listapro($id)
  <?php 
  for ($i=0;$i<$rows;$i++)
  {
-  $id = pg_result($res,$i,0);
-  $proname = pg_result($res,$i,1);
+  $id = pg_fetch_result($res,$i,0);
+  $proname = pg_fetch_result($res,$i,1);
 	?><tr><td><?php echo $id?></td><td><?php echo $proname?></td><?php 
   probutton($id);
 	?></tr><?php 
@@ -52,7 +52,7 @@ function formcierrapro()
  if(!$res) echo "ERROR: (func:209) No se encontró el proyecto";
  else
  {
-	 $proname = pg_result($res,0);
+	 $proname = pg_fetch_result($res,0,0);
  }
 ?>
  <form action="index.php?option=2" method="post">

@@ -1,7 +1,7 @@
-<?php 
+<?php
 
 error_reporting(E_ALL);
-ini_set('display_errors', '1');
+#ini_set('display_errors', '1');
 
 if(!isset($_SESSION['generacionactiva'])) $_SESSION['generacionactiva']=0;
 
@@ -135,7 +135,7 @@ function testcar($id){
 
 								$id=$_POST['borrarcar'];
 								$sql="delete from caracteres where id=".$id;
-								echo $sql."<br/>";
+								#echo $sql."<br/>";
 								$conn=conecta();
 								$res=pg_query($conn,$sql);
 				pg_close($conn);
@@ -271,6 +271,10 @@ function testvergenes(){
 								$_SESSION['vergenes']=TRUE;
 								$conn = conecta();
 								$sql="select gen_id from genes_car where car_id =".$_SESSION['caractivo']." order by gen_id";
+								#debug
+								#echo $sql;
+								#
+								
 								$res = pg_query($conn,$sql);
 				        pg_close($conn);
 								$filas = pg_num_rows($res);
@@ -282,14 +286,26 @@ function testvergenes(){
 																$gen_id = pg_fetch_result($res,$i,0);
 																$conngen=conecta();
 												        $sqlgen = "select * from genes where idglobal =".$gen_id;
+									#debug
+								#echo $sqlgen;
+								#
 												        $resgen = pg_query($conngen,$sqlgen);
 																pg_close($conngen);
 																if(!$resgen) echo "ERROR: No se insertó la información del gen en la BD";
-																$idglobal=pg_fetch_result($resgen,0);
-																$name=pg_fetch_result($resgen,2);
-																$chr=pg_fetch_result($resgen,3);
-																$pos=pg_fetch_result($resgen,4);
-																$code=pg_fetch_result($resgen,5);
+																#debug
+																#echo "<br>".$resgen;
+																#
+																$idglobal=pg_fetch_result($resgen,0,0);
+																#debug
+																#echo $idglobal;
+																#
+																$name=pg_fetch_result($resgen,0,2);
+																#debug
+																#echo $name;
+																#
+																$chr=pg_fetch_result($resgen,0,3);
+																$pos=pg_fetch_result($resgen,0,4);
+																$code=pg_fetch_result($resgen,0,5);
 ?>
 				<tr><td><?php echo $idglobal?></td><td><?php echo $name?></td><td><?php echo $chr?></td><td><?php echo $pos?></td><td><?php echo $code?></td>
 <?php 
@@ -597,10 +613,16 @@ function testabrirgen($id){
 								$res=pg_query($conn,$sql);
 								if (!$res) echo "ERROR: No se pudo borrar el carácter"; 
 								refresh();
-				}
-				if(isset($_POST['borrargen']) && isset($_POST['confirmado'])){
+    }
+    if(isset($_POST['borrargen']) && isset($_POST['confirmado'])){
+        #debug
+      echo "borrar";
+      #
 								$id=$_POST['borrargen'];
-								$sql="delete from genes where idglobal=".$id;
+        $sql="delete from genes where idglobal=".$id;
+        #debug
+        echo $sql;
+        #
 								$res=pg_query($conn,$sql);
 								if (!$res) echo "ERROR: borrar genes genes";
 								$sql = "delete from genes_car where gen_id =".$id;

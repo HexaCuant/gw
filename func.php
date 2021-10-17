@@ -22,7 +22,8 @@ function cabecera()
 
 function conecta()
 {
-			$conn = pg_connect("host=sql port=5432 dbname=genweb3 user=genweb password=genweb");
+ //$conn = pg_connect("host=sql port=5432 dbname=genweb3 user=genweb password=genweb");
+ $conn = pg_connect("host=localhost port=5432 dbname=genweb user=genweb password=genweb");
  if(pg_ErrorMessage($conn))
  {
   echo "<p><b>Ocurrió un error en la conexión a la base de datos</b></p>";
@@ -80,14 +81,29 @@ else
 function autentifica($user,$pass)
 {
  $conn = conecta();
- $sql = "select id,cod_auth from users where username='$user' and pass='$pass'";
- $res=pg_query($conn,$sql);
- $rows=pg_NumRows($res);
+	$sql = "select id,cod_auth from users where username='$user' and pass='$pass'";
+	#debug
+	#echo $sql;
+	#
+	$res=pg_query($conn,$sql);
+	#debug
+	#print_r("<br/>". $res);
+	#
+	$rows=pg_NumRows($res);
+	#debug
+	#echo "<br/>rows: ".$rows;
+	#
  if ($rows == 1)
  {
-				 $_SESSION['userid'] = pg_result($res,1);
-				 $cod_auth = pg_result($res,1);
-         pg_close($conn);
+									$_SESSION['userid'] = pg_fetch_result($res, 0, 0);
+									#debug
+									#echo "<br/>userid: ".$_SESSION['userid'];
+									#
+                  $cod_auth = pg_fetch_result($res, 0, 1);
+					#debug
+					#echo "<br/>cod_auth: ".$cod_auth;
+					#
+					pg_close($conn);
 				 return $cod_auth;
  }
  else
@@ -101,7 +117,7 @@ function getid($user){
 				$conn=conecta();
 				$sql = "select id from users where username = '".$user."'";
 				$res = pg_query($conn,$sql);
-				$id = pg_result($res,0);
+				$id = pg_fetch_result($res,0,0);
 				return $id;
 }
 
