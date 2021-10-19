@@ -90,7 +90,7 @@ function createdir(){
 				$res = pg_query($conn,$sql);
 				$id = pg_fetch_result($res,0,0);
 				pg_close($conn);
-				$path = "/var/www/proyectosGengine3/".$id;
+				$path = "/var/www/proyectosGengine/".$id;
 				mkdir($path);
 }
 
