@@ -59,10 +59,7 @@ function processline($line){
   $data = explode("=",$line);
   $datos_fenotipos = array();
 				if ($data[0] > 0){
-								echo "\n";
-								?><tr><?php 
 								$idindiv = $data[0];
-								?><td><?php echo $idindiv?><?php 
 								fwrite($_SESSION['out'],$data[0]);
 								$fenotipos = explode(":",$data[1]);
 								$i=0;
@@ -71,7 +68,6 @@ function processline($line){
                 $datos_fenotipos['id'] = $idindiv;
 								while($fenotipos[$i] !== "$"){
 												$i++;
-                        ?><td><?php echo $fenotipos[$i]?><?php 
                         $datos_fenotipos[$_SESSION['colnames'][$index_colname]] = $fenotipos[$i];
                         $index_colname++;
                         fwrite($_SESSION['out']," ".$fenotipos[$i]);
@@ -80,10 +76,7 @@ function processline($line){
 								}
                 $_SESSION['tab_generacion'][$idindiv] = $datos_fenotipos;
                 $datos_fenotipos = array();
-								indivbutton($idindiv);
-								?></tr><?php 
                 fwrite($_SESSION['out'],"\n");
-								echo "\n";
         }
 }
 
@@ -110,7 +103,6 @@ function testcarac($line){
 								 else{
 												 $name = pg_fetch_result($res,0,0);
 												 $_SESSION['listcarac'][$j]=$name;
-												 ?><th><?php echo $name?></th><?php 
                          fwrite($_SESSION['out']," ".$name);
                          array_push($_SESSION['colnames'],$name);
 								 }
@@ -120,43 +112,12 @@ function testcarac($line){
 				 }
 				$_SESSION['missingnames']=false;
 				pg_close($conn);
-				?><th>Selec.</th><tr><?php 
         fwrite($_SESSION['out'],"\n");
-        print_r($_SESSION['colnames']);
 }
 
-
-function abrirgeneracion($id){
-  global $colnames;
-  $colnames[] = 'uno';
-  $colnames[] = 'dos';
-				?><form action = "index.php?option=3#cruce" method="post">
-				<input type="submit" name="cerrargeneracion" value="Cerrar"></input><?php 
-				$_SESSION['missingnames']=true;
-				?><h2>Generacion <?php echo $id?></h2><?php 
-				$filename = "/var/www/proyectosGengine/".$_SESSION['proactivo']."/".$_SESSION['proactivo'].".dat".$id;
-				$outfilename = "/var/www/proyectosGengine/".$_SESSION['proactivo']."/".$_SESSION['proactivo']."_".$id."_datos.csv";
-				$fh = fopen($filename,"r");
-				$_SESSION['out'] = fopen($outfilename,"w");
+function print_generacion(){
+global $colnames;
 ?>
-<table>
-          <tr><th>Id</th><?php
-        $generation = array(); 
-				fwrite($_SESSION['out'],"Id");
-				if($fh){
-								while (($line = fgets($fh)) !== false){
-												if (checkline($line)){
-																if($_SESSION['missingnames']) testcarac($line);
-																processline($line);
-												}
-								}
-				}
-				?></table>
-          </form><?php 
-
-        print_r($_SESSION['colnames']);
-?>
-
 <div class="tab">
 <table>
 <tr><th>ID</th>
@@ -180,15 +141,43 @@ function abrirgeneracion($id){
 ?>
 </table>
 </div>
+<?php
+}
+
+function abrirgeneracion($id){
+				?><form action = "index.php?option=3#cruce" method="post">
+				<input type="submit" name="cerrargeneracion" value="Cerrar"></input><?php 
+				$_SESSION['missingnames']=true;
+				?><h2>Generacion <?php echo $id?></h2><?php 
+				$filename = "/var/www/proyectosGengine/".$_SESSION['proactivo']."/".$_SESSION['proactivo'].".dat".$id;
+				$outfilename = "/var/www/proyectosGengine/".$_SESSION['proactivo']."/".$_SESSION['proactivo']."_".$id."_datos.csv";
+				$fh = fopen($filename,"r");
+				$_SESSION['out'] = fopen($outfilename,"w");
+?>
+        <?php
+        $generation = array(); 
+				fwrite($_SESSION['out'],"Id");
+				if($fh){
+								while (($line = fgets($fh)) !== false){
+												if (checkline($line)){
+																if($_SESSION['missingnames']) testcarac($line);
+																processline($line);
+												}
+								}
+				}
+?>
+
   <?php
         $feno = array_column($_SESSION['tab_generacion'], 'color');
         array_multisort($feno, SORT_DESC, $_SESSION['tab_generacion']);
-        print_r($_SESSION['tab_generacion']);
-
-
+        //print_r($_SESSION['tab_generacion']);
 
 				fclose($fh);
-				fclose($_SESSION['out']);
+        fclose($_SESSION['out']);
+
+
+
+
 				$puntofilename = "/proyectosGengine/".$_SESSION['proactivo']."/".$_SESSION['proactivo']."_".$id."_datos.csv";
 	?><p><a href="<?php echo $puntofilename?>">Descargar datos</a> (puntos decimales)</p><?php 
 				//archivo con comas decimales
@@ -200,9 +189,12 @@ function abrirgeneracion($id){
 								fwrite($_SESSION['coma'],$comaline);
 				}
 				fclose($fh);
-				fclose($_SESSION['coma']);
+        fclose($_SESSION['coma']);
+
+
 				?><p><a href="<?php echo $comafilename?>">Descargar datos</a> (comas decimales)</p><?php 
 
+        print_generacion();
 }
 
 function generacionbutton($id){
