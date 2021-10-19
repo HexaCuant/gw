@@ -1,4 +1,6 @@
 <?php 
+$_SESSION['colnames'] = array();
+$_SESSION['tab_generacion'] = array();
 
 function formnewrandom(){
 				//generacion max
@@ -54,7 +56,8 @@ function indivbutton($id){
 
 
 function processline($line){
-				$data = explode("=",$line);
+  $data = explode("=",$line);
+  $datos_fenotipos = array();
 				if ($data[0] > 0){
 								echo "\n";
 								?><tr><?php 
@@ -63,19 +66,24 @@ function processline($line){
 								fwrite($_SESSION['out'],$data[0]);
 								$fenotipos = explode(":",$data[1]);
 								$i=0;
-								$j=0;
+                $j=0;
+                $index_colname=0;
 								while($fenotipos[$i] !== "$"){
 												$i++;
-												?><td><?php echo $fenotipos[$i]?><?php 
-												fwrite($_SESSION['out']," ".$fenotipos[$i]);
+                        ?><td><?php echo $fenotipos[$i]?><?php 
+                        $datos_fenotipos[$_SESSION['colnames'][$index_colname]] = $fenotipos[$i];
+                        $index_colname++;
+                        fwrite($_SESSION['out']," ".$fenotipos[$i]);
 												$i++;
 												$j++;
 								}
+                $_SESSION['tab_generacion'][$idindiv] = $datos_fenotipos;
+                $datos_fenotipos = array();
 												indivbutton($idindiv);
 								?></tr><?php 
-								fwrite($_SESSION['out'],"\n");
+                fwrite($_SESSION['out'],"\n");
 								echo "\n";
-				}
+        }
 }
 
 function checkline($line){
@@ -88,6 +96,7 @@ function checkline($line){
 }
 
 function testcarac($line){
+        global $colnames;
 				$conn=conecta();
 				$data = explode("=",$line);
 				$fenotipos = explode(":",$data[1]);
@@ -101,7 +110,8 @@ function testcarac($line){
 												 $name = pg_fetch_result($res,0,0);
 												 $_SESSION['listcarac'][$j]=$name;
 												 ?><th><?php echo $name?></th><?php 
-												 fwrite($_SESSION['out']," ".$name);
+                         fwrite($_SESSION['out']," ".$name);
+                         array_push($_SESSION['colnames'],$name);
 								 }
 								 $j++;
 								 $i++;
@@ -110,11 +120,15 @@ function testcarac($line){
 				$_SESSION['missingnames']=false;
 				pg_close($conn);
 				?><th>Selec.</th><tr><?php 
-				fwrite($_SESSION['out'],"\n");
+        fwrite($_SESSION['out'],"\n");
+        print_r($_SESSION['colnames']);
 }
 
 
 function abrirgeneracion($id){
+  global $colnames;
+  $colnames[] = 'uno';
+  $colnames[] = 'dos';
 				?><form action = "index.php?option=3#cruce" method="post">
 				<input type="submit" name="cerrargeneracion" value="Cerrar"></input><?php 
 				$_SESSION['missingnames']=true;
@@ -123,8 +137,10 @@ function abrirgeneracion($id){
 				$outfilename = "/var/www/proyectosGengine/".$_SESSION['proactivo']."/".$_SESSION['proactivo']."_".$id."_datos.csv";
 				$fh = fopen($filename,"r");
 				$_SESSION['out'] = fopen($outfilename,"w");
-				?><table>
-				<tr><th>Id</th><?php 
+?>
+<table>
+          <tr><th>Id</th><?php
+        $generation = array(); 
 				fwrite($_SESSION['out'],"Id");
 				if($fh){
 								while (($line = fgets($fh)) !== false){
@@ -135,7 +151,10 @@ function abrirgeneracion($id){
 								}
 				}
 				?></table>
-				</form><?php 
+          </form><?php 
+        $color = array_column($_SESSION['tab_generacion'], 'color');
+        array_multisort($color, SORT_DESC, $_SESSION['tab_generacion']);
+        print_r($_SESSION['tab_generacion']);
 				fclose($fh);
 				fclose($_SESSION['out']);
 				$puntofilename = "/proyectosGengine/".$_SESSION['proactivo']."/".$_SESSION['proactivo']."_".$id."_datos.csv";

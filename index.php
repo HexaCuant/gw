@@ -8,6 +8,10 @@ if(isset($_POST['pass'])) $pass=$_POST['pass']; else $pass="";
 
 cabecera($option);
 
+?>
+<p>dynamic</p>
+  <?php
+
 if(isset($_POST['login'])){
 			if($_POST['login'] == 'Entrar'){
 				if(!isset($_SESSION['ident'])){
