@@ -68,6 +68,7 @@ function processline($line){
 								$i=0;
                 $j=0;
                 $index_colname=0;
+                $datos_fenotipos['id'] = $idindiv;
 								while($fenotipos[$i] !== "$"){
 												$i++;
                         ?><td><?php echo $fenotipos[$i]?><?php 
@@ -79,7 +80,7 @@ function processline($line){
 								}
                 $_SESSION['tab_generacion'][$idindiv] = $datos_fenotipos;
                 $datos_fenotipos = array();
-												indivbutton($idindiv);
+								indivbutton($idindiv);
 								?></tr><?php 
                 fwrite($_SESSION['out'],"\n");
 								echo "\n";
@@ -152,9 +153,40 @@ function abrirgeneracion($id){
 				}
 				?></table>
           </form><?php 
-        $color = array_column($_SESSION['tab_generacion'], 'color');
-        array_multisort($color, SORT_DESC, $_SESSION['tab_generacion']);
+
+        print_r($_SESSION['colnames']);
+?>
+
+<div class="tab">
+<table>
+<tr><th>ID</th>
+<?php
+        foreach($_SESSION['colnames'] as $fen){
+          echo "<th>".$fen."</th>";
+        }        
+?>
+<th>Select.</th>
+</tr>
+<tr>
+<?php
+        foreach($_SESSION['tab_generacion'] as $indiv){
+          echo "<tr>";
+          foreach($indiv as $dato){
+          echo "<td>".$dato."</td>"; 
+          }
+								indivbutton($indiv['id']);
+          echo "</tr>";
+        }
+?>
+</table>
+</div>
+  <?php
+        $feno = array_column($_SESSION['tab_generacion'], 'color');
+        array_multisort($feno, SORT_DESC, $_SESSION['tab_generacion']);
         print_r($_SESSION['tab_generacion']);
+
+
+
 				fclose($fh);
 				fclose($_SESSION['out']);
 				$puntofilename = "/proyectosGengine/".$_SESSION['proactivo']."/".$_SESSION['proactivo']."_".$id."_datos.csv";
