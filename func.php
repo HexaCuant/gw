@@ -1,6 +1,6 @@
-<?php
-error_reporting(E_ALL);
-ini_set('display_errors', '1');
+<?php 
+//error_reporting(E_ALL);
+//ini_set('display_errors', '1');
 session_start();
 require_once("func_car.php");
 require_once("func_pro.php");
@@ -17,12 +17,13 @@ function cabecera()
   <title>GenWeb</title>
   </head>
 	<body>
- <?
+ <?php 
 }
 
 function conecta()
 {
- $conn = pg_connect("dbname=genweb user=genweb password=1ene2007");
+ //$conn = pg_connect("host=sql port=5432 dbname=genweb3 user=genweb password=genweb");
+ $conn = pg_connect("host=localhost port=5432 dbname=genweb user=genweb password=genweb");
  if(pg_ErrorMessage($conn))
  {
   echo "<p><b>Ocurrió un error en la conexión a la base de datos</b></p>";
@@ -36,12 +37,12 @@ function menu($option)
 ?>
 <div class="divmenu">
 <ul class="menu2011">
-<li <?if ($option==1)  print("class=\"verde\"");?>><a href="index.php?option=1">Caracteres</a></li>
-<li <?if ($option==2)  print("class=\"verde\"");?>><a href="index.php?option=2">Proyectos</a></li>
-<li <?if ($option==3)  print("class=\"verde\"");?>><a href="index.php?option=3">Generaciones</a></li>
+<li <?php if ($option==1)  print("class=\"verde\"");?>><a href="index.php?option=1">Caracteres</a></li>
+<li <?php if ($option==2)  print("class=\"verde\"");?>><a href="index.php?option=2">Proyectos</a></li>
+<li <?php if ($option==3)  print("class=\"verde\"");?>><a href="index.php?option=3">Generaciones</a></li>
 </ul>
 </div>
-<?
+<?php 
 }
 
 
@@ -50,42 +51,59 @@ function autentificaform()
 if(isset($_SESSION['ident']))
 {
 ?>
-				<h2>Identificado como <?=$_SESSION['user']?>
+				<h2>Usuario-Carpeta: <?php echo $_SESSION['user']?>
 <form action="index.php" method="post">
 <input type="submit" value="salir" name="login" />
 </form>
 </h2>
-<?
+<?php 
 }
 else
 {
 ?>
- <h2>Identifícate</h2>
 <form action="index.php" method="post">
-<p>Usuario<input type="text" name="user"></input></p>
-<p>Contrase&ntilde;a<input type="password" name="pass"></input></p>
-<p><input type="submit" value="identificar" name="login" /><input type="reset" value="borrar" /></p>
-<!--<p><input type="submit" value="he olvidado mi contrase&ntilde;a" name="olvido" /></p>-->
-<p><input type="submit" value="Nuevo Usuario" name="login"/></p>
+			<p>Crea o entra en una carpeta para tu proyecto</p><p> Protégela con contraseña</p>
+			<table>
+						<tr><td>Usuario</td><td><input type="text" name="user"></input></td></tr>
+						<tr><td>Carpeta</td><td><input type="text" name="folder"></input></td></tr>
+						<tr><td>Contrase&ntilde;a</td><td><input type="password" name="pass"></input></td></tr>
+			</table>
+			<p><input type="submit" value="Entrar" name="login" />&nbsp;<input type="reset" value="borrar" /></p>
+<p><input type="submit" value="Nueva carpeta" name="login"/></p>
 </form>
-<?
+<?php 
 }
 ?>
 
-<?
+<?php 
 }
 
 function autentifica($user,$pass)
 {
  $conn = conecta();
- $sql = "select id,cod_auth from users where username='$user' and pass='$pass'";
- $res=pg_query($conn,$sql);
- $rows=pg_NumRows($res);
+	$sql = "select id,cod_auth from users where username='$user' and pass='$pass'";
+	#debug
+	#echo $sql;
+	#
+	$res=pg_query($conn,$sql);
+	#debug
+	#print_r("<br/>". $res);
+	#
+	$rows=pg_NumRows($res);
+	#debug
+	#echo "<br/>rows: ".$rows;
+	#
  if ($rows == 1)
  {
-				 $_SESSION['userid'] = pg_result($res,1);
-				 $cod_auth = pg_result($res,1);
-         pg_close($conn);
+									$_SESSION['userid'] = pg_fetch_result($res, 0, 0);
+									#debug
+									#echo "<br/>userid: ".$_SESSION['userid'];
+									#
+                  $cod_auth = pg_fetch_result($res, 0, 1);
+					#debug
+					#echo "<br/>cod_auth: ".$cod_auth;
+					#
+					pg_close($conn);
 				 return $cod_auth;
  }
  else
@@ -99,7 +117,7 @@ function getid($user){
 				$conn=conecta();
 				$sql = "select id from users where username = '".$user."'";
 				$res = pg_query($conn,$sql);
-				$id = pg_result($res,0);
+				$id = pg_fetch_result($res,0,0);
 				return $id;
 }
 
