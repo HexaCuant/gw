@@ -72,6 +72,7 @@ if($_SESSION['ident'])
 	<?php menu($option);?>
 
 <div class="tab">
+<a name="cruce">
 <?php 
 				switch ($option)
 				{
