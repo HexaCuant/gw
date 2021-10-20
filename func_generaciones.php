@@ -215,7 +215,7 @@ function get_indiv_from_file($indiv_id, $gener_indiv_id, $proy_id){
 function print_parentales($generacion){
   global $stats_parentales;
 
-  echo "<h3>parentales de la generación ".$generacion."</h3>";
+  echo "<h2>Parentales de la generación ".$generacion."</h2>";
 
 ?>
 <div class="tab">
@@ -275,7 +275,6 @@ function abrirgeneracion($id){
 ?><form action = "index.php?option=3#cruce" method="post">
   <input type="submit" name="cerrargeneracion" value="Cerrar"></input><?php 
   $_SESSION['missingnames']=true;
-  ?><h2>Generacion <?php echo $id?></h2><?php 
   $filename = "/var/www/proyectosGengine/".$_SESSION['proactivo']."/".$_SESSION['proactivo'].".dat".$id;
   $outfilename = "/var/www/proyectosGengine/".$_SESSION['proactivo']."/".$_SESSION['proactivo']."_".$id."_datos.csv";
   $fh = fopen($filename,"r");
@@ -304,6 +303,7 @@ function abrirgeneracion($id){
 
   print_parentales($id);
 
+  print("<h2>Generación ".$id."</h2>");
 
   $puntofilename = "/proyectosGengine/".$_SESSION['proactivo']."/".$_SESSION['proactivo']."_".$id."_datos.csv";
   ?><p><a href="<?php echo $puntofilename?>">Descargar datos</a> (puntos decimales)</p><?php 
