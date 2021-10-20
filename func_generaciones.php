@@ -1,6 +1,7 @@
 <?php 
 $_SESSION['colnames'] = array();
 $_SESSION['tab_generacion'] = array();
+$pathProyectos = "/var/www/proyectosGengine/";
 
 function formnewrandom(){
   //generacion max
@@ -176,13 +177,77 @@ print('<br>Varianza: '.stats($col,'var'));
  */
 }
 
+function get_indiv_from_file($indiv_id, $gener_indiv_id, $proy_id){
+  global $pathProyectos;
+    $path = $pathProyectos.$proy_id."/".$proy_id.".dat".$gener_indiv_id;
+    $fh = fopen($path,'r');
+    if($fh){
+      $found = FALSE;
+      while(!feof($fh) && !$found){
+        $line = explode("=",fgets($fh));
+        if($line[0] == $indiv_id){
+          $found = TRUE;
+          $data = explode(":",$line[1]);
+          print("<tr><td>".$indiv_id."</td><td>".$gener_indiv_id."</td>");
+          $j = 0;
+          for($i=0;$i<count($data);$i++){
+            $caracter = $data[$i];
+            if($caracter == '$') break;
+            $i++;
+            $fenotipo = $data[$i];
+            print("<td>".$data[$i]."</td>");
+            $j++;
+          }
+          print("</tr>");
+        }
+      }
+  
+    }else{
+      //ERROR
+      echo "ERROR: No se ha podido conseguir el archivo ".$path;
+    }
+}
+
+
+function print_parentales($generacion){
+  echo "<br/>parentales de la generación ".$generacion;
+
+?>
+<div class="tab">
+<table>
+<tr><th>ID</th><th>Gen.</th>
+<?php
+  foreach($_SESSION['colnames'] as $fen){
+    echo "<th>".$fen."</th>";
+  }        
+
+  $conn = conecta();
+  $sql = "select indiv_id, gener_indiv_id, proy_id from parentales where generacion_id = ".$generacion;
+  $res = pg_query($conn,$sql);
+  if($res){
+    $filas = pg_num_rows($res);
+    for($i=0;$i<$filas;$i++){
+      $indiv_id=pg_fetch_result($res,$i,0);
+      $gener_indiv_id=pg_fetch_result($res,$i,1);
+      $proy_id=pg_fetch_result($res,$i,2);
+      get_indiv_from_file($indiv_id, $gener_indiv_id, $proy_id);
+    }
+  }else{
+    echo "<br/>ERROR: No se han podido localizar los parentales<br/>";
+    echo $sql."<br/>";
+  }
+  pg_close($conn);
+
+  ?></table></div><?php
+}
+
+
 function abrirgeneracion($id){
 ?><form action = "index.php?option=3#cruce" method="post">
   <input type="submit" name="cerrargeneracion" value="Cerrar"></input><?php 
   $_SESSION['missingnames']=true;
   ?><h2>Generacion <?php echo $id?></h2><?php 
   $filename = "/var/www/proyectosGengine/".$_SESSION['proactivo']."/".$_SESSION['proactivo'].".dat".$id;
-  echo $filename;
   $outfilename = "/var/www/proyectosGengine/".$_SESSION['proactivo']."/".$_SESSION['proactivo']."_".$id."_datos.csv";
   $fh = fopen($filename,"r");
   $_SESSION['out'] = fopen($outfilename,"w");
@@ -208,7 +273,7 @@ function abrirgeneracion($id){
   fclose($fh);
   fclose($_SESSION['out']);
 
-
+  print_parentales($id);
 
 
   $puntofilename = "/proyectosGengine/".$_SESSION['proactivo']."/".$_SESSION['proactivo']."_".$id."_datos.csv";
