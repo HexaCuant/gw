@@ -182,6 +182,7 @@ function abrirgeneracion($id){
   $_SESSION['missingnames']=true;
   ?><h2>Generacion <?php echo $id?></h2><?php 
   $filename = "/var/www/proyectosGengine/".$_SESSION['proactivo']."/".$_SESSION['proactivo'].".dat".$id;
+  echo $filename;
   $outfilename = "/var/www/proyectosGengine/".$_SESSION['proactivo']."/".$_SESSION['proactivo']."_".$id."_datos.csv";
   $fh = fopen($filename,"r");
   $_SESSION['out'] = fopen($outfilename,"w");
@@ -281,6 +282,8 @@ function crearcruce(){
         Generación num. <input type="text" name="generacion_id" value="<?php echo $generacion_id?>"></input /><br /><br />
         Tamaño población <input type="text" name="poblacion" value=""></input /><br /><br />
 <?php 
+
+  /*
   if(!isset($_SESSION['creandocruce'])) $_SESSION['creandocruce']=0;
   if($_SESSION['creandocruce']){
     ?><input type="submit" name="ocultarparentales" value="Ocultar parentales"></input><?php 
@@ -288,8 +291,10 @@ function crearcruce(){
   else{
     ?><input type="submit" name="verparentales" value="Ver parentales"></input><?php 
   }
+   */
   ?><input type="submit" name="cruzar" value="Generar nueva generación"></input><?php 
 
+  /*
   if(isset($_POST['verparentales'])){
     $_SESSION['cruce_gen_id']=$_POST['generacion_id'];
     $_SESSION['creandocruce']=TRUE;
@@ -300,6 +305,8 @@ function crearcruce(){
     $_SESSION['creandocruce']=FALSE;
     refresh();
   }
+   */
+
   if(isset($_POST['cruzar'])){
     $pop = $_POST['poblacion'];
     if ($pop > 0){
@@ -309,10 +316,10 @@ function crearcruce(){
     }
   }
 
-  if($_SESSION['creandocruce']){
+//  if($_SESSION['creandocruce']){
     ?><h3>Parentales</h3><?php 
     cruce();
-  }
+//  }
 ?>
 </form>
 <?php 
@@ -463,7 +470,8 @@ function makepoc($pop,$gen,$tipo){
     //ejemplo cruce		1,6:5,3:=,10:
     $line = "*cross\n";
     fwrite($fh,$line);
-    $sqlcruce="select indiv_id, gener_indiv_id from parentales where generacion_id = ".$_POST['generacion_id']." and proy_id = ".$_SESSION['proactivo']."order by gener_indiv_id, indiv_id";
+    $sqlcruce="select indiv_id, gener_indiv_id from parentales where generacion_id = ".$_POST['generacion_id']." and proy_id = ".$_SESSION['proactivo']." order by gener_indiv_id, indiv_id";
+    echo $sqlcruce;
     $rescruce=pg_query($conn,$sqlcruce);
     $filas = pg_num_rows($rescruce);
     $line="";
