@@ -283,18 +283,18 @@ function crearcruce(){
         Tamaño población <input type="text" name="poblacion" value=""></input /><br /><br />
 <?php 
 
-  /*
+  
   if(!isset($_SESSION['creandocruce'])) $_SESSION['creandocruce']=0;
   if($_SESSION['creandocruce']){
     ?><input type="submit" name="ocultarparentales" value="Ocultar parentales"></input><?php 
   }
   else{
-    ?><input type="submit" name="verparentales" value="Ver parentales"></input><?php 
+    ?><input type="submit" name="verparentales" value="Añadir parentales"></input><?php 
   }
-   */
+ 
   ?><input type="submit" name="cruzar" value="Generar nueva generación"></input><?php 
 
-  /*
+  
   if(isset($_POST['verparentales'])){
     $_SESSION['cruce_gen_id']=$_POST['generacion_id'];
     $_SESSION['creandocruce']=TRUE;
@@ -305,7 +305,7 @@ function crearcruce(){
     $_SESSION['creandocruce']=FALSE;
     refresh();
   }
-   */
+ 
 
   if(isset($_POST['cruzar'])){
     $pop = $_POST['poblacion'];
@@ -316,10 +316,10 @@ function crearcruce(){
     }
   }
 
-//  if($_SESSION['creandocruce']){
+  if($_SESSION['creandocruce']){
     ?><h3>Parentales</h3><?php 
     cruce();
-//  }
+  }
 ?>
 </form>
 <?php 
