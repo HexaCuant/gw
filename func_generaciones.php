@@ -2,6 +2,7 @@
 $_SESSION['colnames'] = array();
 $_SESSION['tab_generacion'] = array();
 $pathProyectos = "/var/www/proyectosGengine/";
+$stats_parentales = array();
 
 function formnewrandom(){
   //generacion max
@@ -151,20 +152,20 @@ function print_generacion(){
     indivbutton($indiv['id']);
     echo "</tr>";
   }
-//añade estadísticas
+  //añade estadísticas
   echo "<tr><td>Media</td>";
-foreach($_SESSION['colnames'] as $fen){
-  $col = array_column($_SESSION['tab_generacion'],$fen);
-  echo '<td>'.stats($col,'mean').'</td>';
-}
-echo "<td></td></tr>";
-echo "<tr><td>Varianza</td>";
+  foreach($_SESSION['colnames'] as $fen){
+    $col = array_column($_SESSION['tab_generacion'],$fen);
+    echo '<td>'.stats($col,'mean').'</td>';
+  }
+  echo "<td></td></tr>";
+  echo "<tr><td>Varianza</td>";
 
-foreach($_SESSION['colnames'] as $fen){
-  $col = array_column($_SESSION['tab_generacion'],$fen);
-  echo '<td>'.stats($col,'var').'</td>';
-}
-echo "<td></td></tr>";
+  foreach($_SESSION['colnames'] as $fen){
+    $col = array_column($_SESSION['tab_generacion'],$fen);
+    echo '<td>'.stats($col,'var').'</td>';
+  }
+  echo "<td></td></tr>";
 ?>
 </table>
 </div>
@@ -179,38 +180,42 @@ print('<br>Varianza: '.stats($col,'var'));
 
 function get_indiv_from_file($indiv_id, $gener_indiv_id, $proy_id){
   global $pathProyectos;
-    $path = $pathProyectos.$proy_id."/".$proy_id.".dat".$gener_indiv_id;
-    $fh = fopen($path,'r');
-    if($fh){
-      $found = FALSE;
-      while(!feof($fh) && !$found){
-        $line = explode("=",fgets($fh));
-        if($line[0] == $indiv_id){
-          $found = TRUE;
-          $data = explode(":",$line[1]);
-          print("<tr><td>".$indiv_id."</td><td>".$gener_indiv_id."</td>");
-          $j = 0;
-          for($i=0;$i<count($data);$i++){
-            $caracter = $data[$i];
-            if($caracter == '$') break;
-            $i++;
-            $fenotipo = $data[$i];
-            print("<td>".$data[$i]."</td>");
-            $j++;
-          }
-          print("</tr>");
+  global $stats_parentales;
+
+  $path = $pathProyectos.$proy_id."/".$proy_id.".dat".$gener_indiv_id;
+  $fh = fopen($path,'r');
+  if($fh){
+    $found = FALSE;
+    while(!feof($fh) && !$found){
+      $line = explode("=",fgets($fh));
+      if($line[0] == $indiv_id){
+        $found = TRUE;
+        $data = explode(":",$line[1]);
+        print("<tr><td>".$indiv_id."</td><td>".$gener_indiv_id."</td>");
+        $j = 0;
+        for($i=0;$i<count($data);$i++){
+          $caracter = $data[$i];
+          if($caracter == '$') break;
+          $i++;
+          $fenotipo = $data[$i];
+          $stats_parentales[$j][] = $fenotipo;
+          print("<td>".$data[$i]."</td>");
+          $j++;
         }
+        print("</tr>");
       }
-  
-    }else{
-      //ERROR
-      echo "ERROR: No se ha podido conseguir el archivo ".$path;
     }
+  }else{
+    //ERROR
+    echo "ERROR: No se ha podido conseguir el archivo ".$path;
+  }
 }
 
 
 function print_parentales($generacion){
-  echo "<br/>parentales de la generación ".$generacion;
+  global $stats_parentales;
+
+  echo "<h3>parentales de la generación ".$generacion."</h3>";
 
 ?>
 <div class="tab">
@@ -219,6 +224,7 @@ function print_parentales($generacion){
 <?php
   foreach($_SESSION['colnames'] as $fen){
     echo "<th>".$fen."</th>";
+    //$stats_parentales[] = $fen;
   }        
 
   $conn = conecta();
@@ -237,6 +243,29 @@ function print_parentales($generacion){
     echo $sql."<br/>";
   }
   pg_close($conn);
+  
+  /*
+  print("Size:".sizeof($stats_parentales));
+echo "<br/>";
+print_r($stats_parentales);
+echo "<br/>";
+$media = stats($stats_parentales[0],'mean');
+print("media: ".$media);
+   */
+
+print("<tr><td></td><td>Media</td>");
+for($i=0;$i<sizeof($stats_parentales);$i++){
+print("<td>".stats($stats_parentales[$i],'mean')."</td>");
+}
+print("</tr>");
+print("<tr><td></td><td>Varianza</td>");
+for($i=0;$i<sizeof($stats_parentales);$i++){
+print("<td>".stats($stats_parentales[$i],'var')."</td>");
+}
+print("</tr>");
+
+
+$stats_parentales = array();
 
   ?></table></div><?php
 }
@@ -348,7 +377,7 @@ function crearcruce(){
         Tamaño población <input type="text" name="poblacion" value=""></input /><br /><br />
 <?php 
 
-  
+
   if(!isset($_SESSION['creandocruce'])) $_SESSION['creandocruce']=0;
   if($_SESSION['creandocruce']){
     ?><input type="submit" name="ocultarparentales" value="Ocultar parentales"></input><?php 
@@ -356,10 +385,10 @@ function crearcruce(){
   else{
     ?><input type="submit" name="verparentales" value="Añadir parentales"></input><?php 
   }
- 
+
   ?><input type="submit" name="cruzar" value="Generar nueva generación"></input><?php 
 
-  
+
   if(isset($_POST['verparentales'])){
     $_SESSION['cruce_gen_id']=$_POST['generacion_id'];
     $_SESSION['creandocruce']=TRUE;
@@ -370,7 +399,7 @@ function crearcruce(){
     $_SESSION['creandocruce']=FALSE;
     refresh();
   }
- 
+
 
   if(isset($_POST['cruzar'])){
     $pop = $_POST['poblacion'];
