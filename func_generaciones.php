@@ -157,6 +157,7 @@ function print_generacion($id){
     echo "</tr>";
   }
   //añade estadísticas
+  
   $datos_gen_exist = sizeof($_SESSION['stats'][$id]['generacion']) > 0;
 
   if($datos_gen_exist){
@@ -198,7 +199,6 @@ function print_generacion($id){
   ksort($_SESSION['stats']);
   $proy_id = $_SESSION['proactivo'];
   $path = $pathProyectos.$proy_id."/".$proy_id."stats.json";
-  echo $path; 
   file_put_contents($path,json_encode($_SESSION['stats']));
 ?>
 </table>
@@ -273,8 +273,7 @@ function print_parentales($generacion){
   pg_close($conn);
 
 //añade estadísticas
-  
-  $datos_par_exist = sizeof($_SESSION['stats'][$id]['parentales']) > 0;
+  $datos_par_exist = sizeof($_SESSION['stats'][$generacion]['parentales']) > 0;
 
   if($datos_par_exist){
       $numindiv = $_SESSION['stats'][$generacion]['parentales']['numindiv'];
@@ -727,4 +726,5 @@ function testcarac($line){
   fwrite($_SESSION['out'],"\n");
 }
 
+ */
 
