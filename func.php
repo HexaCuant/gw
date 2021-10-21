@@ -40,6 +40,7 @@ function menu($option)
 <li <?php if ($option==1)  print("class=\"verde\"");?>><a href="index.php?option=1">Caracteres</a></li>
 <li <?php if ($option==2)  print("class=\"verde\"");?>><a href="index.php?option=2">Proyectos</a></li>
 <li <?php if ($option==3)  print("class=\"verde\"");?>><a href="index.php?option=3">Generaciones</a></li>
+<li <?php if ($option==4)  print("class=\"verde\"");?>><a href="index.php?option=4">Resumen</a></li>
 </ul>
 </div>
 <?php 

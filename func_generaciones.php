@@ -38,6 +38,10 @@ function testnewrandom(){
       echo "Generacion=".$gen;
       $tipo="aleatoria";
       makepoc($pop,$gen,$tipo);
+      $_SESSION['generacionactiva'] = $gen;
+      echo "<div class=\"derecha\">";
+      abrirgeneracion($gen);
+      echo "</div>";
     }
   }
   if(isset($_POST['vergeneraciones'])){
@@ -129,7 +133,7 @@ function stats($lista,$funcion){
 }
 
 
-function print_generacion(){
+function print_generacion($id){
   global $colnames;
 ?>
 <div class="tab">
@@ -153,19 +157,48 @@ function print_generacion(){
     echo "</tr>";
   }
   //añade estadísticas
+  $datos_gen_exist = sizeof($_SESSION['stats'][$id]['generacion']) > 0;
+
+  if($datos_gen_exist){
+      $numindiv = $_SESSION['stats'][$id]['generacion']['numindiv'];
+      foreach($_SESSION['colnames'] as $fen){
+        $col = array_column($_SESSION['tab_generacion'],$fen);
+        $media = $_SESSION['stats'][$id]['generacion'][$fen]['mean'];
+        $varianza = $_SESSION['stats'][$id]['generacion'][$fen]['var'];
+    }
+  }else{
+    $numindiv = sizeof($_SESSION['tab_generacion']);
+      foreach($_SESSION['colnames'] as $fen){
+        $col = array_column($_SESSION['tab_generacion'],$fen);
+        $_SESSION['stats'][$id]['generacion']['numindiv'] = $numindiv;
+        $media = stats($col,'mean');
+        $_SESSION['stats'][$id]['generacion'][$fen]['mean'] = $media;
+        $varianza = stats($col,'var');
+        $_SESSION['stats'][$id]['generacion'][$fen]['var'] = $varianza;
+      }
+  }
+
+
   echo "<tr><td>Media</td>";
   foreach($_SESSION['colnames'] as $fen){
-    $col = array_column($_SESSION['tab_generacion'],$fen);
-    echo '<td>'.stats($col,'mean').'</td>';
+    $media = $_SESSION['stats'][$id]['generacion'][$fen]['mean'];
+    echo '<td>'.$media.'</td>';
   }
   echo "<td></td></tr>";
   echo "<tr><td>Varianza</td>";
 
   foreach($_SESSION['colnames'] as $fen){
-    $col = array_column($_SESSION['tab_generacion'],$fen);
-    echo '<td>'.stats($col,'var').'</td>';
+    $varianza = $_SESSION['stats'][$id]['generacion'][$fen]['var'];
+    echo '<td>'.$varianza.'</td>';
   }
   echo "<td></td></tr>";
+  echo "<br/>Num. indiv: ".sizeof($_SESSION['tab_generacion'])."<br/>";
+  $_SESSION['stats'][$id]['generacion']['numindiv'] = $numindiv;
+
+  ksort($_SESSION['stats']);
+  echo "<pre>";
+  print_r($_SESSION['stats']);
+  echo "</pre>";
 ?>
 </table>
 </div>
@@ -198,7 +231,7 @@ function get_indiv_from_file($indiv_id, $gener_indiv_id, $proy_id){
           if($caracter == '$') break;
           $i++;
           $fenotipo = $data[$i];
-          $stats_parentales[$j][] = $fenotipo;
+          $stats_parentales[$_SESSION['colnames'][$j]][] = $fenotipo;
           print("<td>".$data[$i]."</td>");
           $j++;
         }
@@ -243,7 +276,42 @@ function print_parentales($generacion){
     echo $sql."<br/>";
   }
   pg_close($conn);
+
+//añade estadísticas
   
+  $datos_par_exist = sizeof($_SESSION['stats'][$id]['parentales']) > 0;
+
+  if($datos_par_exist){
+      $numindiv = $_SESSION['stats'][$generacion]['parentales']['numindiv'];
+      foreach($_SESSION['colnames'] as $fen){
+        $col = array_column($_SESSION['tab_generacion'],$fen);
+        $media = $_SESSION['stats'][$generacion]['parentales'][$fen]['mean'];
+        $varianza = $_SESSION['stats'][$generacion]['parentales'][$fen]['var'];
+    }
+  }else{
+    $numindiv = sizeof($stats_parentales[0]);
+      foreach($_SESSION['colnames'] as $fen){
+        $col = $stats_parentales[$fen];
+        print($fen);
+        print_r($stats_parentales[$fen]);
+        echo "<pre>";
+        print_r($col);
+        echo "</pre>";
+
+        $_SESSION['stats'][$generacion]['parentales']['numindiv'] = $numindiv;
+        $media = stats($col,'mean');
+        $_SESSION['stats'][$generacion]['parentales'][$fen]['mean'] = $media;
+        $varianza = stats($col,'var');
+        $_SESSION['stats'][$generacion]['parentales'][$fen]['var'] = $varianza;
+      }
+  }
+ 
+  echo "<pre>";
+  print_r($stats_parentales);
+  echo "</pre>";
+
+print($_SESSION['colnames'][0]);
+
   /*
   print("Size:".sizeof($stats_parentales));
 echo "<br/>";
@@ -254,13 +322,17 @@ print("media: ".$media);
    */
 
 print("<tr><td></td><td>Media</td>");
-for($i=0;$i<sizeof($stats_parentales);$i++){
-print("<td>".stats($stats_parentales[$i],'mean')."</td>");
+//for($i=0;$i<sizeof($stats_parentales);$i++){
+  foreach($_SESSION['colnames'] as $fen){
+  $media = $_SESSION['stats'][$generacion]['parentales'][$fen]['mean'];
+  print("<td>".$media."</td>");
 }
 print("</tr>");
 print("<tr><td></td><td>Varianza</td>");
-for($i=0;$i<sizeof($stats_parentales);$i++){
-print("<td>".stats($stats_parentales[$i],'var')."</td>");
+//for($i=0;$i<sizeof($stats_parentales);$i++){
+  foreach($_SESSION['colnames'] as $fen){
+  $varianza = $_SESSION['stats'][$generacion]['parentales'][$fen]['var'];
+print("<td>".$varianza."</td>");
 }
 print("</tr>");
 
@@ -292,19 +364,14 @@ function abrirgeneracion($id){
     }
   }
 ?>
-
 <?php
   $feno = array_column($_SESSION['tab_generacion'], $_SESSION['colnames'][0]);
   array_multisort($feno, SORT_DESC, $_SESSION['tab_generacion']);
   //print_r($_SESSION['tab_generacion']);
-
   fclose($fh);
   fclose($_SESSION['out']);
-
   print_parentales($id);
-
   print("<h2>Generación ".$id."</h2>");
-
   $puntofilename = "/proyectosGengine/".$_SESSION['proactivo']."/".$_SESSION['proactivo']."_".$id."_datos.csv";
   ?><p><a href="<?php echo $puntofilename?>">Descargar datos</a> (puntos decimales)</p><?php 
   //archivo con comas decimales
@@ -317,11 +384,8 @@ function abrirgeneracion($id){
   }
   fclose($fh);
   fclose($_SESSION['coma']);
-
-
   ?><p><a href="<?php echo $comafilename?>">Descargar datos</a> (comas decimales)</p><?php 
-
-  print_generacion();
+  print_generacion($id);
 }
 
 function generacionbutton($id){
@@ -407,6 +471,10 @@ function crearcruce(){
       $gen=$_POST['generacion_id'];
       $tipo="cruce";
       makepoc($pop,$gen,$tipo);
+      $_SESSION['generacionactiva'] = $gen;
+      echo "<div class=\"derecha\">";
+      abrirgeneracion($gen);
+      echo "</div>";
     }
   }
 
@@ -597,3 +665,95 @@ function makepoc($pop,$gen,$tipo){
   }
   pg_close($conn);
 }
+
+
+
+/////////////////////////////////////////////////////
+//                                                 //
+//                ESTADISTICAS                     //
+//                                                 //
+/////////////////////////////////////////////////////
+
+/*
+
+function mediasGeneracion(){
+  global $colnames;
+  foreach($_SESSION['colnames'] as $fen){
+    $col = array_column($_SESSION['tab_generacion'],$fen);
+    $medias_generacion = stats($col,'mean');
+    return $medias_generacion;
+  }
+}
+
+function varianzasGeneracion(){
+  foreach($_SESSION['colnames'] as $fen){
+    $col = array_column($_SESSION['tab_generacion'],$fen);
+    $varianzas_generacion = stats($col,'var');
+    return $varianzas_generacion;
+  }
+}
+
+function statsGeneracion($id){
+  $_SESSION['missingnames']=true;
+  $filename = "/var/www/proyectosGengine/".$_SESSION['proactivo']."/".$_SESSION['proactivo'].".dat".$id;
+  $fh = fopen($filename,"r");
+  $generation = array(); 
+  if($fh){
+    while (($line = fgets($fh)) !== false){
+      if (checkline($line)){
+        if($_SESSION['missingnames']) testcarac($line);
+        processline($line);
+      }
+    }
+  }
+?>
+<?php
+  $feno = array_column($_SESSION['tab_generacion'], $_SESSION['colnames'][0]);
+  array_multisort($feno, SORT_DESC, $_SESSION['tab_generacion']);
+  //print_r($_SESSION['tab_generacion']);
+  fclose($fh);
+  fclose($_SESSION['out']);
+  print_parentales($id);
+  print("<h2>Generación ".$id."</h2>");
+  $puntofilename = "/proyectosGengine/".$_SESSION['proactivo']."/".$_SESSION['proactivo']."_".$id."_datos.csv";
+  ?><p><a href="<?php echo $puntofilename?>">Descargar datos</a> (puntos decimales)</p><?php 
+  //archivo con comas decimales
+  $comafilename = "/proyectosGengine/".$_SESSION['proactivo']."/".$_SESSION['proactivo']."_".$id."_datos_coma.csv";
+  $fh = fopen($outfilename,"r");
+  $_SESSION['coma'] = fopen("/var/www/".$comafilename,"w");
+  while (($line = fgets($fh)) !== false){
+    $comaline = preg_replace('@\.@',',',$line);
+    fwrite($_SESSION['coma'],$comaline);
+  }
+  fclose($fh);
+  fclose($_SESSION['coma']);
+  ?><p><a href="<?php echo $comafilename?>">Descargar datos</a> (comas decimales)</p><?php 
+  print_generacion();
+}
+
+function testcarac($line){
+  $conn=conecta();
+  $data = explode("=",$line);
+  $fenotipos = explode(":",$data[1]);
+  $i=0;
+  $j=0;
+  while($fenotipos[$i] !== "$"){
+    $sql = "select name from caracteres where id = ".$fenotipos[$i];
+    $res=pg_query($conn,$sql);
+    if(!$res) echo "ERROR 52-func_generaciones";
+    else{
+      $name = pg_fetch_result($res,0,0);
+      $_SESSION['listcarac'][$j]=$name;
+      fwrite($_SESSION['out']," ".$name);
+      array_push($_SESSION['colnames'],$name);
+    }
+    $j++;
+    $i++;
+    $i++;
+  }
+  $_SESSION['missingnames']=false;
+  pg_close($conn);
+  fwrite($_SESSION['out'],"\n");
+}
+
+
