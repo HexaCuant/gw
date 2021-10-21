@@ -134,7 +134,7 @@ function stats($lista,$funcion){
 
 
 function print_generacion($id){
-  global $colnames;
+  global $pathProyectos;
 ?>
 <div class="tab">
 <table>
@@ -196,6 +196,10 @@ function print_generacion($id){
   $_SESSION['stats'][$id]['generacion']['numindiv'] = $numindiv;
 
   ksort($_SESSION['stats']);
+  $proy_id = $_SESSION['proactivo'];
+  $path = $pathProyectos.$proy_id."/".$proy_id."stats.json";
+  echo $path; 
+  file_put_contents($path,json_encode($_SESSION['stats']));
 ?>
 </table>
 </div>
