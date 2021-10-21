@@ -196,19 +196,10 @@ function print_generacion($id){
   $_SESSION['stats'][$id]['generacion']['numindiv'] = $numindiv;
 
   ksort($_SESSION['stats']);
-  echo "<pre>";
-  print_r($_SESSION['stats']);
-  echo "</pre>";
 ?>
 </table>
 </div>
 <?php
-/*
-// Prueba para función estadística
-$col = array_column($_SESSION['tab_generacion'],'color');
-  print('<br>Media: '.stats($col,'mean'));
-print('<br>Varianza: '.stats($col,'var'));
- */
 }
 
 function get_indiv_from_file($indiv_id, $gener_indiv_id, $proy_id){
@@ -292,12 +283,6 @@ function print_parentales($generacion){
     $numindiv = sizeof($stats_parentales[0]);
       foreach($_SESSION['colnames'] as $fen){
         $col = $stats_parentales[$fen];
-        print($fen);
-        print_r($stats_parentales[$fen]);
-        echo "<pre>";
-        print_r($col);
-        echo "</pre>";
-
         $_SESSION['stats'][$generacion]['parentales']['numindiv'] = $numindiv;
         $media = stats($col,'mean');
         $_SESSION['stats'][$generacion]['parentales'][$fen]['mean'] = $media;
@@ -305,31 +290,13 @@ function print_parentales($generacion){
         $_SESSION['stats'][$generacion]['parentales'][$fen]['var'] = $varianza;
       }
   }
- 
-  echo "<pre>";
-  print_r($stats_parentales);
-  echo "</pre>";
-
-print($_SESSION['colnames'][0]);
-
-  /*
-  print("Size:".sizeof($stats_parentales));
-echo "<br/>";
-print_r($stats_parentales);
-echo "<br/>";
-$media = stats($stats_parentales[0],'mean');
-print("media: ".$media);
-   */
-
 print("<tr><td></td><td>Media</td>");
-//for($i=0;$i<sizeof($stats_parentales);$i++){
   foreach($_SESSION['colnames'] as $fen){
   $media = $_SESSION['stats'][$generacion]['parentales'][$fen]['mean'];
   print("<td>".$media."</td>");
 }
 print("</tr>");
 print("<tr><td></td><td>Varianza</td>");
-//for($i=0;$i<sizeof($stats_parentales);$i++){
   foreach($_SESSION['colnames'] as $fen){
   $varianza = $_SESSION['stats'][$generacion]['parentales'][$fen]['var'];
 print("<td>".$varianza."</td>");
