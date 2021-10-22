@@ -1,43 +1,23 @@
 <?php
 
-
-
 function leerStats($path){
-
-  echo "Leer el archivo ".$path;
-}
-
-function crearStats($path){
-
-  echo "Crear el archivo".$path;
-  $fh = fopen($path,'w');
-  if($fh){
-    debug("Creado ".$path); 
-    $sql = "select generacion_id from generaciones_proy where proy_id = ".$_SESSION['proactivo'];
-    debug($sql);
-    $conn = conecta();
-    $res = pg_query($conn,$sql);
-    if($res){
-      debug("conectado");
-      $generaciones = pg_fetch_all($res);
-      foreach($generaciones as $generacion){
-      debug($generacion['generacion_id']);
-      }
-    }else{
-      debug("ERROR: no ha podido conectarse con la BD");
-    }
-  pg_close($conn);
-  }else{
-  echo "ERROR: no ha podido crearse el archivo de estadísticas: ".$path;
+  $fh = fopen($path);
+  print(sizeof($_SESSION['stats']));
+  foreach($_SESSION['stats'] as $generacion){
+    print($_SESSION['stats'][0]);
+    //debug_r($generacion);
   }
-  fclose($fh);
 }
-
-
 
 
 
 function debug($msg){
 echo "<br/>".$msg."<br/>";
+}
+
+function debug_r($a){
+  echo "<pre>";
+  print_r($a);
+  echo "</pre>";
 }
 ?>

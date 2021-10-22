@@ -245,6 +245,11 @@ function print_parentales($generacion){
 
   echo "<h2>Parentales de la generación ".$generacion."</h2>";
 
+  $conn = conecta();
+  $sql = "select indiv_id, gener_indiv_id, proy_id from parentales where generacion_id = ".$generacion;
+  $res = pg_query($conn,$sql);
+  $filas = pg_num_rows($res);
+
 ?>
 <div class="tab">
 <table>
@@ -252,14 +257,10 @@ function print_parentales($generacion){
 <?php
   foreach($_SESSION['colnames'] as $fen){
     echo "<th>".$fen."</th>";
-    //$stats_parentales[] = $fen;
   }        
 
-  $conn = conecta();
-  $sql = "select indiv_id, gener_indiv_id, proy_id from parentales where generacion_id = ".$generacion;
-  $res = pg_query($conn,$sql);
+  if($filas > 0){
   if($res){
-    $filas = pg_num_rows($res);
     for($i=0;$i<$filas;$i++){
       $indiv_id=pg_fetch_result($res,$i,0);
       $gener_indiv_id=pg_fetch_result($res,$i,1);
@@ -272,9 +273,8 @@ function print_parentales($generacion){
   }
   pg_close($conn);
 
-//añade estadísticas
+//  echo "<br>añade estadísticas<br>";
   $datos_par_exist = sizeof($_SESSION['stats'][$generacion]['parentales']) > 0;
-
   if($datos_par_exist){
       $numindiv = $_SESSION['stats'][$generacion]['parentales']['numindiv'];
       foreach($_SESSION['colnames'] as $fen){
@@ -283,10 +283,10 @@ function print_parentales($generacion){
         $varianza = $_SESSION['stats'][$generacion]['parentales'][$fen]['var'];
     }
   }else{
-    $numindiv = sizeof($stats_parentales[0]);
+    $numindiv = $filas; //TODO NO SE ACTUALIZA BIEN SIEMPRE ES 0
+    $_SESSION['stats'][$generacion]['parentales']['numindiv'] = $numindiv;
       foreach($_SESSION['colnames'] as $fen){
         $col = $stats_parentales[$fen];
-        $_SESSION['stats'][$generacion]['parentales']['numindiv'] = $numindiv;
         $media = stats($col,'mean');
         $_SESSION['stats'][$generacion]['parentales'][$fen]['mean'] = $media;
         $varianza = stats($col,'var');
@@ -309,7 +309,10 @@ print("</tr>");
 
 $stats_parentales = array();
 
-  ?></table></div><?php
+?></table></div><?php
+  }else{
+  echo "Generación aleatoria";
+  }
 }
 
 
