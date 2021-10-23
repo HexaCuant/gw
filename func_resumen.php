@@ -1,15 +1,9 @@
 <?php
 
-function leerStats($path){
-  $fh = fopen($path);
-  print(sizeof($_SESSION['stats']));
-  foreach($_SESSION['stats'] as $generacion){
-    print($_SESSION['stats'][0]);
-    //debug_r($generacion);
-  }
+function out($a,$fh){
+  echo $a;
+  fwrite($fh,$a);
 }
-
-
 
 function debug($msg){
 echo "<br/>".$msg."<br/>";

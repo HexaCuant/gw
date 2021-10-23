@@ -4,70 +4,71 @@
 $pathProyectos = "/var/www/proyectosGengine/";
 $proy_id = $_SESSION['proactivo'];
 $path = $pathProyectos.$proy_id."/".$proy_id."stats.json";
-
+$outfilename = $pathProyectos.$proy_id."/".$proy_id."resumen.html";
 
 require_once('func_resumen.php');
 
 if(file_exists($path)){
   //leerStats($path);
-
+$fh = fopen($outfilename,'w',$fh);
   $sql = "select name from caracteres where id in (select caracter_id from caracteres_proy where proyecto_id = ".$_SESSION['proactivo'].")";
   $conn = conecta();
   $res = pg_query($conn,$sql);
   $fenotipos = pg_fetch_all($res);
   $num_fenotipos = sizeof($fenotipos);
-  ?><div class=?tab=><table>
+  $colspan = 1+2*$num_fenotipos;
+  out(
+  '<div class=?tab=><table>
     <tr>
 <th></th>
-   <th colspan="<?php echo 1+2*$num_fenotipos?>">Datos Parentales</th>
-   <th colspan="<?php echo 1+2*$num_fenotipos?>">Datos Generacion</th>
+   <th colspan="'.$colspan.'">Datos Parentales</th>
+   <th colspan="'.$colspan.'">Datos Generacion</th>
 </tr>
 <tr>
 <th></th>
-<th></th>
-<?php
-  foreach($fenotipos as $fen){
- echo "<th colspan='2'>".$fen['name']."</th>";
-  }
-  echo "<th></th>";
-  foreach($fenotipos as $fen){
- echo "<th colspan='2'>".$fen['name']."</th>";
-  }
-echo "</tr><tr>";
-  ?><th>Gen.</th><th>Num.</th><?php
-  foreach($fenotipos as $fen){
- echo "<th>Media</th><th>Varianza</th>";
-  }
-  echo "<th>Num.</th>";
-  foreach($fenotipos as $fen){
- echo "<th>Media</th><th>Varianza</th>";
-  }
-echo "</tr>";
-  pg_close($conn);
+<th></th>',$fh);
 
+  foreach($fenotipos as $fen){
+ out("<th colspan='2'>".$fen['name']."</th>",$fh);
+  }
+  out("<th></th>",$fh);
+  foreach($fenotipos as $fen){
+ out("<th colspan='2'>".$fen['name']."</th>",$fh);
+  }
+out("</tr><tr>",$fh);
+  out('<th>Gen.</th><th>Num.</th>',$fh);
+  foreach($fenotipos as $fen){
+ out("<th>Media</th><th>Varianza</th>",$fh);
+  }
+  out("<th>Num.</th>",$fh);
+  foreach($fenotipos as $fen){
+ out("<th>Media</th><th>Varianza</th>",$fh);
+  }
+out("</tr>",$fh);
+  pg_close($conn);
 
   $generaciones = array_keys($_SESSION['stats']);
   foreach($generaciones as $generacion){
-    echo "<tr>";
-    echo "<td>".$generacion."</td><td>";
-    echo $_SESSION['stats'][$generacion]['parentales']['numindiv'];
-    echo "</td>";
+    out("<tr>",$fh);
+    out("<td>".$generacion."</td><td>",$fh);
+    out($_SESSION['stats'][$generacion]['parentales']['numindiv'],$fh);
+    out("</td>",$fh);
     foreach ($fenotipos as $fen){
-      echo "<td>";
-    echo $_SESSION['stats'][$generacion]['parentales'][$fen['name']]['mean'];
-    echo "</td><td>";
-    echo $_SESSION['stats'][$generacion]['parentales'][$fen['name']]['var'];
+      out("<td>",$fh);
+    out($_SESSION['stats'][$generacion]['parentales'][$fen['name']]['mean'],$fh);
+    out("</td><td>",$fh);
+    out($_SESSION['stats'][$generacion]['parentales'][$fen['name']]['var'],$fh);
     }
-    echo "</td><td>";
-    echo $_SESSION['stats'][$generacion]['generacion']['numindiv'];
-     echo "</td>";
+    out("</td><td>",$fh);
+    out($_SESSION['stats'][$generacion]['generacion']['numindiv'],$fh);
+     out("</td>",$fh);
     foreach ($fenotipos as $fen){
-      echo "<td>";
-    echo $_SESSION['stats'][$generacion]['generacion'][$fen['name']]['mean'];
-    echo "</td><td>";
-    echo $_SESSION['stats'][$generacion]['generacion'][$fen['name']]['var'];
+      out("<td>",$fh);
+    out($_SESSION['stats'][$generacion]['generacion'][$fen['name']]['mean'],$fh);
+    out("</td><td>",$fh);
+    out($_SESSION['stats'][$generacion]['generacion'][$fen['name']]['var'],$fh);
     }
-   echo "</td></tr>";
+   out("</td></tr>",$fh);
 
     /*
     debug_r($_SESSION['stats'][$generacion]['parentales']) ;
@@ -78,7 +79,11 @@ echo "</tr>";
     debug_r($_SESSION['stats'][$generacion]['generacion']);
      */
   }
-  echo "</table></div>";
+  out("</table></div>",$fh);
+  fclose($fh);
+$command = "cd /var/www/html/gw/ && ./convierte.sh ".$_SESSION['proactivo']." ".$outfilename;
+exec($command);
+echo $command;
 }else{
 debug("ERROR: Archivo no encontrado: ".$path);
 }
