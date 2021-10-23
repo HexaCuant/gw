@@ -3,7 +3,6 @@ $_SESSION['colnames'] = array();
 $_SESSION['tab_generacion'] = array();
 $pathProyectos = "/var/www/proyectosGengine/";
 $stats_parentales = array();
-
 function formnewrandom(){
   //generacion max
   $sql="select max(generacion_id) from generaciones_proy where proy_id = ".$_SESSION['proactivo'];
@@ -193,7 +192,7 @@ function print_generacion($id){
     echo '<td>'.$varianza.'</td>';
   }
   echo "<td></td></tr>";
-  echo "<br/>Num. indiv: ".sizeof($_SESSION['tab_generacion'])."<br/>";
+    echo "<br/>Num. indiv: ".sizeof($_SESSION['tab_generacion'])."<br/>";
   $_SESSION['stats'][$id]['generacion']['numindiv'] = $numindiv;
 
   ksort($_SESSION['stats']);
