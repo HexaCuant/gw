@@ -1,4 +1,5 @@
 <?php 
+
 if(isset($_SESSION['proactivo'])){
 				if (($_SESSION['proactivo'] > 0)){
 								?><h2>Proyecto activo: <?php echo $_SESSION['proname']?></h2><?php 

@@ -1,4 +1,7 @@
-<?php 
+<?php
+
+require_once('debug.php');
+
 function listapro($id)
 {
   $conn = conecta();
@@ -66,7 +69,10 @@ function testcierrapro()
   if(isset($_POST['cerrarpro']))
   {
     $_SESSION['proactivo']=0;
+    $_SESSION['generacionactiva']=0;
     unset($_SESSION['proactivo']);
+    $_SESSION['stats'] = array();
+    unset($_SESSION['stats']);
     $_SESSION['proname']="";
     //	refresh();
   }
@@ -102,11 +108,23 @@ function testborrarpro()
     $sql = "delete from proyectos where id=".$id;
     $conn=conecta();
     pg_query($conn,$sql);
+    $sql = "delete from caracteres_proy where proyecto_id =".$id;
+    pg_query($conn,$sql);
+    $sql = "delete from cruces_proy where id_proy =".$id;
+    pg_query($conn,$sql);
+    $sql = "delete from generaciones_proy where proy_id =".$id;
+    pg_query($conn,$sql);
+    $sql = "delete from parentales where proy_id =".$id;
+    pg_query($conn,$sql);
+
     pg_close($conn);
     $_SESSION['proactivo']=0;
+    $_SESSION['generacionactiva']=0;
     unset($_SESSION['proactivo']);
     $_SESSION['proname']="";
     unset($_SESSION['proname']);
+    $_SESSION['stats'] = array();
+    unset($_SESSION['stats']);
 
     refresh();
   }
@@ -117,7 +135,16 @@ function testabrepro(){
     $_SESSION['proactivo'] = $_POST['abrirpro'];
     $proyecto_id = $_POST['abrirpro'];
     $path = "/var/www/proyectosGengine/".$proyecto_id."/".$proyecto_id."stats.json";
+    $_SESSION['stats'] = array();
+    unset($_SESSION['stats']);
+    debug($path);
+    if(file_exists($path)){
     $_SESSION['stats'] = json_decode(file_get_contents($path),true);
+    debug_r($_SESSION['stats']);
+    }
+    //else{
+    //echo "ERROR: no se ha encontrado el fichero de estadísticas";
+    //}
   }
   if(isset($_SESSION['proactivo'])){
     $conn = conecta();

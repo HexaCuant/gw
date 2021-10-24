@@ -4,7 +4,7 @@
 $pathProyectos = "/var/www/proyectosGengine/";
 $proy_id = $_SESSION['proactivo'];
 $path = $pathProyectos.$proy_id."/".$proy_id."stats.json";
-$outfilename = $pathProyectos.$proy_id."/".$proy_id."resumen.html";
+$outfilename = $pathProyectos.$proy_id."/".$proy_id."resumen_punto.html";
 
 require_once('func_resumen.php');
 
@@ -81,9 +81,26 @@ out("</tr>",$fh);
   }
   out("</table></div>",$fh);
   fclose($fh);
-$command = "cd /var/www/html/gw/ && ./convierte.sh ".$_SESSION['proactivo']." ".$outfilename;
-exec($command);
-echo $command;
+
+  $puntofilename = '/proyectosGengine/'.$proy_id."/".$proy_id."resumen_punto.html";
+  ?><p><a href="<?php echo $puntofilename?>">Descargar datos</a> (puntos decimales)</p><?php 
+  //archivo con comas decimales
+  $outcomafilename = $pathProyectos.$proy_id."/".$proy_id."resumen_coma.html";
+  $comafilename = '/proyectosGengine/'.$proy_id."/".$proy_id."resumen_coma.html";
+  $fh = fopen($outfilename,"r");
+  $fhcoma = fopen($outcomafilename,"w");
+  if(!$fh){echo "ERROR abriendo:".$outfilename;}
+  if(!$fhcoma){echo "ERROR abriendo:".$outcomafilename;}
+  while (($line = fgets($fh)) !== false){
+    $comaline = preg_replace('@\.@',',',$line);
+    fwrite($fhcoma,$comaline);
+  }
+  fclose($fh);
+  fclose($fhcoma);
+  ?><p><a href="<?php echo $comafilename?>">Descargar datos</a> (comas decimales)</p><?php 
+ 
+
+
 }else{
 debug("ERROR: Archivo no encontrado: ".$path);
 }

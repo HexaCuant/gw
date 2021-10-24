@@ -1,4 +1,7 @@
 <?php 
+
+require_once('debug.php');
+
 $_SESSION['colnames'] = array();
 $_SESSION['tab_generacion'] = array();
 $pathProyectos = "/var/www/proyectosGengine/";
@@ -55,7 +58,7 @@ function testnewrandom(){
 
 
 function indivbutton($id){
-  ?><td><input type="submit" name="addindiv" value="<?php echo $id?>"></input>
+  ?><td><a name="<?php echo $id?>"></a><input type="submit" name="addindiv" value="<?php echo $id?>"></input>
 <?php 
 }
 
@@ -157,10 +160,17 @@ function print_generacion($id){
   }
   //añade estadísticas
   
+  debug_r($_SESSION['tab_generacion']);
   $datos_gen_exist = sizeof($_SESSION['stats'][$id]['generacion']) > 0;
 
+  debug("id: ".$id);
+  debug_r("existe: ".$_SESSION['stats'][$id]['generacion']);
+  print_r($_SESSION['stats'][$id]['generacion']);
+  debug($datos_gen_exist);
+
   if($datos_gen_exist){
-      $numindiv = $_SESSION['stats'][$id]['generacion']['numindiv'];
+    $numindiv = $_SESSION['stats'][$id]['generacion']['numindiv'];
+    debug("numindiv. existe: ".$numindiv);
       foreach($_SESSION['colnames'] as $fen){
         $col = array_column($_SESSION['tab_generacion'],$fen);
         $media = $_SESSION['stats'][$id]['generacion'][$fen]['mean'];
@@ -168,9 +178,11 @@ function print_generacion($id){
     }
   }else{
     $numindiv = sizeof($_SESSION['tab_generacion']);
+    debug("numindiv. NO existe: ".$numindiv);
+    $_SESSION['stats'][$id]['generacion']['numindiv'] = $numindiv;
       foreach($_SESSION['colnames'] as $fen){
         $col = array_column($_SESSION['tab_generacion'],$fen);
-        $_SESSION['stats'][$id]['generacion']['numindiv'] = $numindiv;
+        //debug_r($col);
         $media = stats($col,'mean');
         $_SESSION['stats'][$id]['generacion'][$fen]['mean'] = $media;
         $varianza = stats($col,'var');
@@ -192,8 +204,9 @@ function print_generacion($id){
     echo '<td>'.$varianza.'</td>';
   }
   echo "<td></td></tr>";
-    echo "<br/>Num. indiv: ".sizeof($_SESSION['tab_generacion'])."<br/>";
-  $_SESSION['stats'][$id]['generacion']['numindiv'] = $numindiv;
+    echo "<br/>Num. indiv (1): ".sizeof($_SESSION['tab_generacion'])."<br/>";
+    echo "<br/>Num. indiv (2): ".$numindiv."<br/>";
+  //$_SESSION['stats'][$id]['generacion']['numindiv'] = $numindiv;
 
   ksort($_SESSION['stats']);
   $proy_id = $_SESSION['proactivo'];
@@ -245,7 +258,7 @@ function print_parentales($generacion){
   echo "<h2>Parentales de la generación ".$generacion."</h2>";
 
   $conn = conecta();
-  $sql = "select indiv_id, gener_indiv_id, proy_id from parentales where generacion_id = ".$generacion;
+  $sql = "select indiv_id, gener_indiv_id, proy_id from parentales where generacion_id = ".$generacion." and proy_id = ".$_SESSION['proactivo'];
   $res = pg_query($conn,$sql);
   $filas = pg_num_rows($res);
 
@@ -282,7 +295,7 @@ function print_parentales($generacion){
         $varianza = $_SESSION['stats'][$generacion]['parentales'][$fen]['var'];
     }
   }else{
-    $numindiv = $filas; //TODO NO SE ACTUALIZA BIEN SIEMPRE ES 0
+    $numindiv = $filas;
     $_SESSION['stats'][$generacion]['parentales']['numindiv'] = $numindiv;
       foreach($_SESSION['colnames'] as $fen){
         $col = $stats_parentales[$fen];
@@ -387,10 +400,19 @@ function testlistgeneraciones(){
     pg_close($conn);
   }
   if(isset($_POST['borrargeneracion']) && isset($_POST['confirmado'])){
+    $_SESSION['generacionactiva'] = 0;
     $id=$_POST['borrargeneracion'];
+    $_SESSION['cruce_gen_id'] = array();
+    $_SESSION['stats'][$id] = array();
+    unset($_SESSION['cruce_gen_id']);
+    unset($_SESSION['stats'][$id]);
     $conn=conecta();
     $sql = "delete from generaciones_proy where proy_id = ".$_SESSION['proactivo']." and generacion_id = ".$id;
     $res = pg_query($conn,$sql);
+    if(!$res) echo "No ha funcionado: ".$sql;
+    $sql = "delete from parentales where generacion_id = ".$id." and proy_id = ". $_SESSION['proactivo'];
+    $res = pg_query($conn,$sql);
+    if(!$res) echo "No ha funcionado: ".$sql;
     $file = "/var/www/proyectosGengine/".$_SESSION['proactivo']."/".$_SESSION['proactivo'].".dat".$id;
     $command = "rm ".$file;
     system($command);
@@ -441,12 +463,20 @@ function crearcruce(){
     $pop = $_POST['poblacion'];
     if ($pop > 0){
       $gen=$_POST['generacion_id'];
+      //debug("generacion: ".$gen);
+      //debug_r($_SESSION['stats']);
+      $datos_gen_exist = sizeof($_SESSION['stats'][$gen]['generacion']) > 0;
+      //debug("existe: ".$datos_gen_exist);
       $tipo="cruce";
       makepoc($pop,$gen,$tipo);
       $_SESSION['generacionactiva'] = $gen;
-      echo "<div class=\"derecha\">";
-      abrirgeneracion($gen);
-      echo "</div>";
+      $datos_gen_exist = sizeof($_SESSION['stats'][$gen]['generacion']) > 0;
+      //debug("existe (2): ".$datos_gen_exist);
+      //exit();
+      //echo "<div class=\"derecha\">";
+      //abrirgeneracion($gen);
+      //echo "</div>";
+      //unset($_SESSION['cruce_gen_id']);
     }
   }
 
@@ -477,6 +507,7 @@ function cruce(){
   if(isset($_POST['addindiv'])){
     $sql="insert into parentales (generacion_id, indiv_id, gener_indiv_id,proy_id) values (".$_SESSION['cruce_gen_id'].",".$_POST['addindiv'].",".$_SESSION['generacionactiva'].",".$_SESSION['proactivo'].")";
     $res=pg_query($conn,$sql);
+   //  echo "<meta http-equiv=\"refresh\" content=\"0; url=#".$_POST['addindiv']."\" />";
   }
   ?><table><?php 
   ?><tr><th>N.</th><th>Indiv. Id</th><th>Generación</th><th>Borrar</th></tr><?php 
