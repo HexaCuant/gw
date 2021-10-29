@@ -27,7 +27,12 @@ if(isset($_SESSION['proactivo'])){
 								?><br /><fieldset><legend>Crear un cruce</legend><?php 
 								crearcruce();
 				//				cruce();
-								?></fieldset><?php 
+                ?></fieldset><?php 
+								?><br/><fieldset><legend>Crear múltiples cruces</legend><?php 
+                formnewmultiple();
+                ?></fieldset><?php
+                testnewmultiple();
+
 				}
 }
 else{

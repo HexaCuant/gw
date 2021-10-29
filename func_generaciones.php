@@ -56,6 +56,69 @@ function testnewrandom(){
   }
 }
 
+function formnewmultiple(){
+  //generacion max
+  $sql="select max(generacion_id) from generaciones_proy where proy_id = ".$_SESSION['proactivo'];
+  $conn = conecta();
+  $res = pg_query($conn,$sql);
+  $generacion_id = pg_fetch_result($res,0,0);
+  $generacion_id++;
+  pg_close($conn);
+  //////
+?><form action="index.php?option=3#fin" method="post">
+        Generación de parentales: <input type = "text" name="gen_parentales_multiple" ></input><br /><br />
+        Num. individuos que se cruzan <input type="text" name="numindiv_multiple"></input /><br /><br />
+        Número de cruces: <input type="text" name="numcruces_multiple"></input><br/><br/>
+        Tamaño población: <input type="text" name="poblacion_multiple"></input><br/><br/>
+        <input type="submit" name="newmultiple" value="Crear múltiples cruces"></input><br /><br /><?php
+}
+
+
+function testnewmultiple(){
+  if(isset($_POST['newmultiple'])){
+    $conn = conecta();
+    $gen_parentales_multiple = $_POST['gen_parentales_multiple'];
+    $numindiv_multiple = $_POST['numindiv_multiple'];
+    $numcruces_multiple = $_POST['numcruces_multiple'];
+    $poblacion_multiple = $_POST['poblacion_multiple'];
+
+    $gen_indiv = $_SESSION['stats'][$gen_parentales_multiple]['generacion']['numindiv'];
+    //debug_r($_SESSION['stats'][$gen_parentales_multiple]['generacion']);
+    //conseguir número de nueva generación
+  //generacion max
+    $sql="select max(generacion_id) from generaciones_proy where proy_id = ".$_SESSION['proactivo'];
+  $res = pg_query($conn,$sql);
+  pg_close($conn);
+  $generacion_id = pg_fetch_result($res,0,0);
+  $generacion_id++;
+  debug("nueva generacion: ".$generacion_id);
+  //////
+
+
+    //bucle para cruces
+    for ($i=0;$i<$numcruces_multiple;$i++){
+      //bucle para individuos
+        $conn = conecta();
+      for($j=0;$j<$numindiv_multiple;$j++){
+        $selec = rand(1,$gen_indiv-$numindiv_multiple);
+        debug("gen_indiv: ".$gen_indiv);
+        debug("selec: ".$selec);
+        //añadir parental a tabla
+        $proyactivo = $_SESSION['proactivo'];
+        $sql="insert into parentales (generacion_id, indiv_id, gener_indiv_id,proy_id) values 
+          ($generacion_id,$selec,$gen_parentales_multiple,$proyactivo)";
+        debug($sql);
+        $res=pg_query($conn,$sql);
+        if(!$res) echo "ERROR: ".$sql;
+      }
+        pg_close($conn);
+        makepoc($poblacion_multiple,$generacion_id,"cruce");
+        $_SESSION['generacionactiva'] = $generacion_id;
+        $generacion_id++;
+    }
+  }
+}
+
 
 function indivbutton($id){
   ?><td><a name="<?php echo $id?>"></a><input type="submit" name="addindiv" value="<?php echo $id?>"></input>
@@ -160,17 +223,17 @@ function print_generacion($id){
   }
   //añade estadísticas
   
-  debug_r($_SESSION['tab_generacion']);
+  //debug_r($_SESSION['tab_generacion']);
   $datos_gen_exist = sizeof($_SESSION['stats'][$id]['generacion']) > 0;
 
-  debug("id: ".$id);
-  debug_r("existe: ".$_SESSION['stats'][$id]['generacion']);
-  print_r($_SESSION['stats'][$id]['generacion']);
-  debug($datos_gen_exist);
+  //debug("id: ".$id);
+  //debug_r("existe: ".$_SESSION['stats'][$id]['generacion']);
+  //print_r($_SESSION['stats'][$id]['generacion']);
+  //debug($datos_gen_exist);
 
   if($datos_gen_exist){
     $numindiv = $_SESSION['stats'][$id]['generacion']['numindiv'];
-    debug("numindiv. existe: ".$numindiv);
+    //debug("numindiv. existe: ".$numindiv);
       foreach($_SESSION['colnames'] as $fen){
         $col = array_column($_SESSION['tab_generacion'],$fen);
         $media = $_SESSION['stats'][$id]['generacion'][$fen]['mean'];
@@ -178,7 +241,7 @@ function print_generacion($id){
     }
   }else{
     $numindiv = sizeof($_SESSION['tab_generacion']);
-    debug("numindiv. NO existe: ".$numindiv);
+    //debug("numindiv. NO existe: ".$numindiv);
     $_SESSION['stats'][$id]['generacion']['numindiv'] = $numindiv;
       foreach($_SESSION['colnames'] as $fen){
         $col = array_column($_SESSION['tab_generacion'],$fen);
@@ -416,6 +479,9 @@ function testlistgeneraciones(){
     $file = "/var/www/proyectosGengine/".$_SESSION['proactivo']."/".$_SESSION['proactivo'].".dat".$id;
     $command = "rm ".$file;
     system($command);
+    $file = "/var/www/proyectosGengine/".$_SESSION['proactivo']."/.".$_SESSION['proactivo']."/".$_SESSION['proactivo'].".g".$id;
+    $command = "rm ".$file;
+    system($command);
     refresh();
   }
 }
@@ -526,6 +592,12 @@ function cruce(){
 
 
 function makepoc($pop,$gen,$tipo){
+  debug("pop: ".$pop);
+  debug("gen: ".$gen);
+  debug("tipo: ".$tipo);
+  $post_gen_id = $_POST['generacion_id'];
+  debug("post_gen_id: ".$post_gen_id);
+
   $path="/var/www/proyectosGengine/".$_SESSION['proactivo']."/".$_SESSION['proactivo'].".poc";
   $fh = fopen($path,"w");
   $line = "#file created by GenWeb\n";
@@ -621,7 +693,7 @@ function makepoc($pop,$gen,$tipo){
   }
   if($tipo=="cruce"){
     //Qué generaciones hay que leer
-    $sqlread = "select distinct gener_indiv_id from parentales where generacion_id = ".$_POST['generacion_id']." order by gener_indiv_id";
+    $sqlread = "select distinct gener_indiv_id from parentales where generacion_id = ".$gen." order by gener_indiv_id";
     $resread = pg_query($conn,$sqlread);
     $filas = pg_num_rows($resread);
     for($i=0;$i<$filas;$i++){
@@ -635,7 +707,7 @@ function makepoc($pop,$gen,$tipo){
     //ejemplo cruce		1,6:5,3:=,10:
     $line = "*cross\n";
     fwrite($fh,$line);
-    $sqlcruce="select indiv_id, gener_indiv_id from parentales where generacion_id = ".$_POST['generacion_id']." and proy_id = ".$_SESSION['proactivo']." order by gener_indiv_id, indiv_id";
+    $sqlcruce="select indiv_id, gener_indiv_id from parentales where generacion_id = ".$gen." and proy_id = ".$_SESSION['proactivo']." order by gener_indiv_id, indiv_id";
     echo $sqlcruce;
     $rescruce=pg_query($conn,$sqlcruce);
     $filas = pg_num_rows($rescruce);
@@ -646,12 +718,13 @@ function makepoc($pop,$gen,$tipo){
       $line = $line.$indiv.",".$gener.":";
     }
     fwrite($fh,$line);
-    $poblacion=$_POST['poblacion'];
-    $line="=,".$poblacion.":\n";
+    //$poblacion=$_POST['poblacion'];
+    $line="=,".$pop.":\n";
     fwrite($fh,$line);
   }
   $line = "*end\n";
   fwrite($fh,$line);
+  fclose($fh);
   //ejecutar
   $command = "gen2web ".$_SESSION['proactivo']." > /dev/null";
   echo "<br>".$command."<br>";
@@ -660,9 +733,9 @@ function makepoc($pop,$gen,$tipo){
     echo "creada generación";
     $sqlnewgen ="insert into generaciones_proy (proy_id,generacion_id) values (".$_SESSION['proactivo'].", ".$gen.")";
     $res=pg_query($conn,$sqlnewgen);
-    $_SESSION['cruce_gen_id']=$_POST['generacion_id'];
+    $_SESSION['cruce_gen_id']=$gen;
     $_SESSION['creandocruce']=FALSE;
-    refresh();
+//    refresh();
   }else{
     echo "ERROR: ".$ret.": no ha podido crearse la nueva generación.";
   }
