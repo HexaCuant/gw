@@ -137,10 +137,10 @@ function testabrepro(){
     $path = "/var/www/proyectosGengine/".$proyecto_id."/".$proyecto_id."stats.json";
     $_SESSION['stats'] = array();
     unset($_SESSION['stats']);
-    debug($path);
+    //debug($path);
     if(file_exists($path)){
     $_SESSION['stats'] = json_decode(file_get_contents($path),true);
-    debug_r($_SESSION['stats']);
+    //debug_r($_SESSION['stats']);
     }
     //else{
     //echo "ERROR: no se ha encontrado el fichero de estadísticas";

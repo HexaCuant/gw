@@ -7,10 +7,11 @@ $path = $pathProyectos.$proy_id."/".$proy_id."stats.json";
 $outfilename = $pathProyectos.$proy_id."/".$proy_id."resumen_punto.html";
 
 require_once('func_resumen.php');
+require_once('debug.php');
 
 if(file_exists($path)){
   //leerStats($path);
-$fh = fopen($outfilename,'w',$fh);
+$fh = fopen($outfilename,'w');
   $sql = "select name from caracteres where id in (select caracter_id from caracteres_proy where proyecto_id = ".$_SESSION['proactivo'].")";
   $conn = conecta();
   $res = pg_query($conn,$sql);
@@ -51,13 +52,13 @@ out("</tr>",$fh);
   foreach($generaciones as $generacion){
     out("<tr>",$fh);
     out("<td>".$generacion."</td><td>",$fh);
-    out($_SESSION['stats'][$generacion]['parentales']['numindiv'],$fh);
+    if(isset($_SESSION['stats'][$generacion]['parentales'])) out($_SESSION['stats'][$generacion]['parentales']['numindiv'],$fh);
     out("</td>",$fh);
     foreach ($fenotipos as $fen){
       out("<td>",$fh);
-    out($_SESSION['stats'][$generacion]['parentales'][$fen['name']]['mean'],$fh);
+    if(isset($_SESSION['stats'][$generacion]['parentales'])) out($_SESSION['stats'][$generacion]['parentales'][$fen['name']]['mean'],$fh);
     out("</td><td>",$fh);
-    out($_SESSION['stats'][$generacion]['parentales'][$fen['name']]['var'],$fh);
+    if(isset($_SESSION['stats'][$generacion]['parentales'])) out($_SESSION['stats'][$generacion]['parentales'][$fen['name']]['var'],$fh);
     }
     out("</td><td>",$fh);
     out($_SESSION['stats'][$generacion]['generacion']['numindiv'],$fh);
@@ -81,7 +82,7 @@ out("</tr>",$fh);
   }
   out("</table></div>",$fh);
   fclose($fh);
-
+  //debug_r($_SESSION['stats']);
   $puntofilename = '/proyectosGengine/'.$proy_id."/".$proy_id."resumen_punto.html";
   ?><p><a href="<?php echo $puntofilename?>">Descargar datos</a> (puntos decimales)</p><?php 
   //archivo con comas decimales

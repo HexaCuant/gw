@@ -9,7 +9,7 @@ testcierrapro();
 if(isset($_SESSION['proactivo'])){
   ?><h2>Caracteres del proyecto: <?php echo $_SESSION['proname']?> (id=<?php echo $_SESSION['proactivo']?>)</h2><?php 
 
-  debug_r($_SESSION['stats']);
+ // debug_r($_SESSION['stats']);
 
  // debug_r($_SESSION['tab_generacion']);
 								formcierrapro();
