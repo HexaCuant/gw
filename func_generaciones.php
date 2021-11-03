@@ -719,7 +719,7 @@ function makepoc($pop,$gen,$tipo){
   }
   if($tipo=="cruce"){
     //Qué generaciones hay que leer
-    $sqlread = "select distinct gener_indiv_id from parentales where generacion_id = ".$gen." order by gener_indiv_id";
+    $sqlread = "select distinct gener_indiv_id from parentales where generacion_id = ".$gen." and proy_id = ".$_SESSION['proactivo']."order by gener_indiv_id";
     $resread = pg_query($conn,$sqlread);
     $filas = pg_num_rows($resread);
     for($i=0;$i<$filas;$i++){
