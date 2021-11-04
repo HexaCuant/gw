@@ -127,8 +127,10 @@ function testnewmultiple(){
 }*/
 
 function indivbutton($id){
+  if($_SESSION['creandocruce']){
   ?><td><a name="<?php echo $id?>"></a><input type="checkbox" name="addindiv[]" value="<?php echo $id?>"></input>
 <?php 
+}
 }
 
 
@@ -192,7 +194,7 @@ function testcarac($line,$saveout = TRUE){
   if($saveout) fwrite($_SESSION['out'],"\n");
 }
 
-
+/*
 function stats($lista,$funcion){
   $vector = 'c(';
   foreach($lista as $val){
@@ -202,6 +204,24 @@ function stats($lista,$funcion){
   $command = 'Rscript -e \''.$funcion.'('.$vector.')\'';
   return substr(exec($command),4);
 }
+ */
+function stats($lista,$funcion){
+    $sum = 0;
+    $n = count($lista);
+    for ($i = 0; $i < $n; $i++)
+      $sum += $lista[$i];
+      $mean = (double)$sum / (double)$n;
+      if('mean' == $funcion){
+        return $mean;
+      }elseif('var' == $funcion){
+        $sqDiff = 0;
+        for ( $i = 0; $i < $n; $i++)
+            $sqDiff += ($lista[$i] - $mean) * ($lista[$i] - $mean);
+        return $sqDiff / $n;    
+      }else{
+        return -1;
+      }
+  }
 
 
 function print_generacion($id){
