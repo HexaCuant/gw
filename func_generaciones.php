@@ -66,10 +66,14 @@ function formnewmultiple(){
   pg_close($conn);
   //////
 ?><form action="index.php?option=3#fin" method="post">
-        Generación de parentales: <input type = "text" name="gen_parentales_multiple" ></input><br /><br />
+  Generación de parentales: <input type = "text" name="gen_parentales_multiple" value='<?php echo $_SESSION['generacionactiva']?>' size='3' readonly></input> (Abrir generación para cambiar el valor)<br /><br />
         Num. individuos que se cruzan <input type="text" name="numindiv_multiple"></input /><br /><br />
         Número de cruces: <input type="text" name="numcruces_multiple"></input><br/><br/>
         Tamaño población: <input type="text" name="poblacion_multiple"></input><br/><br/>
+        <input type="radio" name="tipocruce" value="asociativo">
+        <label for="asociativo">Asociativo</label><br/><br/>
+        <input type="radio" name="tipocruce" value="aleatorio">
+        <label for="aleatorio">Aleatorio</label><br/><br/>
         <input type="submit" name="newmultiple" value="Crear múltiples cruces"></input><br /><br /><?php
 }
 
@@ -81,42 +85,64 @@ function testnewmultiple(){
     $numindiv_multiple = $_POST['numindiv_multiple'];
     $numcruces_multiple = $_POST['numcruces_multiple'];
     $poblacion_multiple = $_POST['poblacion_multiple'];
+    $tipocruce = $_POST['tipocruce'];
 
     $gen_indiv = $_SESSION['stats'][$gen_parentales_multiple]['generacion']['numindiv'];
     //debug_r($_SESSION['stats'][$gen_parentales_multiple]['generacion']);
     //conseguir número de nueva generación
-  //generacion max
+    //generacion max
     $sql="select max(generacion_id) from generaciones_proy where proy_id = ".$_SESSION['proactivo'];
-  $res = pg_query($conn,$sql);
-  pg_close($conn);
-  $generacion_id = pg_fetch_result($res,0,0);
-  $generacion_id++;
-  //debug("nueva generacion: ".$generacion_id);
-  //////
-
-
+    $res = pg_query($conn,$sql);
+    pg_close($conn);
+    $generacion_id = pg_fetch_result($res,0,0);
+    $generacion_id++;
+    //debug("nueva generacion: ".$generacion_id);
+    //////
     //bucle para cruces
-    for ($i=0;$i<$numcruces_multiple;$i++){
-      //bucle para individuos
-        $conn = conecta();
-      for($j=0;$j<$numindiv_multiple;$j++){
-        $selec = rand(1,$gen_indiv-$numindiv_multiple);
-        //debug("gen_indiv: ".$gen_indiv);
-        //debug("selec: ".$selec);
-        //añadir parental a tabla
+    //debug($tipocruce);
+    // debug_r($_SESSION['tab_generacion']);
+
+    if('asociativo' == $tipocruce){
+      $conn = conecta();
+      $gen_id = $generacion_id;
+      for ($i=0;$i<$numcruces_multiple;$i++){
+        debug("numcruces_multiple: ".$numcruces_multiple."--i: ".$i);
+        //bucle para individuos
+        $selec = rand(0,$gen_indiv-$numindiv_multiple);
         $proyactivo = $_SESSION['proactivo'];
-        $sql="insert into parentales (generacion_id, indiv_id, gener_indiv_id,proy_id) values 
-          ($generacion_id,$selec,$gen_parentales_multiple,$proyactivo)";
-        //debug($sql);
-        $res=pg_query($conn,$sql);
-        if(!$res) echo "ERROR: ".$sql;
+        for($j=0;$j<$numindiv_multiple;$j++){
+          debug("numindiv_multiple: ".$numindiv_multiple."--j: ".$j);
+          $indiv = $_SESSION['tab_generacion'][$selec]['id'];
+          $sql="insert into parentales (generacion_id, indiv_id, gener_indiv_id,proy_id) values ($gen_id,$indiv,$gen_parentales_multiple,$proyactivo)";
+          $res=pg_query($conn,$sql);
+          debug($sql);
+          if(!$res) echo "ERROR: ".$sql;
+          $selec++;
+        }
+        $gen_id++;
       }
-        pg_close($conn);
+    pg_close($conn);
+    }elseif('aleatorio' == $tipocruce){
+      $conn = conecta();
+      $gen_id == $generacion_id;
+     for ($i=0;$i<$numcruces_multiple;$i++){
+        for($j=0;$j<$numindiv_multiple;$j++){
+          $selec = rand(1,$gen_indiv);
+          $proyactivo = $_SESSION['proactivo'];
+          $sql="insert into parentales (generacion_id, indiv_id, gener_indiv_id,proy_id) values ($gen_id,$selec,$gen_parentales_multiple,$proyactivo)";
+          $res=pg_query($conn,$sql);
+          if(!$res) echo "ERROR: ".$sql;
+        }
+        $gen_id++;
+      }
+    pg_close($conn);
+    }
+     for ($i=0;$i<$numcruces_multiple;$i++){
         makepoc($poblacion_multiple,$generacion_id,"cruce");
         $_SESSION['generacionactiva'] = $generacion_id;
         estadisticas($generacion_id);
         $generacion_id++;
-    }
+      }
   }
 }
 
@@ -128,9 +154,9 @@ function testnewmultiple(){
 
 function indivbutton($id){
   if($_SESSION['creandocruce']){
-  ?><td><a name="<?php echo $id?>"></a><input type="checkbox" name="addindiv[]" value="<?php echo $id?>"></input>
+    ?><td><a name="<?php echo $id?>"></a><input type="checkbox" name="addindiv[]" value="<?php echo $id?>"></input>
 <?php 
-}
+  }
 }
 
 
@@ -206,22 +232,22 @@ function stats($lista,$funcion){
 }
  */
 function stats($lista,$funcion){
-    $sum = 0;
-    $n = count($lista);
-    for ($i = 0; $i < $n; $i++)
-      $sum += $lista[$i];
-      $mean = (double)$sum / (double)$n;
-      if('mean' == $funcion){
-        return $mean;
-      }elseif('var' == $funcion){
-        $sqDiff = 0;
-        for ( $i = 0; $i < $n; $i++)
-            $sqDiff += ($lista[$i] - $mean) * ($lista[$i] - $mean);
-        return $sqDiff / $n;    
-      }else{
-        return -1;
-      }
+  $sum = 0;
+  $n = count($lista);
+  for ($i = 0; $i < $n; $i++)
+    $sum += $lista[$i];
+  $mean = (double)$sum / (double)$n;
+  if('mean' == $funcion){
+    return $mean.":".implode('-',$lista).":".$funcion;
+  }elseif('var' == $funcion){
+    $sqDiff = 0;
+    for ( $i = 0; $i < $n; $i++)
+      $sqDiff += ($lista[$i] - $mean) * ($lista[$i] - $mean);
+    return $sqDiff / $n;    
+  }else{
+    return -1;
   }
+}
 
 
 function print_generacion($id){
@@ -251,7 +277,7 @@ function print_generacion($id){
     echo "</tr>";
   }
   //añade estadísticas
-  
+
   //debug_r($_SESSION['tab_generacion']);
   //  $datos_gen_exist = sizeof($_SESSION['stats'][$id]['generacion']) > 0;
   //
@@ -264,19 +290,19 @@ function print_generacion($id){
       $_SESSION['stats'][$id]['generacion'] = array();
       $datos_gen_exist = FALSE;
     }
-}else{
-  $_SESSION['stats'] = array();
-  $datos_gen_exist = FALSE;
-}
+  }else{
+    $_SESSION['stats'] = array();
+    $datos_gen_exist = FALSE;
+  }
   //debug("id: ".$id);
   //debug_r("existe: ".$_SESSION['stats'][$id]['generacion']);
   //print_r($_SESSION['stats'][$id]['generacion']);
   //debug($datos_gen_exist);
 
 
-//debug("datos_gen_exist (x): ". $datos_gen_exist);
+  //debug("datos_gen_exist (x): ". $datos_gen_exist);
 
-    //$numindiv = sizeof($_SESSION['tab_generacion']);
+  //$numindiv = sizeof($_SESSION['tab_generacion']);
   if($datos_gen_exist){
     //$numindiv = $_SESSION['stats'][$id]['generacion']['numindiv'];
     //debug("numindiv. existe: ".$numindiv);
@@ -288,20 +314,20 @@ function print_generacion($id){
       //debug_r($col);
       $media = $_SESSION['stats'][$id]['generacion'][$fen]['mean'];
       //debug_r($_SESSION['stats'][$id]);
-        $varianza = $_SESSION['stats'][$id]['generacion'][$fen]['var'];
+      $varianza = $_SESSION['stats'][$id]['generacion'][$fen]['var'];
     }
   }else{
     //$numindiv = sizeof($_SESSION['tab_generacion']);
     //debug("numindiv. NO existe: ".$numindiv);
     $_SESSION['stats'][$id]['generacion']['numindiv'] = $numindiv;
-      foreach($_SESSION['colnames'] as $fen){
-        $col = array_column($_SESSION['tab_generacion'],$fen);
-        //debug_r($col);
-        $media = stats($col,'mean');
-        $_SESSION['stats'][$id]['generacion'][$fen]['mean'] = $media;
-        $varianza = stats($col,'var');
-        $_SESSION['stats'][$id]['generacion'][$fen]['var'] = $varianza;
-      }
+    foreach($_SESSION['colnames'] as $fen){
+      $col = array_column($_SESSION['tab_generacion'],$fen);
+      //debug_r($col);
+      $media = stats($col,'mean');
+      $_SESSION['stats'][$id]['generacion'][$fen]['mean'] = $media;
+      $varianza = stats($col,'var');
+      $_SESSION['stats'][$id]['generacion'][$fen]['var'] = $varianza;
+    }
   }
 
 
@@ -318,7 +344,7 @@ function print_generacion($id){
     echo '<td>'.$varianza.'</td>';
   }
   echo "<td></td></tr>";
-    //debug("Num. indiv (1): ".sizeof($_SESSION['tab_generacion']));
+  //debug("Num. indiv (1): ".sizeof($_SESSION['tab_generacion']));
   //debug("Num. indiv (2): ".$numindiv);
   //debug("Num. indiv (3): ".$_SESSION['stats'][$id]['generacion']['numindiv']);
   //$_SESSION['stats'][$id]['generacion']['numindiv'] = $numindiv;
@@ -388,31 +414,31 @@ function print_parentales($generacion){
   }        
 
   if($filas > 0){
-  if($res){
-    for($i=0;$i<$filas;$i++){
-      $indiv_id=pg_fetch_result($res,$i,0);
-      $gener_indiv_id=pg_fetch_result($res,$i,1);
-      $proy_id=pg_fetch_result($res,$i,2);
-      get_indiv_from_file($indiv_id, $gener_indiv_id, $proy_id);
+    if($res){
+      for($i=0;$i<$filas;$i++){
+        $indiv_id=pg_fetch_result($res,$i,0);
+        $gener_indiv_id=pg_fetch_result($res,$i,1);
+        $proy_id=pg_fetch_result($res,$i,2);
+        get_indiv_from_file($indiv_id, $gener_indiv_id, $proy_id);
+      }
+    }else{
+      echo "<br/>ERROR: No se han podido localizar los parentales<br/>";
+      echo $sql."<br/>";
     }
-  }else{
-    echo "<br/>ERROR: No se han podido localizar los parentales<br/>";
-    echo $sql."<br/>";
-  }
-  pg_close($conn);
+    pg_close($conn);
 
-  //  echo "<br>añade estadísticas<br>";
+    //  echo "<br>añade estadísticas<br>";
     $datos_par_exist = isset($_SESSION['stats'][$generacion]['parentales']);
-  if($datos_par_exist){
+    if($datos_par_exist){
       $numindiv = $_SESSION['stats'][$generacion]['parentales']['numindiv'];
       foreach($_SESSION['colnames'] as $fen){
         $col = array_column($_SESSION['tab_generacion'],$fen);
         $media = $_SESSION['stats'][$generacion]['parentales'][$fen]['mean'];
         $varianza = $_SESSION['stats'][$generacion]['parentales'][$fen]['var'];
-    }
-  }else{
-    $numindiv = $filas;
-    $_SESSION['stats'][$generacion]['parentales']['numindiv'] = $numindiv;
+      }
+    }else{
+      $numindiv = $filas;
+      $_SESSION['stats'][$generacion]['parentales']['numindiv'] = $numindiv;
       foreach($_SESSION['colnames'] as $fen){
         $col = $stats_parentales[$fen];
         $media = stats($col,'mean');
@@ -420,26 +446,26 @@ function print_parentales($generacion){
         $varianza = stats($col,'var');
         $_SESSION['stats'][$generacion]['parentales'][$fen]['var'] = $varianza;
       }
-  }
-print("<tr><td></td><td>Media</td>");
-  foreach($_SESSION['colnames'] as $fen){
-  $media = $_SESSION['stats'][$generacion]['parentales'][$fen]['mean'];
-  print("<td>".$media."</td>");
-}
-print("</tr>");
-print("<tr><td></td><td>Varianza</td>");
-  foreach($_SESSION['colnames'] as $fen){
-  $varianza = $_SESSION['stats'][$generacion]['parentales'][$fen]['var'];
-print("<td>".$varianza."</td>");
-}
-print("</tr>");
+    }
+    print("<tr><td></td><td>Media</td>");
+    foreach($_SESSION['colnames'] as $fen){
+      $media = $_SESSION['stats'][$generacion]['parentales'][$fen]['mean'];
+      print("<td>".$media."</td>");
+    }
+    print("</tr>");
+    print("<tr><td></td><td>Varianza</td>");
+    foreach($_SESSION['colnames'] as $fen){
+      $varianza = $_SESSION['stats'][$generacion]['parentales'][$fen]['var'];
+      print("<td>".$varianza."</td>");
+    }
+    print("</tr>");
 
 
-$stats_parentales = array();
+    $stats_parentales = array();
 
-?></table></div><?php
+    ?></table></div><?php
   }else{
-  echo "Generación aleatoria";
+    echo "Generación aleatoria";
   }
 }
 
@@ -616,11 +642,11 @@ function cruce(){
   }
   if(isset($_POST['anadeparental'])){
     foreach($_POST['addindiv'] as $indiv ){
-    $sql="insert into parentales (generacion_id, indiv_id, gener_indiv_id,proy_id) values (".$_SESSION['cruce_gen_id'].",".$indiv.",".$_SESSION['generacionactiva'].",".$_SESSION['proactivo'].")";
-    $res=pg_query($conn,$sql);
-   //  echo "<meta http-equiv=\"refresh\" content=\"0; url=#".$_POST['addindiv']."\" />";
+      $sql="insert into parentales (generacion_id, indiv_id, gener_indiv_id,proy_id) values (".$_SESSION['cruce_gen_id'].",".$indiv.",".$_SESSION['generacionactiva'].",".$_SESSION['proactivo'].")";
+      $res=pg_query($conn,$sql);
+      //  echo "<meta http-equiv=\"refresh\" content=\"0; url=#".$_POST['addindiv']."\" />";
+    }
   }
-}
 
   ?><table><?php 
   ?><tr><th>N.</th><th>Indiv. Id</th><th>Generación</th><th>Borrar</th></tr><?php 
@@ -754,7 +780,7 @@ function makepoc($pop,$gen,$tipo){
     $line = "*cross\n";
     fwrite($fh,$line);
     $sqlcruce="select indiv_id, gener_indiv_id from parentales where generacion_id = ".$gen." and proy_id = ".$_SESSION['proactivo']." order by gener_indiv_id, indiv_id";
-    //echo $sqlcruce;
+    debug($sqlcruce);
     $rescruce=pg_query($conn,$sqlcruce);
     $filas = pg_num_rows($rescruce);
     $line="";
@@ -807,7 +833,7 @@ function estadisticas($id){
 
   $generacion = array(); 
 
-if($fh){
+  if($fh){
     while (($line = fgets($fh)) !== false){
       if (checkline($line)){
         if($_SESSION['missingnames']) testcarac($line,FALSE);
@@ -817,7 +843,7 @@ if($fh){
   }
   $feno = array_column($_SESSION['tab_generacion'], $_SESSION['colnames'][0]);
   array_multisort($feno, SORT_DESC, $_SESSION['tab_generacion']);
- 
+
   //parentales
   global $stats_parentales;
   $conn = conecta();
@@ -825,34 +851,34 @@ if($fh){
   //debug($sql);
   $res = pg_query($conn,$sql);
   $filas = pg_num_rows($res);
- if($filas > 0){
-  if($res){
-    for($i=0;$i<$filas;$i++){
-      $indiv_id=pg_fetch_result($res,$i,0);
-      $gener_indiv_id=pg_fetch_result($res,$i,1);
-      $proy_id=pg_fetch_result($res,$i,2);
-      get_indiv_from_file($indiv_id, $gener_indiv_id, $proy_id, FALSE);
+  if($filas > 0){
+    if($res){
+      for($i=0;$i<$filas;$i++){
+        $indiv_id=pg_fetch_result($res,$i,0);
+        $gener_indiv_id=pg_fetch_result($res,$i,1);
+        $proy_id=pg_fetch_result($res,$i,2);
+        get_indiv_from_file($indiv_id, $gener_indiv_id, $proy_id, FALSE);
+      }
+    }else{
+      echo "<br/>ERROR: No se han podido localizar los parentales<br/>";
+      echo $sql."<br/>";
     }
-  }else{
-    echo "<br/>ERROR: No se han podido localizar los parentales<br/>";
-    echo $sql."<br/>";
-  }
-  pg_close($conn);
-  
+    pg_close($conn);
+
     $numindiv = $filas;
-  //  echo "<br>añade estadísticas<br>";
-  //debug_r($_SESSION['stats']);
-  $datos_par_exist = isset($_SESSION['stats'][$id]['parentales']);
-  if($datos_par_exist){
+    //  echo "<br>añade estadísticas<br>";
+    //debug_r($_SESSION['stats']);
+ /*  $datos_par_exist = isset($_SESSION['stats'][$id]['parentales']);
+    if($datos_par_exist){
       //$numindiv = $_SESSION['stats'][$id]['parentales']['numindiv'];
       foreach($_SESSION['colnames'] as $fen){
         $col = array_column($_SESSION['tab_generacion'],$fen);
         $media = $_SESSION['stats'][$id]['parentales'][$fen]['mean'];
         $varianza = $_SESSION['stats'][$id]['parentales'][$fen]['var'];
-    }
-  }else{
-    //$numindiv = $filas;
-    $_SESSION['stats'][$id]['parentales']['numindiv'] = $numindiv;
+      }
+    }else{*/
+      //$numindiv = $filas;
+      $_SESSION['stats'][$id]['parentales']['numindiv'] = $numindiv;
       foreach($_SESSION['colnames'] as $fen){
         $col = $stats_parentales[$fen];
         $media = stats($col,'mean');
@@ -860,27 +886,27 @@ if($fh){
         $varianza = stats($col,'var');
         $_SESSION['stats'][$id]['parentales'][$fen]['var'] = $varianza;
       }
-  }
-$stats_parentales = array();
+    //}
+    $stats_parentales = array();
 
-//población
+    //población
 
-//$datos_gen_exist = sizeof($_SESSION['stats'][$id]['generacion']) > 0;
-$datos_gen_exist = isset($_SESSION['stats'][$id]['generacion']);
+    //$datos_gen_exist = sizeof($_SESSION['stats'][$id]['generacion']) > 0;
+    /*$datos_gen_exist = isset($_SESSION['stats'][$id]['generacion']);
 
 
     //$numindiv = sizeof($_SESSION['tab_generacion']);
-if($datos_gen_exist){
-    $numindiv = $_SESSION['stats'][$id]['generacion']['numindiv'];
-    //debug("numindiv. existe: ".$numindiv);
+    if($datos_gen_exist){
+      $numindiv = $_SESSION['stats'][$id]['generacion']['numindiv'];
+      //debug("numindiv. existe: ".$numindiv);
       foreach($_SESSION['colnames'] as $fen){
         $col = array_column($_SESSION['tab_generacion'],$fen);
         $media = $_SESSION['stats'][$id]['generacion'][$fen]['mean'];
         $varianza = $_SESSION['stats'][$id]['generacion'][$fen]['var'];
-    }
-  }else{
-    $numindiv = sizeof($_SESSION['tab_generacion'])-1;
-    $_SESSION['stats'][$id]['generacion']['numindiv'] = $numindiv;
+      }
+    }else{*/
+      $numindiv = sizeof($_SESSION['tab_generacion'])-1;
+      $_SESSION['stats'][$id]['generacion']['numindiv'] = $numindiv;
       foreach($_SESSION['colnames'] as $fen){
         $col = array_column($_SESSION['tab_generacion'],$fen);
         //debug_r($col);
@@ -889,22 +915,22 @@ if($datos_gen_exist){
         $varianza = stats($col,'var');
         $_SESSION['stats'][$id]['generacion'][$fen]['var'] = $varianza;
       }
+    //}
+
+    foreach($_SESSION['colnames'] as $fen){
+      $media = $_SESSION['stats'][$id]['generacion'][$fen]['mean'];
+    }
+
+    foreach($_SESSION['colnames'] as $fen){
+      $varianza = $_SESSION['stats'][$id]['generacion'][$fen]['var'];
+    }
+
+    ksort($_SESSION['stats']);
+    $proy_id = $_SESSION['proactivo'];
+    $path = $pathProyectos.$proy_id."/".$proy_id."stats.json";
+    file_put_contents($path,json_encode($_SESSION['stats']));
+
+
   }
-
-  foreach($_SESSION['colnames'] as $fen){
-    $media = $_SESSION['stats'][$id]['generacion'][$fen]['mean'];
-  }
-
-  foreach($_SESSION['colnames'] as $fen){
-    $varianza = $_SESSION['stats'][$id]['generacion'][$fen]['var'];
-  }
- 
-  ksort($_SESSION['stats']);
-  $proy_id = $_SESSION['proactivo'];
-  $path = $pathProyectos.$proy_id."/".$proy_id."stats.json";
-  file_put_contents($path,json_encode($_SESSION['stats']));
-
-
- }
 
 }
