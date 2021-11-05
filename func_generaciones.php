@@ -106,16 +106,16 @@ function testnewmultiple(){
       $conn = conecta();
       $gen_id = $generacion_id;
       for ($i=0;$i<$numcruces_multiple;$i++){
-        debug("numcruces_multiple: ".$numcruces_multiple."--i: ".$i);
+        //debug("numcruces_multiple: ".$numcruces_multiple."--i: ".$i);
         //bucle para individuos
         $selec = rand(0,$gen_indiv-$numindiv_multiple);
         $proyactivo = $_SESSION['proactivo'];
         for($j=0;$j<$numindiv_multiple;$j++){
-          debug("numindiv_multiple: ".$numindiv_multiple."--j: ".$j);
+          //debug("numindiv_multiple: ".$numindiv_multiple."--j: ".$j);
           $indiv = $_SESSION['tab_generacion'][$selec]['id'];
           $sql="insert into parentales (generacion_id, indiv_id, gener_indiv_id,proy_id) values ($gen_id,$indiv,$gen_parentales_multiple,$proyactivo)";
           $res=pg_query($conn,$sql);
-          debug($sql);
+          //debug($sql);
           if(!$res) echo "ERROR: ".$sql;
           $selec++;
         }
@@ -124,18 +124,19 @@ function testnewmultiple(){
     pg_close($conn);
     }elseif('aleatorio' == $tipocruce){
       $conn = conecta();
-      $gen_id == $generacion_id;
+      $gen_id = $generacion_id;
      for ($i=0;$i<$numcruces_multiple;$i++){
+        $proyactivo = $_SESSION['proactivo'];
         for($j=0;$j<$numindiv_multiple;$j++){
           $selec = rand(1,$gen_indiv);
-          $proyactivo = $_SESSION['proactivo'];
+          $indiv = $_SESSION['tab_generacion'][$selec]['id'];
           $sql="insert into parentales (generacion_id, indiv_id, gener_indiv_id,proy_id) values ($gen_id,$selec,$gen_parentales_multiple,$proyactivo)";
           $res=pg_query($conn,$sql);
           if(!$res) echo "ERROR: ".$sql;
         }
         $gen_id++;
       }
-    pg_close($conn);
+      pg_close($conn);
     }
      for ($i=0;$i<$numcruces_multiple;$i++){
         makepoc($poblacion_multiple,$generacion_id,"cruce");
