@@ -908,7 +908,7 @@ function estadisticas($id){
         $varianza = $_SESSION['stats'][$id]['generacion'][$fen]['var'];
       }
     }else{*/
-      $numindiv = sizeof($_SESSION['tab_generacion'])-1;
+      $numindiv = sizeof($_SESSION['tab_generacion']);
       $_SESSION['stats'][$id]['generacion']['numindiv'] = $numindiv;
       foreach($_SESSION['colnames'] as $fen){
         $col = array_column($_SESSION['tab_generacion'],$fen);
