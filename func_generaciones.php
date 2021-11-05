@@ -238,7 +238,8 @@ function stats($lista,$funcion){
     $sum += $lista[$i];
   $mean = (double)$sum / (double)$n;
   if('mean' == $funcion){
-    return $mean.":".implode('-',$lista).":".$funcion;
+    //return $mean.":".implode('-',$lista).":".$funcion;
+    return $mean;
   }elseif('var' == $funcion){
     $sqDiff = 0;
     for ( $i = 0; $i < $n; $i++)
@@ -832,6 +833,7 @@ function estadisticas($id){
   $fh = fopen($filename,"r");
 
   $generacion = array(); 
+  $_SESSION['tab_generacion'] = array();
 
   if($fh){
     while (($line = fgets($fh)) !== false){
