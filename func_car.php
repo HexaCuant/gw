@@ -222,8 +222,10 @@ function datoscar($car_id){
 								}
 ?>
 			<h2>Carácter:<?php echo $_SESSION['name_caractivo']?></h2>
-			<form action="index.php?option=1#fin" method="post">
-			<p>Sexo: <input type="checkbox" name="sexo"  <?php if($sexo == "t") print("checked")?>></input></p>
+      <form action="index.php?option=1#fin" method="post">
+<!--
+      <p>Sexo: <input type="checkbox" name="sexo"  <?php if($sexo == "t") print("checked")?>></input></p>
+-->
 			<!--<p>Visible: <input type="checkbox" name="visible"--> <?php #if($visible == "t") print("checked")?><!-- ></input>-->
 			<!--Público: <input type="checkbox" name="public"--> <?php #if($public == "t") print("checked")?><!-- ></input>-->
 			</p>
@@ -281,7 +283,7 @@ function testvergenes(){
 								?>
 								<form action="index.php?option=1#fin" method="post">
 								<table>
-								<tr><th>Id</th><th>Nombre</th><th>chr</th><th>pos</th><th>cod</th><th>Borrar</th><th>Abrir</th></tr><?php 
+								<tr><th>Id</th><th>Nombre</th><th>chr</th><th>pos</th><!--<th>cod</th>--><th>Borrar</th><th>Abrir</th></tr><?php 
 								        for ($i=0;$i<$filas;$i++){
 																$gen_id = pg_fetch_result($res,$i,0);
 																$conngen=conecta();
@@ -307,7 +309,7 @@ function testvergenes(){
 																$pos=pg_fetch_result($resgen,0,4);
 																$code=pg_fetch_result($resgen,0,5);
 ?>
-				<tr><td><?php echo $idglobal?></td><td><?php echo $name?></td><td><?php echo $chr?></td><td><?php echo $pos?></td><td><?php echo $code?></td>
+				<tr><td><?php echo $idglobal?></td><td><?php echo $name?></td><td><?php echo $chr?></td><td><?php echo $pos?></td><!--<td><?php echo $code?></td>-->
 <?php 
 																genbutton($idglobal)
 ?>
@@ -378,7 +380,7 @@ function testvergenes(){
 												//mostrarlas
 												?><h2>Conexiones</h2><?php 
 												?><form action="index.php?option=1#fin" method="post"><?php 
-												?><table><tr><th>S</th><th>gen</th><th>P</th><th>Borrar</th></tr><?php 
+
 												for($i=0;$i<$filas;$i++){
 																$SA=pg_fetch_result($res,$i,0);
 																$gen=pg_fetch_result($res,$i,1);
