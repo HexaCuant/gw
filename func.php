@@ -145,7 +145,7 @@ function inserta($user,$pass)
  if($res) return 1;
  else
   {
-				 echo "error en la inserción";
+				 echo "error en la inserción: ".$sql;
 				 return 0;
   }
  }

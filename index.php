@@ -9,7 +9,7 @@ if(isset($_POST['pass'])) $pass=$_POST['pass']; else $pass="";
 cabecera($option);
 
 ?>
-<p>dynamic</p>
+<!--<p>dynamic</p>-->
 <?php
 
 if(isset($_POST['login'])){

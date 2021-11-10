@@ -380,7 +380,8 @@ function testvergenes(){
 												//mostrarlas
 												?><h2>Conexiones</h2><?php 
 												?><form action="index.php?option=1#fin" method="post"><?php 
-
+												?><table><?php 
+                  ?><tr><th>S</th><th>gen</th><th>P</th><th>Borrar</th></tr><?php
 												for($i=0;$i<$filas;$i++){
 																$SA=pg_fetch_result($res,$i,0);
 																$gen=pg_fetch_result($res,$i,1);
