@@ -237,7 +237,7 @@ function stats($lista,$funcion){
   $n = count($lista);
   for ($i = 0; $i < $n; $i++)
     $sum += $lista[$i];
-  $mean = (double)$sum / (double)$n;
+  $mean = $sum / $n;
   if('mean' == $funcion){
     //return $mean.":".implode('-',$lista).":".$funcion;
     return $mean;
@@ -305,6 +305,7 @@ function print_generacion($id){
   //debug("datos_gen_exist (x): ". $datos_gen_exist);
 
   //$numindiv = sizeof($_SESSION['tab_generacion']);
+  $datos_gen_exist = FALSE;
   if($datos_gen_exist){
     //$numindiv = $_SESSION['stats'][$id]['generacion']['numindiv'];
     //debug("numindiv. existe: ".$numindiv);
