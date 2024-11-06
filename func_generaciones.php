@@ -198,12 +198,27 @@ function checkline($line){
 function testcarac($line,$saveout = TRUE){
   global $colnames;
   $conn=conecta();
+
+  echo  $line;
+  echo "<br>";
+  
   $data = explode("=",$line);
+
+print_r($data);
+echo "<br>";
   $fenotipos = explode(":",$data[1]);
+
+print_r($fenotipos);
+echo "<br>";
+
+
   $i=0;
   $j=0;
   while($fenotipos[$i] !== "$"){
     $sql = "select name from caracteres where id = ".$fenotipos[$i];
+
+echo $sql;
+
     $res=pg_query($conn,$sql);
     if(!$res) echo "ERROR 52-func_generaciones";
     else{
@@ -215,6 +230,8 @@ function testcarac($line,$saveout = TRUE){
     $j++;
     $i++;
     $i++;
+
+    if($i > 9) exit;
   }
   $_SESSION['missingnames']=false;
   pg_close($conn);
@@ -802,7 +819,9 @@ function makepoc($pop,$gen,$tipo){
   fclose($fh);
   //ejecutar
   $command = "gen2web ".$_SESSION['proactivo']." > /dev/null";
-  //echo "<br>".$command."<br>"; //debug <---
+
+  echo "<br>".$command."<br>"; //debug <---
+  
   system($command,$ret);
   if($ret==0){
     echo "creada generación";
