@@ -188,9 +188,12 @@ function processline($line,$saveout = TRUE){
 
 function checkline($line){
   $data = explode("=",$line);
-  if ($data[0] > 0){
+  //echo "checkline data[0][0]: ".$data[0][0]."<br>";
+  if ($data[0] > 0 && $data[0][0] != "n"){
+	//echo "checkline true<br>";
     return true;
   }else{
+	//echo "checkline false<br>";
     return false;
   }
 }
@@ -199,17 +202,19 @@ function testcarac($line,$saveout = TRUE){
   global $colnames;
   $conn=conecta();
 
-  echo  $line;
-  echo "<br>";
+  //echo  "line: " . $line;
+  //echo "<br>";
   
   $data = explode("=",$line);
 
-print_r($data);
-echo "<br>";
+  //echo "data: ";
+//print_r($data);
+//echo "<br>";
   $fenotipos = explode(":",$data[1]);
 
-print_r($fenotipos);
-echo "<br>";
+ // echo "fenotipos: ";
+//print_r($fenotipos);
+//echo "<br>";
 
 
   $i=0;
@@ -217,7 +222,7 @@ echo "<br>";
   while($fenotipos[$i] !== "$"){
     $sql = "select name from caracteres where id = ".$fenotipos[$i];
 
-echo $sql;
+//echo $sql;
 
     $res=pg_query($conn,$sql);
     if(!$res) echo "ERROR 52-func_generaciones";
@@ -424,6 +429,7 @@ function print_parentales($generacion){
   $res = pg_query($conn,$sql);
   $filas = pg_num_rows($res);
 
+  if($filas > 0){
 ?>
 <div class="tab">
 <table>
@@ -433,7 +439,7 @@ function print_parentales($generacion){
     echo "<th>".$fen."</th>";
   }        
 
-  if($filas > 0){
+  
     if($res){
       for($i=0;$i<$filas;$i++){
         $indiv_id=pg_fetch_result($res,$i,0);
@@ -785,7 +791,9 @@ function makepoc($pop,$gen,$tipo){
   }
   if($tipo=="cruce"){
     //Qué generaciones hay que leer
-    $sqlread = "select distinct gener_indiv_id from parentales where generacion_id = ".$gen." and proy_id = ".$_SESSION['proactivo']."order by gener_indiv_id";
+	$pro = $_SESSION['proactivo'];
+    $sqlread = "select distinct gener_indiv_id from parentales where generacion_id = '$gen' and proy_id = '$pro' order by gener_indiv_id";
+	//echo $sqlread;
     $resread = pg_query($conn,$sqlread);
     $filas = pg_num_rows($resread);
     for($i=0;$i<$filas;$i++){
