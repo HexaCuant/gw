@@ -64,25 +64,44 @@ function processline($line){
 								$fenotipos = explode(":",$data[1]);
 								$i=0;
 								$j=0;
+
+								//echo "line: " . $line . "<br>";
+								//echo "data<br>";
+								
+								//print_r($data);
+				//echo "<br>";
+								//echo "fenotipos<br>";
+								//print_r($fenotipos);
+//echo "----------<br>";
+//if ($line[0] != 'n') {
+
 								while($fenotipos[$i] !== "$"){
 												$i++;
 												?><td><?php echo $fenotipos[$i]?><?php 
 												fwrite($_SESSION['out']," ".$fenotipos[$i]);
 												$i++;
 												$j++;
+												if($i>10) break;
 								}
 												indivbutton($idindiv);
 								?></tr><?php 
 								fwrite($_SESSION['out'],"\n");
 								echo "\n";
 				}
+			//}
 }
 
 function checkline($line){
 				$data = explode("=",$line);
-				if ($data[0] > 0){
+				if ($data[0] != "#" && $data[0][0] != "n" && $data[0] > 0){
+								
+
+								//echo "linea checkline: " . $line . "<br>";
+								//echo "data[0] checkline<br>" . $data[0] . "<br>";
 								return true;
 				}else{
+
+					//echo "data checkline else<br>" . $data[0] . "<br>";
 								return false;
 				}
 }
@@ -93,6 +112,15 @@ function testcarac($line){
 				$fenotipos = explode(":",$data[1]);
 				$i=0;
 				$j=0;
+				//echo "linea: " . $linea . "<br>";
+				//echo "linea[0]" . $linea[0] . "<br>";
+				//echo "data<br>";
+				
+				//print_r($data);
+
+				//echo "fenotipos<br>";
+				//print_r($fenotipos);
+//if($linea[0] != '#' && $linea[0] != 'n' && $linea[0] != ''){
 				 while($fenotipos[$i] !== "$"){
 								 $sql = "select name from caracteres where id = ".$fenotipos[$i];
 								 $res=pg_query($conn,$sql);
@@ -106,7 +134,9 @@ function testcarac($line){
 								 $j++;
 								 $i++;
 								 $i++;
+								 if($i>10) break;
 				 }
+//				}
 				$_SESSION['missingnames']=false;
 				pg_close($conn);
 				?><th>Selec.</th><tr><?php 
@@ -136,7 +166,10 @@ function abrirgeneracion($id){
 				}
 				?></table>
 				</form><?php 
-				fclose($fh);
+				if($fh) fclose($fh);
+				else $_SESSION['generacionactiva']=0;
+			
+			
 				fclose($_SESSION['out']);
 				$puntofilename = "/proyectosGengine/".$_SESSION['proactivo']."/".$_SESSION['proactivo']."_".$id."_datos.csv";
 	?><p><a href="<?php echo $puntofilename?>">Descargar datos</a> (puntos decimales)</p><?php 
@@ -406,7 +439,8 @@ function makepoc($pop,$gen,$tipo){
 				fwrite($fh,$line);
 				//ejecutar
 				$command = "gen2web ".$_SESSION['proactivo']." > /dev/null";
-				echo "<br>".$command."<br>";
+				//$command = "/usr/local/bin/gen2web ".$_SESSION['proactivo'];
+				//echo "<br>".$command."<br>";
 				system($command,$ret);
 				if($ret==0){
 								echo "creada generación";
