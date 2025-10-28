@@ -24,7 +24,7 @@ function conecta()
 {
  //$conn = pg_connect("host=sql port=5432 dbname=genweb3 user=genweb password=genweb");
  $conn = pg_connect("host=localhost port=5432 dbname=genweb user=genweb password=genweb");
- if(pg_ErrorMessage($conn))
+ if(pg_last_error($conn))
  {
   echo "<p><b>Ocurrió un error en la conexión a la base de datos</b></p>";
 	exit;
@@ -90,7 +90,7 @@ function autentifica($user,$pass)
 	#debug
 	#print_r("<br/>". $res);
 	#
-	$rows=pg_NumRows($res);
+	$rows=pg_num_rows($res);
 	#debug
 	#echo "<br/>rows: ".$rows;
 	#
